@@ -6,8 +6,9 @@ public class Game {
     private String gameId = UUID.randomUUID().toString();;
     private Company company = new Company();
     private String month = "Jan";
-    private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}; //should month be an array of months that is cycled through but starting at january
+    private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private int currentTurn = 1;
+    public int maxCrowdFundPerTurn = 1;
 
     private boolean isGameCompleted = false;
 
@@ -35,11 +36,14 @@ public class Game {
 
     public void advanceTurn(){
         currentTurn++;
+        company.resetCrowdFundCount();
     }
 
     public boolean isGameCompleted() {
         return isGameCompleted;
     }
 
-
+    public int getMaxCrowdFundPerTurn() {
+        return maxCrowdFundPerTurn;
+    }
 }

@@ -8,21 +8,25 @@ public class Company {
     private int productXP = 1;
     private double revenue = 1000000;
 
-
-    public void crowdFund(){
-        revenue += 100000;
-    }
+    private int crowdFundCount = 0;
 
 
     //company methods to be used in the API game
-    //crowdFund method - increases revenue but can only be used once per turn
+    //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this? maybe dont?
+    public void crowdFund(){
+        Game game = new Game(); //this seems like a clunky way to do this
+        if(crowdFundCount < game.getMaxCrowdFundPerTurn()){
+            revenue += 100000;
+            incrementCrowdFundCount();
+        }
+    }
 
+
+    //hireEmployee method - company can add employees based on the revenue but no more than 10 employees per turn
 
     //sniper invest method - increases or decreases revenue after 2 turns
 
     //passive invest method - increases or decreases revenue after 3 turns
-
-    //hireEmployee method - company can add employees based on the revenue but no more than 10 employees per turn
 
     //addDepartment - add a departmetn but they need a minimum number of employees
 
@@ -31,13 +35,19 @@ public class Company {
     //marketing - adds 100 to customer base and 1 to product XP
 
 
+    public void incrementCrowdFundCount(){
+        crowdFundCount++;
+    }
 
+    //this method will be used in the advance turn method
+    public void resetCrowdFundCount(){
+        crowdFundCount = 0;
+    }
 
-
-
-
-
-    //company getters and setters
+    public int getCrowdFundCount() {
+        return crowdFundCount;
+    }
+//company getters and setters
 
     public int getEmployees() {
         return employees;
