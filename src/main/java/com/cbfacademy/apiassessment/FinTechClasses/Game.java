@@ -8,7 +8,6 @@ public class Game {
     private String month = "Jan";
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private int currentTurn = 1;
-    public int maxCrowdFundPerTurn = 1;
 
     private boolean isGameCompleted = false;
 
@@ -43,7 +42,5 @@ public class Game {
         return isGameCompleted;
     }
 
-    public int getMaxCrowdFundPerTurn() {
-        return maxCrowdFundPerTurn;
-    }
+
 }

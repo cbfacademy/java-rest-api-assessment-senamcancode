@@ -1,38 +1,69 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
 public class Company {
-    private int employees;
+    private int employees = 1;
     private int departments = 0;
     public final static double costOfEmployee = 5000;
     private int customerBase = 0;
     private int productXP = 1;
     private double revenue = 1000000;
+    private int maxCrowdFundCount = 1;
 
     private int crowdFundCount = 0;
 
 
+
     //company methods to be used in the API game
-    //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this? maybe dont?
+    //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this
     public void crowdFund(){
-        Game game = new Game(); //this seems like a clunky way to do this
-        if(crowdFundCount < game.getMaxCrowdFundPerTurn()){
-            revenue += 100000;
-            incrementCrowdFundCount();
+            if(crowdFundCount < maxCrowdFundCount) {
+                revenue += 100000;
+                incrementCrowdFundCount();
+            }
+
+    }
+
+
+    private boolean hasSufficientFunds(int numberOfEmployees){
+        double costOfHiring = costOfEmployee * numberOfEmployees;
+        return revenue >= costOfHiring;
+    }
+
+    //hireEmployee method - company can add employees but no more than 10 employees per turn
+    public void hireEmployee(int numberOfEmployees){
+        if(numberOfEmployees <= 10 && hasSufficientFunds(numberOfEmployees)){
+            employees += 5;
+            double costOfHiring = costOfEmployee * numberOfEmployees;
+            revenue -= costOfHiring;
+        }
+    }
+
+    //addDepartment - add a department but they need a minimum number of employees
+    public void addDepartment(){
+        if(employees % 10 == 0 && employees > 10) {
+            departments += 1;
         }
     }
 
 
-    //hireEmployee method - company can add employees based on the revenue but no more than 10 employees per turn
+    //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base )
+    public void addProductXP(){
+        productXP += 2;
+        revenue -= 50000;
+    }
+
+    //marketing - adds 100 to customer base and 1 to product XP
+    public void market(){
+        customerBase += 100;
+        productXP += 1;
+        revenue -= 10000;
+    }
 
     //sniper invest method - increases or decreases revenue after 2 turns
 
     //passive invest method - increases or decreases revenue after 3 turns
 
-    //addDepartment - add a departmetn but they need a minimum number of employees
 
-    //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base )
-
-    //marketing - adds 100 to customer base and 1 to product XP
 
 
     public void incrementCrowdFundCount(){
