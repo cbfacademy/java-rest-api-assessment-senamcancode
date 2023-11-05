@@ -58,6 +58,12 @@ public class Company {
     }
 
     //sniper invest method - increases or decreases revenue after 2 turns
+    //have a method which generates 2 random numbers:
+    //the first is between 1 or 2
+    //the second is a number between 1000 and 100,000
+    //if the number is 1, you add the second number generated to revenue
+    //if the number is 2, you take away the second number generated from revenue
+
 
     //passive invest method - increases or decreases revenue after 3 turns
 
