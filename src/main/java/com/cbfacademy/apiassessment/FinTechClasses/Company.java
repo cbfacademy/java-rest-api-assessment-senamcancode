@@ -20,9 +20,7 @@ public class Company {
                 revenue += 100000;
                 incrementCrowdFundCount();
             }
-
     }
-
 
     private boolean hasSufficientFunds(int numberOfEmployees){
         double costOfHiring = costOfEmployee * numberOfEmployees;
@@ -62,8 +60,6 @@ public class Company {
     //sniper invest method - increases or decreases revenue after 2 turns
 
     //passive invest method - increases or decreases revenue after 3 turns
-
-
 
 
     public void incrementCrowdFundCount(){
