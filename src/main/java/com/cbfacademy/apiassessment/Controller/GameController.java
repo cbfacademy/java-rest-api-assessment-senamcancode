@@ -3,9 +3,11 @@ package com.cbfacademy.apiassessment.Controller;
 
 //import com.cbfacademy.apiassessment.Service.GameService;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
+import com.cbfacademy.apiassessment.Service.GameService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,9 @@ import java.io.IOException;
 public class GameController {
     private Game game;
     private Company company;
-//    private GameService gameService;
+
+    @Autowired
+    private GameService gameService;
 
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {

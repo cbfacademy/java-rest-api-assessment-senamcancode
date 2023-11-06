@@ -10,6 +10,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
+
+@Service
+ public class GameService {
+
+
+}
+
+
+
 //@Service
 //    public class GameService {
 //        private Game game; // Assuming game is initialized somewhere

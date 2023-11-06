@@ -83,6 +83,7 @@ public class Game {
 
     public void advanceTurn(){
         currentTurn++;
+        setMonth();
         company.resetCrowdFundCount();
         triggerRandomEvent();
     }
