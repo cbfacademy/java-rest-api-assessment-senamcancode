@@ -1,11 +1,13 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
+import java.security.SecureRandom;
+
 public class Company {
     private int employees = 1;
     private int departments = 0;
     public final static double costOfEmployee = 5000;
     private int customerBase = 0;
-    private int productXP = 1;
+    private int productXP = 0;
     private double revenue = 1000000;
     private int maxCrowdFundCount = 1;
 
@@ -22,51 +24,68 @@ public class Company {
             }
     }
 
-    private boolean hasSufficientFunds(int numberOfEmployees){
+    public boolean hasSufficientFunds(int numberOfEmployees){
         double costOfHiring = costOfEmployee * numberOfEmployees;
         return revenue >= costOfHiring;
     }
 
     //hireEmployee method - company can add employees but no more than 10 employees per turn
-    public void hireEmployee(int numberOfEmployees){
+    public void addEmployee(int numberOfEmployees){
         if(numberOfEmployees <= 10 && hasSufficientFunds(numberOfEmployees)){
-            employees += 5;
+            employees += numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue -= costOfHiring;
         }
     }
 
-    //addDepartment - add a department but they need a minimum number of employees
+    //addDepartment - add a department but they need a minimum number of employees - need to re-write
     public void addDepartment(){
-        if(employees % 10 == 0 && employees > 10) {
-            departments += 1;
+        int employeesNeeded = (departments+ 1) * 10;
+
+        if (employees >= employeesNeeded){
+            departments++;
         }
     }
 
 
-    //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base )
-    public void addProductXP(){
-        productXP += 2;
-        revenue -= 50000;
+    //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base)
+    public void researchAndDev(){
+        if (revenue > 50000 && productXP < 100) {
+
+            productXP += 2;
+            revenue -= 50000;
+
+            if (productXP % 10 == 0) {
+                customerBase += 1000;
+            }
+        }
+
     }
 
-    //marketing - adds 100 to customer base and 1 to product XP
-    public void market(){
-        customerBase += 100;
-        productXP += 1;
-        revenue -= 10000;
+    //marketing - adds 100 to customer base but costs money
+    public void marketing(){
+        if(revenue > 10000) {
+            customerBase += 1000;
+            revenue -= 10000;
+        }
     }
 
     //sniper invest method - increases or decreases revenue after 2 turns
-    //have a method which generates 2 random numbers:
-    //the first is between 1 or 2
-    //the second is a number between 1000 and 100,000
-    //if the number is 1, you add the second number generated to revenue
-    //if the number is 2, you take away the second number generated from revenue
+    public void invest(){
+        SecureRandom rand = new SecureRandom();
+        int firstRandomNumber = rand.nextInt(2);
+        int secondRandomNumber = rand.nextInt(100001);
+
+        if(firstRandomNumber == 0) {
+            revenue += secondRandomNumber;
+        } else {
+            revenue -= secondRandomNumber;
+        }
+    }
 
 
     //passive invest method - increases or decreases revenue after 3 turns
-
+    //how could I approach having a delay of the investment method
 
     public void incrementCrowdFundCount(){
         crowdFundCount++;
@@ -80,8 +99,33 @@ public class Company {
     public int getCrowdFundCount() {
         return crowdFundCount;
     }
-//company getters and setters
 
+
+    public void reduceRevenue(double percentage){
+        double reduction = (percentage / 100) * revenue;
+        revenue -= reduction;
+    }
+
+    public void increaseRevenue(double percentage){
+        double reduction = (percentage / 100) * revenue;
+        revenue += reduction;
+    }
+
+    public void increaseCustomerBase(int customers){
+        customerBase += customers;
+    }
+
+    public void reduceCustomerBase(int customers){
+        if(customerBase > customers) {
+            customerBase -= customers;
+        } else {
+            customerBase = 0;
+        }
+    }
+
+
+
+    //company getters and setters
     public int getEmployees() {
         return employees;
     }

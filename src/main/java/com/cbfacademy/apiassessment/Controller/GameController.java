@@ -1,7 +1,40 @@
 package com.cbfacademy.apiassessment.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.cbfacademy.apiassessment.FinTechClasses.Game;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+@RestController
+@RequestMapping("api/game")
 public class GameController {
-    //should probably have an update method which applies all the changes in the game object ie company too and writes it to the JSON file before giong to the next turn
+
+    @PostMapping("/start")
+    public ResponseEntity<Object> startNewGame() {
+        //Rest the game state to the initial values.
+        Game game = new Game();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(game);
+
+        //how can I write the file to a specific place in the directory? - would i make this part of the JSON controller?
+        try (FileWriter writer = new FileWriter("game-data.json")) {
+            writer.write(json);
+            return ResponseEntity.ok("New game started and data written to file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
+        }
+    }
+}
+
+//should probably have an update method which applies all the changes in the game object ie company too and writes it to the JSON file before giong to the next turn
 //    @RestController
 //    @RequestMapping("/game")
 //    public class GameController {
@@ -25,4 +58,3 @@ public class GameController {
 //    }
 
 
-}

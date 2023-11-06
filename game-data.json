@@ -1,0 +1,22 @@
+{
+  "gameId": "4a098521-5240-4f54-9e3c-1aea299c9936",
+  "currentTurn": 1,
+  "isGameCompleted": false,
+  "company": {
+    "employees": 1,
+    "departments": 0,
+    "customerBase": 0,
+    "productXP": 0,
+    "revenue": 1000000.0,
+    "maxCrowdFundCount": 1,
+    "crowdFundCount": 0
+  },
+  "month": "Jan",
+  "events": [
+    {},
+    {},
+    {},
+    {},
+    {}
+  ]
+}
