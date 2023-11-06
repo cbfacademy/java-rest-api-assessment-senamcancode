@@ -14,7 +14,10 @@ public class Game {
     private String gameId;
     //public final LocalDateTime creationDateTime;
     private int currentTurn = 1;
+    private final int maxTurnsPerGame = 20;
     private boolean isGameCompleted = false;
+    private int currentNumberOfActions = 0;
+    private int actionsPerTurn = 3;
     private Company company = new Company();
     private String month = "Jan";
 
@@ -39,6 +42,10 @@ public class Game {
         int randomIndex = random.nextInt(event.size());
         Event randomEvent = event.get(randomIndex);
         randomEvent.executeEvent(company);
+    }
+
+    public void resetActionsTaken(){
+        currentNumberOfActions = 0;
     }
 
     public List<Event> getEvents() {
@@ -82,6 +89,11 @@ public class Game {
 
     public boolean isGameCompleted() {
         return isGameCompleted;
+    }
+
+
+    public boolean isGameOver(){
+        return currentTurn == maxTurnsPerGame;
     }
 
 

@@ -2,12 +2,14 @@ package com.cbfacademy.apiassessment.Controller;
 
 
 //import com.cbfacademy.apiassessment.Service.GameService;
+import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileWriter;
@@ -17,11 +19,13 @@ import java.io.IOException;
 @RequestMapping("api/game")
 public class GameController {
     private Game game;
+    private Company company;
 //    private GameService gameService;
 
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {
         this.game = new Game();
+        this.company = game.getCompany();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(game);
@@ -36,7 +40,18 @@ public class GameController {
         }
     }
 
-//
+    @PostMapping("/add-employee")
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees){
+        if (company.hasSufficientFunds(numberOfEmployees)) {
+            company.addEmployee(numberOfEmployees);
+            int totalEmployees = company.getEmployees();
+            return ResponseEntity.ok(numberOfEmployees + " Employee(S) added. You now have " + totalEmployees);
+
+        } else {
+            return ResponseEntity.ok("You don't have sufficient funds to employ " + numberOfEmployees + "employee(s)");
+        }
+
+    }
 
     @PostMapping("/advance-turn")
     public ResponseEntity<String> advanceTurn(){
