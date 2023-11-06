@@ -77,6 +77,7 @@ public class Game {
     public void advanceTurn(){
         currentTurn++;
         company.resetCrowdFundCount();
+        triggerRandomEvent();
     }
 
     public boolean isGameCompleted() {

@@ -1,5 +1,7 @@
 package com.cbfacademy.apiassessment.Controller;
 
+
+//import com.cbfacademy.apiassessment.Service.GameService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -14,11 +16,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("api/game")
 public class GameController {
+    private Game game;
+//    private GameService gameService;
 
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {
-        //Rest the game state to the initial values.
-        Game game = new Game();
+        this.game = new Game();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(game);
@@ -27,11 +30,24 @@ public class GameController {
         try (FileWriter writer = new FileWriter("game-data.json")) {
             writer.write(json);
             return ResponseEntity.ok("New game started and data written to file.");
-        } catch (IOException e) {
+        } catch (IOException e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
         }
     }
+
+//
+
+    @PostMapping("/advance-turn")
+    public ResponseEntity<String> advanceTurn(){
+        if(game != null){
+            game.advanceTurn(); //advance the turn in the game
+            return ResponseEntity.ok("Turn advanced to " + game.getCurrentTurn());
+        } else {
+            return ResponseEntity.badRequest().body("No active game found.");
+        }
+    }
+
 }
 
 //should probably have an update method which applies all the changes in the game object ie company too and writes it to the JSON file before giong to the next turn
@@ -55,6 +71,17 @@ public class GameController {
 //        }
 //
 //        // Other endpoint handling game actions and responses
+//    }
+
+//@PostMapping("/start")
+//    public ResponseEntity<Object> start(){
+//        try {
+//            gameService.startNewGame();
+//            return ResponseEntity.ok("New game started and data written to file.");
+//        } catch (IOException e){
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
+//        }
 //    }
 
 
