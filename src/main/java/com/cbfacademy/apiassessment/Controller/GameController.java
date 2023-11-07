@@ -26,27 +26,40 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
+//    @PostMapping("/start")
+//    public ResponseEntity<Object> startNewGame() {
+//        try {
+//            gameService.startNewGame();
+//            return ResponseEntity.ok("New game started and data written to file.");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
+//
+//        }
+//
+//    }
+
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {
         this.game = new Game();
         this.company = game.getCompany();
-
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(game);
 
-        //how can I write the file to a specific place in the directory? - would i make this part of the JSON controller?
         try (FileWriter writer = new FileWriter("game-data.json")) {
             writer.write(json);
+            writer.flush();
             return ResponseEntity.ok("New game started and data written to file.");
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
         }
     }
 
+
+
     @PostMapping("/add-employee")
-    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees){
-        if (company.hasSufficientFunds(numberOfEmployees)) {
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees){if (company.hasSufficientFunds(numberOfEmployees)) {
             company.addEmployee(numberOfEmployees);
             int totalEmployees = company.getEmployees();
             return ResponseEntity.ok(numberOfEmployees + " Employee(S) added. You now have " + totalEmployees);

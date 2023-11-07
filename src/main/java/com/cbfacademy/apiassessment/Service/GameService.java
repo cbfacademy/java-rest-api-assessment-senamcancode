@@ -1,5 +1,6 @@
 package com.cbfacademy.apiassessment.Service;
 
+import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,9 +13,31 @@ import java.io.IOException;
 
 
 @Service
- public class GameService {
+public class GameService {
+    public Game game = new Game();
+    public Company company = game.getCompany();
 
 
+    public void startNewGame() throws IOException{
+//        this.game = new Game();
+
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(game);
+
+        try (FileWriter writer = new FileWriter("game-data.json")) {
+         writer.write(json);
+         writer.flush();
+        } catch (IOException e) {
+         throw new IOException("Error occurred while writing game data to file: " + e.getMessage());
+        }
+    }
+
+    public void addEmployee(int numberOfEmployees){
+        if(company.hasSufficientFunds(numberOfEmployees)) {
+            company.addEmployee(numberOfEmployees);
+        }
+    }
 }
 
 
