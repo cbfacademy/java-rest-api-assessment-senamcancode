@@ -22,25 +22,27 @@ public class Game {
     private String month = "Jan";
 
     //NB - you can exclude this variable from the json using the key word transient
+
+    //change to a calendar object
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    private List<Event> event = new ArrayList<>();
+    public List<Event> listOfEvents = new ArrayList<>();
 
 
 
     public Game(){
         this.gameId = UUID.randomUUID().toString();
         //this.creationDateTime = LocalDateTime.now();
-        event.add(new NoEvent());
-        event.add(new CybersecurityLeak());
-        event.add(new EconomicBoom());
-        event.add(new EconomicDownturn());
-        event.add(new SocialMediaViral());
+        listOfEvents.add(new NoEvent());
+        listOfEvents.add(new CybersecurityLeak());
+        listOfEvents.add(new EconomicBoom());
+        listOfEvents.add(new EconomicDownturn());
+        listOfEvents.add(new SocialMediaViral());
     }
 
     public void triggerRandomEvent(){
         SecureRandom random = new SecureRandom();
-        int randomIndex = random.nextInt(event.size());
-        Event randomEvent = event.get(randomIndex);
+        int randomIndex = random.nextInt(listOfEvents.size());
+        Event randomEvent = listOfEvents.get(randomIndex);
         randomEvent.executeEvent(company);
     }
 
@@ -49,7 +51,7 @@ public class Game {
     }
 
     public List<Event> getEvents() {
-        return event;
+        return listOfEvents;
     }
 
     public String getGameId() {

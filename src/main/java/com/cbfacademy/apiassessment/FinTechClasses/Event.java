@@ -1,7 +1,6 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
-public interface Event {
-    void executeEvent(Company company);
+public abstract class Event {
 
-
+    public abstract void executeEvent(Company company);
 }
