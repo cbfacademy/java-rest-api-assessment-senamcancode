@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -50,17 +51,16 @@ public class GameController {
 
 
 
-//    @PostMapping("/add-employee")
-//    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees){
-//
-//
-//            return ResponseEntity.ok(numberOfEmployees + " Employee(S) added.");
-//
-//        } else {
-//            return ResponseEntity.ok("You don't have sufficient funds to employ " + numberOfEmployees + "employee(s)");
-//        }
-//
-//    }
+    @PostMapping("/add-employee")
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId){
+
+
+        gameService.addEmployee(gameId, numberOfEmployees);
+
+            return ResponseEntity.ok(numberOfEmployees + " Employee(S) added.");
+
+
+    }
 //
 //    @PostMapping("/advance-turn")
 //    public ResponseEntity<String> advanceTurn(){

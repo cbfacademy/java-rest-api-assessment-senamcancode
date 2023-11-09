@@ -1,11 +1,8 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
 import com.cbfacademy.apiassessment.FinTechClasses.EventClasses.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.io.IOException;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +20,7 @@ public class Game {
 
     //NB - you can exclude this variable from the json using the key word transient
 
-    //change to a calendar object
+    //change to a calendar object to get the date
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     public List<Event> listOfEvents = new ArrayList<>();
 
@@ -32,11 +29,11 @@ public class Game {
     public Game(){
         this.gameId = UUID.randomUUID().toString();
         //this.creationDateTime = LocalDateTime.now();
-        listOfEvents.add(new NoEvent());
-        listOfEvents.add(new CybersecurityLeak());
-        listOfEvents.add(new EconomicBoom());
-        listOfEvents.add(new EconomicDownturn());
-        listOfEvents.add(new SocialMediaViral());
+        listOfEvents.add(new NoEvent("No Event"));
+        listOfEvents.add(new CybersecurityLeak("Cybersecurity Leak"));
+        listOfEvents.add(new EconomicBoom("Economic Boom"));
+        listOfEvents.add(new EconomicDownturn("Economic Downturn"));
+        listOfEvents.add(new SocialMediaViral("Social media viral event"));
     }
 
     public void triggerRandomEvent(){

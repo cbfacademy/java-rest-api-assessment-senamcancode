@@ -25,7 +25,8 @@ public class GameService {
         Game game = gameRepository.retrieveGame(gameId);
         //game.company.addEmployee(numberOfEmployees)
 
-        gameRepository.saveGameData(game);
+
+        gameRepository.updateGameData(game);
 
     }
 }
