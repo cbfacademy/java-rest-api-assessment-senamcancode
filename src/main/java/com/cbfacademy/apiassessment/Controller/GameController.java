@@ -67,6 +67,7 @@ public class GameController {
         gameService.advanceTurn(gameId);
 
         return ResponseEntity.ok("You have advanced to the next turn");
+        //you need to be able to show the data from the company and the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
     }
 
 

@@ -1,6 +1,7 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
 import com.cbfacademy.apiassessment.FinTechClasses.EventClasses.*;
+import com.google.gson.annotations.Expose;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class Game {
     //NB - you can exclude this variable from the json using the key word transient
 
     //change to a calendar object to get the date
+
+    @Expose(serialize = false)
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     public List<Event> listOfEvents = new ArrayList<>();
 

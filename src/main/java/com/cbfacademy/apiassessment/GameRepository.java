@@ -22,6 +22,7 @@ public class GameRepository {
 
 
     public void saveGameData(Database database) {
+        //if the game-data.json is null then do this
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(database.getGames()); //this will change to the database class :)
         //because I am going to have 1 JSON file called the database with each game contained all the saved games
@@ -33,6 +34,7 @@ public class GameRepository {
             e.printStackTrace();
         }
         //if there is a game-data.json already just append it to the json file
+
     }
 
 //    public void updateGameData(Game game){
@@ -75,7 +77,7 @@ public class GameRepository {
     }
 
     public static Game retrieveGame(String gameId) { //use the relative path! & need gameId as argument
-        String filePath = "/Users/senam/Documents/Code/entry-to-tech/CBF Final Project/CBF-final-project/java-rest-api-assessment-senamcancode/game-data.json";
+        String filePath = "game-data.json";
         //Need to find the specific game by id
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
