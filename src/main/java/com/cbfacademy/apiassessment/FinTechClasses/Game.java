@@ -36,22 +36,31 @@ public class Game {
         listOfEvents.add(new SocialMediaViral("Social media viral event"));
     }
 
-    public void triggerRandomEvent(){
+    public String triggerRandomEvent(){
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());
         Event randomEvent = listOfEvents.get(randomIndex);
-        randomEvent.executeEvent(company);
+         randomEvent.executeEvent(company);
+         return randomEvent.getEventName();
+        //this will return the name of the triggered Event
     }
 
     public void resetActionsTaken(){
+
         currentNumberOfActions = 0;
     }
 
+    public void addToCurrentNumberOfActions(){
+        currentNumberOfActions ++;
+    }
+
     public List<Event> getEvents() {
+
         return listOfEvents;
     }
 
     public String getGameId() {
+
         return gameId;
     }
 
@@ -59,6 +68,7 @@ public class Game {
 //        return creationDateTime;
 //    }
     public Company getCompany() {
+
         return company;
     }
 
@@ -97,4 +107,5 @@ public class Game {
     }
 
 
+    //we need a method to limit the actions that the user can take
 }

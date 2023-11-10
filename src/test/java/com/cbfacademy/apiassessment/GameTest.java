@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
 
@@ -59,5 +59,14 @@ public class GameTest {
 
     }
 
+    //need to find a way to test that the thing returned is a string
+//    @Test
+//    @DisplayName("Testing that the trigger random event returns a string")
+//    public void testRandomEventTriggerMethod(){
+//        Game game = new Game();
+//        String event = game.triggerRandomEvent();
+//
+//        assertEquals("No Event", event);
+//    }
 
 }

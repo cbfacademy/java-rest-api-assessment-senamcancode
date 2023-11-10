@@ -1,5 +1,6 @@
 package com.cbfacademy.apiassessment.Service;
 
+import com.cbfacademy.apiassessment.Database.Database;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.cbfacademy.apiassessment.GameRepository;
@@ -14,68 +15,42 @@ public class GameService {
     private GameRepository gameRepository;
 
 
+    //we need to account for if there is a json file already - we need to append the new game to the json file
+
+
     public void newGame() {
         Game game = new Game();
         Company company = game.getCompany();
+        Database gameData = new Database();
+        gameData.addGame(game);
 
-        gameRepository.saveGameData(game);
+        gameRepository.saveGameData(gameData);
     }
 
+    //Is it ideal for the user to constantly have to put the gameId in?
     public void addEmployee(String gameId, int numberOfEmployees){
-        Game game = gameRepository.retrieveGame(gameId);
-        //game.company.addEmployee(numberOfEmployees)
+        Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
+        game.getCompany().addEmployee(numberOfEmployees);
 
-        gameRepository.updateGameData(game);
+        game.addToCurrentNumberOfActions();
 
+        gameRepository.updateGameDataById(gameId, game);
+
+    }
+
+    public void advanceTurn(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
+        game.advanceTurn();
+
+        gameRepository.updateGameDataById(gameId, game);
     }
 }
 
 
 
-
-//    public void startNewGame() throws IOException{
-////        this.game = new Game();
-//
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        String json = gson.toJson(game);
-//
-//        try (FileWriter writer = new FileWriter("game-data.json")) {
-//         writer.write(json);
-//         writer.flush();
-//        } catch (IOException e) {
-//         throw new IOException("Error occurred while writing game data to file: " + e.getMessage());
-//        }
-//    }
-
-//    public void addEmployee(int numberOfEmployees){
-//        if(company.hasSufficientFunds(numberOfEmployees)) {
-//            company.addEmployee(numberOfEmployees);
-//        }
-//    }
-//}
-
-
-
-//@Service
-//    public class GameService {
-//        private Game game; // Assuming game is initialized somewhere
-//
-//
-//        public void startNewGame() throws IOException{
-//            this.game = new Game();
-//
-//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//            String json = gson.toJson(game);
-//
-//            //how can I write the file to a specific place in the directory? - would i make this part of the JSON controller?
-//            try (FileWriter writer = new FileWriter("game-data.json")) {
-//                writer.write(json);
-//            } catch (IOException e) {
-//                throw new IOException("Error occured while writing game data to file");
-//            }
-//        }
 //
 //        public void advanceTurn() {
 //            if (game != null && !game.isGameCompleted()) {
@@ -87,4 +62,3 @@ public class GameService {
 //
 //    }
 
-//}
