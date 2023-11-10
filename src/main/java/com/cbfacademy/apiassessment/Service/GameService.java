@@ -1,6 +1,8 @@
 package com.cbfacademy.apiassessment.Service;
 
 import com.cbfacademy.apiassessment.Database.Database;
+import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.cbfacademy.apiassessment.GameRepository;
@@ -28,13 +30,22 @@ public class GameService {
     }
 
     //Is it ideal for the user to constantly have to put the gameId in?
-    public void addEmployee(String gameId, int numberOfEmployees){
+    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException {
         Game game = GameRepository.retrieveGame(gameId);
+        //this line is constantly repeated can I refactor?
 
         assert game != null;
         game.getCompany().addEmployee(numberOfEmployees);
 
         game.addToCurrentNumberOfActions();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void crowdFund(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().crowdFund();
 
         gameRepository.updateGameDataById(gameId, game);
 

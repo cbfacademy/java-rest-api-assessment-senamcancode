@@ -1,5 +1,8 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
+
 import java.security.SecureRandom;
 
 public class Company {
@@ -17,11 +20,14 @@ public class Company {
 
     //company methods to be used in the API game
     //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this
-    public void crowdFund(){
-            if(crowdFundCount < maxCrowdFundCount) {
+    public void crowdFund() throws InvalidActionException {
+        if(crowdFundCount < maxCrowdFundCount) {
                 revenue += 100000;
                 incrementCrowdFundCount();
             }
+        else{
+            throw new InvalidActionException("Invalid action - You can only crowd fund once per turn");
+        }
     }
 
     public boolean hasSufficientFunds(int numberOfEmployees){
@@ -30,12 +36,22 @@ public class Company {
     }
 
     //hireEmployee method - company can add employees but no more than 10 employees per turn
-    public void addEmployee(int numberOfEmployees){
-        if(numberOfEmployees <= 10 && hasSufficientFunds(numberOfEmployees)){
+    public void addEmployee(int numberOfEmployees) throws InsufficientFundsException {
+        if(!hasSufficientFunds(numberOfEmployees)){
+            throw new InsufficientFundsException("You do not have enough funds available");
+        }
+
+        if(numberOfEmployees <= 10){
             employees += numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue -= costOfHiring;
         }
+    }
+
+    public void removeEmployee(int numberOfEmployees){
+        employees -= numberOfEmployees;
+        double costOfHiring = costOfEmployee * numberOfEmployees;
+        revenue -= costOfHiring;
     }
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write

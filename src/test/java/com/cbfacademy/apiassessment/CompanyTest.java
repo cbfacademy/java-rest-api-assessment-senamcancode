@@ -1,19 +1,20 @@
 package com.cbfacademy.apiassessment;
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CompanyTest {
     //need to find a way to test the investment method - the problem is that the method provides random results
 
     @Test
     @DisplayName("Testing crowdFund method increases revenue by 100000 in Company ")
-    public void testCrowdFund(){
+    public void testCrowdFund() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         double initialRevenue = company.getRevenue();
@@ -38,8 +39,20 @@ public class CompanyTest {
     }
 
     @Test
+    @DisplayName("Testing that the addEmployee method throws an exception")
+    public void testAddEmployeeException() throws InsufficientFundsException {
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        InsufficientFundsException exception = assertThrows(InsufficientFundsException.class, () -> {
+            company.addEmployee(100000);
+        });
+
+    }
+
+    @Test
     @DisplayName("Testing method increases employees in Company ")
-    public void testAddEmployee(){
+    public void testAddEmployee() throws InsufficientFundsException {
         Game game = new Game();
         Company company = game.getCompany();
         double initialEmployee = company.getEmployees();
@@ -53,7 +66,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing method increases departments in copmany ")
-    public void testAddDepartment(){
+    public void testAddDepartment() throws InsufficientFundsException {
         Game game = new Game();
         Company company = game.getCompany();
         int initDepartments = company.getDepartments();

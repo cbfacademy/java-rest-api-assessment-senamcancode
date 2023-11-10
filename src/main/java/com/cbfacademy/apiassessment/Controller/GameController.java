@@ -1,13 +1,13 @@
 package com.cbfacademy.apiassessment.Controller;
 
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.Service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -17,18 +17,6 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-//    @PostMapping("/start")
-//    public ResponseEntity<Object> startNewGame() {
-//        try {
-//            gameService.startNewGame();
-//            return ResponseEntity.ok("New game started and data written to file.");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
-//
-//        }
-//
-//    }
 
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {
@@ -36,39 +24,43 @@ public class GameController {
 
         return ResponseEntity.ok("New game started and data written to file");
     }
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        String json = gson.toJson(game);
-//
-//        try (FileWriter writer = new FileWriter("game-data.json")) {
-//            writer.write(json);
-//            writer.flush();
-//            return ResponseEntity.ok("New game started and data written to file.");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
-//        }
-//    }
-
 
 
     @PostMapping("/add-employee")
     public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId){
+        try {
+            gameService.addEmployee(gameId, numberOfEmployees);
+            return ResponseEntity.ok(numberOfEmployees + " Employee(S) added.");
+        } catch (InsufficientFundsException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding employee(s): " + e.getMessage());
+        }
 
+    }
 
-        gameService.addEmployee(gameId, numberOfEmployees);
-
-        return ResponseEntity.ok(numberOfEmployees + " Employee(S) added.");
+    //is this a valid post request or a get request?
+    @PostMapping("/crowd-fund")
+    public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
+        try{
+            gameService.crowdFund(gameId);
+            return ResponseEntity.ok("Crowd fund was successful");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error crowd funding: " + e.getMessage());
+        }
 
 
     }
 
-    @PostMapping("/advance-turn")
-    public ResponseEntity<String> advanceTurn(@RequestParam String gameId){
+    @GetMapping("/advance-turn/{gameId}")
+    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId){
         gameService.advanceTurn(gameId);
 
         return ResponseEntity.ok("You have advanced to the next turn");
-        //you need to be able to show the data from the company and the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
     }
+
+    //you need to be able to show the data from the company and the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
+
+
+    //In which situation for this game would I be using a put request?
 
 
 //

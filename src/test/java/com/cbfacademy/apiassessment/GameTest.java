@@ -1,5 +1,6 @@
 package com.cbfacademy.apiassessment;
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Event;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -14,7 +15,7 @@ public class GameTest {
 
     @Test
     @DisplayName("Testing crowdfund limit of once per turn")
-    public void testCrowdFundLimit(){
+    public void testCrowdFundLimit() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
 

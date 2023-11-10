@@ -23,7 +23,6 @@ public class Game {
 
     //change to a calendar object to get the date
 
-    @Expose(serialize = false)
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     public List<Event> listOfEvents = new ArrayList<>();
 
