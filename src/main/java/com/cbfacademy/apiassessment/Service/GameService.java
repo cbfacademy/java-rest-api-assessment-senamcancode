@@ -44,6 +44,18 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
+    public void removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException{
+        Game game = gameRepository.retrieveGame(gameId);
+
+        game.getCompany().removeEmployee(numberOfEmployees);
+
+        game.getCompany().productivityBoost();
+
+        game.addToCurrentNumberOfActions();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
     public void crowdFund(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
@@ -86,7 +98,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void market(String gameId){
+    public void market(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
         game.getCompany().marketing();

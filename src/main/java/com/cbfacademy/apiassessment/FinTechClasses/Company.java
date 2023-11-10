@@ -50,17 +50,33 @@ public class Company {
         }
     }
 
+    public void removeEmployee(int numberOfEmployees) throws InvalidActionException{
+        if(employees < numberOfEmployees){
+            throw new InvalidActionException("You cannot get rid of more employees than you already have");
+        }
+
+        if(employees > 0 && employees > numberOfEmployees) {
+            employees -= numberOfEmployees;
+            double costOfHiring = costOfEmployee * numberOfEmployees;
+            revenue += costOfHiring;
+        }
+
+        //need to also remove the department
+        int employeesNeededForDepartment = 10;
+        int departmentsToRemove = numberOfEmployees / employeesNeededForDepartment;
+
+        if(departmentsToRemove > 0){
+            departments -= departmentsToRemove;
+        }
+
+    }
+
     public void productivityBoost(){
         if(employees > 10){
             revenue += (1.5 * revenue);
         }
     }
 
-    public void removeEmployee(int numberOfEmployees){
-        employees -= numberOfEmployees;
-        double costOfHiring = costOfEmployee * numberOfEmployees;
-        revenue -= costOfHiring;
-    }
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write
     public void addDepartment() throws InvalidActionException {
@@ -69,7 +85,7 @@ public class Company {
         if(employees < employeesNeeded){
             throw new InvalidActionException("You do not have enough employees to make a department");
 
-        } else if (employees >= employeesNeeded){
+        } else {
             departments++;
         }
     }
@@ -100,14 +116,16 @@ public class Company {
     }
 
     //marketing - adds 100 to customer base but costs money
-    public void marketing(){
-        if(revenue > 10000) {
+    public void marketing() throws InvalidActionException {
+        if(revenue < 10000){
+            throw new InvalidActionException("You do not have enough funds to implement marketing");
+        } else {
             customerBase += 1000;
             revenue -= 10000;
         }
     }
 
-//    public int investmentGenerator(){
+    //    public int investmentGenerator(){
 //        SecureRandom rand = new SecureRandom();
 //        int firstRandomNumber = rand.nextInt(2);
 //        int secondRandomNumber = rand.nextInt(100001);
@@ -117,6 +135,7 @@ public class Company {
 
     //sniper invest method - increases or decreases revenue after 2 turns
     public void sniperInvestment() throws InvalidActionException{
+        //How could I refactor this??
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
@@ -252,5 +271,17 @@ public class Company {
 
     public void setRevenue(double revenue) {
         this.revenue = revenue;
+    }
+
+    public int getMaxCrowdFundCount() {
+        return maxCrowdFundCount;
+    }
+
+    public int getMaxInvestCount() {
+        return maxInvestCount;
+    }
+
+    public int getInvestCount() {
+        return investCount;
     }
 }

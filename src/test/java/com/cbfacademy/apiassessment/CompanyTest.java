@@ -113,7 +113,6 @@ public class CompanyTest {
     }
 
 
-
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP to a multiple of 10 increases the customerBase ")
     public void testResearchAndDevAddsToCustomerBase() throws InvalidActionException {
@@ -141,7 +140,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing marketing method increases customerBase by 1000 and reduces revenue by 10000 ")
-    public void testMarketing(){
+    public void testMarketing() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         int initCustomerBase = company.getCustomerBase();
@@ -157,6 +156,21 @@ public class CompanyTest {
 
 
     }
+
+    @Test
+    @DisplayName("Testing the marketing method throws an exception if revenue is less than 10000")
+    public void testMarketingException() throws InvalidActionException {
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        company.setRevenue(1000);
+
+        assertThrows(InvalidActionException.class, () -> company.marketing());
+
+
+    }
+
+
     //need to add test for if revenue is insufficient
 
 //    @Test
@@ -279,11 +293,35 @@ public class CompanyTest {
         double newRevenue = company.getRevenue();
 
         assertEquals(initRevenue + (initRevenue * 1.5), newRevenue);
+    }
 
+    @Test
+    @DisplayName("Testing the removeEmployee method removes employees and departments")
+    public void testRemoveEmployee() throws InvalidActionException {
+        Game game = new Game();
+        Company company = game.getCompany();
+        company.setEmployees(20);
+        company.setDepartments(2);
+        int initDepartments = company.getDepartments();
 
+        company.removeEmployee(20);
+
+        int newDepartments = company.getDepartments();
+
+        assertEquals(initDepartments - 2, newDepartments);
     }
 
 
+    @Test
+    @DisplayName("Testing the removeEmployee method throws an exception")
+    public void testRemoveEmployeeThrowsException() throws InvalidActionException{
+        Game game = new Game();
+        Company company = game.getCompany();
+        company.setEmployees(5);
+
+        assertThrows(InvalidActionException.class, () -> company.removeEmployee(6));
+
+    }
 
 
 }
