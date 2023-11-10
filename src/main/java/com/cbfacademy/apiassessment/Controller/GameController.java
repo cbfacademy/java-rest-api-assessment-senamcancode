@@ -27,12 +27,13 @@ public class GameController {
 
 
     @PostMapping("/add-employee")
-    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId){
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
             gameService.addEmployee(gameId, numberOfEmployees);
             return ResponseEntity.ok(numberOfEmployees + " Employee(S) added.");
-        } catch (InsufficientFundsException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding employee(s): " + e.getMessage());
+
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Adding employee(s) error: " + e.getMessage());
         }
 
     }
@@ -40,41 +41,68 @@ public class GameController {
     //is this a valid post request or a get request?
     @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
-        try{
+        try {
             gameService.crowdFund(gameId);
             return ResponseEntity.ok("Crowd fund was successful");
-        } catch (InvalidActionException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error crowd funding: " + e.getMessage());
-        }
 
+        } catch (InvalidActionException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Crowd funding error: " + e.getMessage());
+        }
 
     }
 
+    @PostMapping("/invest/{action}")
+    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException{
+        try {
+            if("sniper".equals(action)){
+                gameService.sniperInvest(gameId);
+                return ResponseEntity.ok("Sniper investment successfully made");
+            }
+
+            if ("passive".equals(action)){
+                gameService.passiveInvest(gameId);
+                return ResponseEntity.ok("Passive investment successfully made");
+            }
+
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Investing error: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+
+    @PostMapping("/add-department")
+    public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException {
+        try {
+
+            gameService.addDepartment(gameId);
+            return ResponseEntity.ok("Department added");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Add department error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("research-and-dev")
+    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
+        gameService.researchAndDev(gameId);
+        return ResponseEntity.ok("Research and development success, 2 XP added to the product");
+    }
+
     @GetMapping("/advance-turn/{gameId}")
-    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId){
+    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) {
         gameService.advanceTurn(gameId);
 
         return ResponseEntity.ok("You have advanced to the next turn");
     }
+}
 
     //you need to be able to show the data from the company and the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
 
 
     //In which situation for this game would I be using a put request?
+    //in the situation of changing the number of employees
 
-
-//
-//    @PostMapping("/advance-turn")
-//    public ResponseEntity<String> advanceTurn(){
-//        if(game != null){
-//            game.advanceTurn(); //advance the turn in the game
-//            return ResponseEntity.ok("Turn advanced to " + game.getCurrentTurn());
-//        } else {
-//            return ResponseEntity.badRequest().body("No active game found.");
-//        }
-//    }
-
-}
 
 //should probably have an update method which applies all the changes in the game object ie company too and writes it to the JSON file before giong to the next turn
 //    @RestController

@@ -12,7 +12,9 @@ public class Company {
     private int customerBase = 0;
     private int productXP = 0;
     private double revenue = 1000000;
-    private int maxCrowdFundCount = 1;
+    private final int maxCrowdFundCount = 1;
+    private final int maxInvestCount = 1;
+    private int investCount = 0;
 
     private int crowdFundCount = 0;
 
@@ -22,7 +24,7 @@ public class Company {
     //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this
     public void crowdFund() throws InvalidActionException {
         if(crowdFundCount < maxCrowdFundCount) {
-                revenue += 100000;
+                revenue += 500000;
                 incrementCrowdFundCount();
             }
         else{
@@ -48,6 +50,12 @@ public class Company {
         }
     }
 
+    public void productivityBoost(){
+        if(employees > 10){
+            revenue += (1.5 * revenue);
+        }
+    }
+
     public void removeEmployee(int numberOfEmployees){
         employees -= numberOfEmployees;
         double costOfHiring = costOfEmployee * numberOfEmployees;
@@ -55,27 +63,40 @@ public class Company {
     }
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write
-    public void addDepartment(){
-        int employeesNeeded = (departments+ 1) * 10;
+    public void addDepartment() throws InvalidActionException {
+        int employeesNeeded = (departments + 1) * 10;
 
-        if (employees >= employeesNeeded){
+        if(employees < employeesNeeded){
+            throw new InvalidActionException("You do not have enough employees to make a department");
+
+        } else if (employees >= employeesNeeded){
             departments++;
         }
     }
 
 
     //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base)
-    public void researchAndDev(){
+    public void researchAndDev() throws InvalidActionException {
+        if(revenue < 50000){
+            throw new InvalidActionException("Insufficient funds: You don't have enough to do research and development");
+        }
+
+
         if (revenue > 50000 && productXP < 100) {
 
             productXP += 2;
             revenue -= 50000;
 
-            if (productXP % 10 == 0) {
+            if (productXP % 10 == 0 && productXP != 100) {
                 customerBase += 1000;
+            } else if(productXP == 100){
+                customerBase += 2000;
             }
         }
 
+        if(productXP == 100){
+            throw new InvalidActionException("You have maxed out your product XP and so can no longer use the R&D method");
+        }
     }
 
     //marketing - adds 100 to customer base but costs money
@@ -86,18 +107,62 @@ public class Company {
         }
     }
 
+//    public int investmentGenerator(){
+//        SecureRandom rand = new SecureRandom();
+//        int firstRandomNumber = rand.nextInt(2);
+//        int secondRandomNumber = rand.nextInt(100001);
+//
+//        return firstRandomNumber;
+//    }
+
     //sniper invest method - increases or decreases revenue after 2 turns
-    public void invest(){
+    public void sniperInvestment() throws InvalidActionException{
+        if(investCount < maxInvestCount){
+        SecureRandom rand = new SecureRandom();
+        int firstRandomNumber = rand.nextInt(2);
+        int secondRandomNumber = rand.nextInt(500001);
+
+            if(firstRandomNumber == 0) {
+                revenue += secondRandomNumber;
+            } else if(revenue > secondRandomNumber) {
+                revenue -= secondRandomNumber;
+            } else if(revenue < secondRandomNumber){
+                revenue = 0;
+            }
+
+            incrementInvestCount();
+
+        //return firstRandomNumber because I want to be able to tell the user what happened
+        //want to be able to return what investment was made - so that they know they either lost or made money
+        } else {
+            throw new InvalidActionException("You can only invest once per turn");
+        }
+    }
+
+    public void passiveInvestment() throws InvalidActionException{
+        if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
         int secondRandomNumber = rand.nextInt(100001);
 
         if(firstRandomNumber == 0) {
             revenue += secondRandomNumber;
-        } else {
+        } else if(revenue > secondRandomNumber) {
             revenue -= secondRandomNumber;
+        } else if(revenue < secondRandomNumber){
+            revenue = 0;
+        }
+
+        incrementInvestCount();
+
+        //return firstRandomNumber because I want to be able to tell the user what happened
+        //want to be able to return what investment was made - so that they know they either lost or made money
+        } else {
+            throw new InvalidActionException("You can only invest once per turn");
         }
     }
+
+
 
 
     //passive invest method - increases or decreases revenue after 3 turns
@@ -107,9 +172,16 @@ public class Company {
         crowdFundCount++;
     }
 
+    public void incrementInvestCount(){
+        investCount++;
+    }
     //this method will be used in the advance turn method
     public void resetCrowdFundCount(){
         crowdFundCount = 0;
+    }
+
+    public void resetInvestCount(){
+        investCount = 0;
     }
 
     public int getCrowdFundCount() {

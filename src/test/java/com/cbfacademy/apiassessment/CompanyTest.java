@@ -22,7 +22,7 @@ public class CompanyTest {
         company.crowdFund();
 
         double newRevenue = company.getRevenue();
-        assertEquals(initialRevenue + 100000, newRevenue);
+        assertEquals(initialRevenue + 500000, newRevenue);
 
     }
 
@@ -65,8 +65,8 @@ public class CompanyTest {
     }
 
     @Test
-    @DisplayName("Testing method increases departments in copmany ")
-    public void testAddDepartment() throws InsufficientFundsException {
+    @DisplayName("Testing method increases departments in company ")
+    public void testAddDepartment() throws InsufficientFundsException, InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         int initDepartments = company.getDepartments();
@@ -82,7 +82,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP ")
-    public void testResearchAndDev(){
+    public void testResearchAndDev() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         int initProductXP = company.getProductXP();
@@ -99,9 +99,24 @@ public class CompanyTest {
         assertEquals( initRevenue - 50000, newRevenue);
     }
 
+
+    @Test
+    @DisplayName("Testing the researchAndDev method throws an exception when the revenue is less than the cost of research and development")
+    public void testResearchAndDevThrowsException() throws InvalidActionException {
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        company.setRevenue(4999);
+
+        assertThrows(InvalidActionException.class, () -> company.researchAndDev());
+
+    }
+
+
+
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP to a multiple of 10 increases the customerBase ")
-    public void testResearchAndDevAddsToCustomerBase(){
+    public void testResearchAndDevAddsToCustomerBase() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         int initProductXP = company.getProductXP();
@@ -186,13 +201,13 @@ public class CompanyTest {
 
         double newRevenue = company.getRevenue();
 
-        assertEquals(initRevenue - 100000, newRevenue);
+        assertEquals(initRevenue - (0.1 * initRevenue), newRevenue);
 
     }
 
     @Test
     @DisplayName("Testing increaseRevenue method increases revenue by inputted percentage")
-    public void testIncreaseRevenue() {
+    public void testIncreasesRevenue() {
         Game game = new Game();
         Company company = game.getCompany();
         double initRevenue = company.getRevenue();
@@ -200,13 +215,13 @@ public class CompanyTest {
 
         double newRevenue = company.getRevenue();
 
-        assertEquals(initRevenue + 100000, newRevenue);
+        assertEquals(initRevenue + (0.1 * initRevenue), newRevenue);
 
     }
 
     @Test
     @DisplayName("Testing increaseCustomerBase method increases customers by inputted number")
-    public void testIncreaseCustomerBase() {
+    public void testIncreasesCustomerBase() {
         Game game = new Game();
         Company company = game.getCompany();
         double initCustomerBase = company.getCustomerBase();
@@ -248,6 +263,26 @@ public class CompanyTest {
         assertEquals(initCustomerBase - 5, newCustomerBase);
 
     }
+
+    @Test
+    @DisplayName("Testing productivity boost increases revenue")
+    public void testIncreasesRevenueIfEmployeesIsLargerThan10() throws InsufficientFundsException {
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        double initRevenue = company.getRevenue();
+
+        company.setEmployees(20);
+
+        company.productivityBoost();
+
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initRevenue + (initRevenue * 1.5), newRevenue);
+
+
+    }
+
 
 
 

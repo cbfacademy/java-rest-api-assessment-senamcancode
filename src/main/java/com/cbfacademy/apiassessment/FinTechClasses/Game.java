@@ -93,12 +93,21 @@ public class Game {
     }
 
     public void advanceTurn(){
+
+        if(currentTurn < 19){
+            triggerRandomEvent();
+        }
         currentTurn++;
         setMonth();
+        resetCurrentNumberOfActions();
         company.resetCrowdFundCount();
-        triggerRandomEvent();
+        company.resetInvestCount();
+
     }
 
+    public void resetCurrentNumberOfActions(){
+        currentNumberOfActions = 0;
+    }
     public boolean isGameCompleted() {
         return isGameCompleted;
     }

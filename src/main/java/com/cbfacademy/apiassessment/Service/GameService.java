@@ -37,6 +37,8 @@ public class GameService {
         assert game != null;
         game.getCompany().addEmployee(numberOfEmployees);
 
+        game.getCompany().productivityBoost();
+
         game.addToCurrentNumberOfActions();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -45,11 +47,53 @@ public class GameService {
     public void crowdFund(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().crowdFund();
 
         gameRepository.updateGameDataById(gameId, game);
 
     }
+
+    public void sniperInvest(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().sniperInvestment();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void passiveInvest(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().passiveInvestment();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void addDepartment(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().addDepartment();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void researchAndDev(String gameId) throws InvalidActionException{
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().researchAndDev();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void market(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().marketing();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
 
     public void advanceTurn(String gameId){
         Game game = GameRepository.retrieveGame(gameId);
