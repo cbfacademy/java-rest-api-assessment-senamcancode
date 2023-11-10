@@ -19,18 +19,9 @@ public class GameTest {
         Game game = new Game();
         Company company = game.getCompany();
 
-        int initialCount = company.getCrowdFundCount();
-
         company.crowdFund();
 
-        int countAfterCrowdFund = company.getCrowdFundCount();
-
-        company.crowdFund();
-
-        int countAfterCrowdFundTwo = company.getCrowdFundCount();
-
-        assertEquals( initialCount + 1, countAfterCrowdFund);
-        assertEquals(countAfterCrowdFund, countAfterCrowdFundTwo);
+        assertThrows(InvalidActionException.class, company::crowdFund);
     }
 
     @Test
@@ -59,6 +50,23 @@ public class GameTest {
         assertEquals( "Feb", newMonth);
 
     }
+
+    @Test
+    @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
+    public void testCheckGameIsCompleted(){
+        Game game = new Game();
+        game.getCompany().setRevenue(10000000);
+        game.getCompany().setEmployees(50);
+        game.getCompany().setDepartments(5);
+        game.getCompany().setCustomerBase(10000);
+        game.getCompany().setProductXP(100);
+
+        game.checkGameIsCompleted();
+
+        assertTrue(game.isGameCompleted());
+
+    }
+
 
     //need to find a way to test that the thing returned is a string
 //    @Test

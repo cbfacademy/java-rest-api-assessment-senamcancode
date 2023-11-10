@@ -27,6 +27,7 @@ public class GameController {
 
 
     @PostMapping("/add-employee")
+    //need to chang the next 2 methods so that the numberofemployees information is not coming diretcly form the client
     public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
             gameService.addEmployee(gameId, numberOfEmployees);
@@ -36,6 +37,16 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Adding employee(s) error: " + e.getMessage());
         }
 
+    }
+
+    @PutMapping("/remove-employee")
+    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId){
+        try {
+            gameService.removeEmployee(gameId, numberOfEmployees);
+            return ResponseEntity.ok(numberOfEmployees + " Employee(s) removed.");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Removing employee(s) error: " + e.getMessage());
+        }
     }
 
     //is this a valid post request or a get request?
@@ -85,8 +96,22 @@ public class GameController {
 
     @PostMapping("research-and-dev")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
-        gameService.researchAndDev(gameId);
-        return ResponseEntity.ok("Research and development success, 2 XP added to the product");
+        try {
+            gameService.researchAndDev(gameId);
+            return ResponseEntity.ok("Research and development success, 2 XP added to the product");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Research and development error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("marketing")
+    public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException{
+        try {
+            gameService.market(gameId);
+            return ResponseEntity.ok("Marketing was successful");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/advance-turn/{gameId}")

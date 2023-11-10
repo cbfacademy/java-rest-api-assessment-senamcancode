@@ -42,8 +42,8 @@ public class Game {
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());
         Event randomEvent = listOfEvents.get(randomIndex);
-         randomEvent.executeEvent(company);
-         return randomEvent.getEventName();
+        randomEvent.executeEvent(company);
+        return randomEvent.getEventName();
         //this will return the name of the triggered Event
     }
 
@@ -102,7 +102,21 @@ public class Game {
         resetCurrentNumberOfActions();
         company.resetCrowdFundCount();
         company.resetInvestCount();
+        checkGameIsCompleted();
 
+    }
+
+    public boolean checkGameIsCompleted(){
+        if(company.getRevenue() == 10000000 &&
+                company.getDepartments() == 5
+                && company.getEmployees() == 50
+                && company.getCustomerBase() == 10000
+                && company.getProductXP() == 100
+        ){
+            isGameCompleted = true;
+        }
+
+        return isGameCompleted;
     }
 
     public void resetCurrentNumberOfActions(){

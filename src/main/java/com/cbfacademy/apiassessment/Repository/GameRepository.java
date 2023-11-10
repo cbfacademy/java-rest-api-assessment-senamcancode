@@ -1,7 +1,8 @@
-package com.cbfacademy.apiassessment;
+package com.cbfacademy.apiassessment.Repository;
 
 
 import com.cbfacademy.apiassessment.Database.Database;
+import com.cbfacademy.apiassessment.EventDeserializer;
 import com.cbfacademy.apiassessment.FinTechClasses.Event;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.google.gson.Gson;
