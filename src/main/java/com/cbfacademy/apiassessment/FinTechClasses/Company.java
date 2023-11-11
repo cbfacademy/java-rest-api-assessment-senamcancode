@@ -125,7 +125,7 @@ public class Company {
     //marketing - adds 100 to customer base but costs money
     public void marketing() throws InvalidActionException {
         if(revenue < 10000){
-            throw new InvalidActionException("You do not have enough funds to implement marketing");
+            throw new InvalidActionException("Insufficient funds: You do not have enough funds to implement marketing");
         } else {
             customerBase += 1000;
             revenue -= 10000;
