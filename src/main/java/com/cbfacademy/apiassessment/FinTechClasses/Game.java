@@ -14,6 +14,7 @@ public class Game {
     private int currentTurn = 1;
     private final int maxTurnsPerGame = 20;
     private boolean isGameCompleted = false;
+    private boolean isGameOver = false;
     private int currentNumberOfActions = 0;
     private int actionsPerTurn = 3;
     private Company company = new Company();
@@ -48,7 +49,6 @@ public class Game {
     }
 
     public void resetActionsTaken(){
-
         currentNumberOfActions = 0;
     }
 
@@ -57,12 +57,10 @@ public class Game {
     }
 
     public List<Event> getEvents() {
-
         return listOfEvents;
     }
 
     public String getGameId() {
-
         return gameId;
     }
 
@@ -70,7 +68,6 @@ public class Game {
 //        return creationDateTime;
 //    }
     public Company getCompany() {
-
         return company;
     }
 
@@ -93,7 +90,6 @@ public class Game {
     }
 
     public void advanceTurn(){
-
         if(currentTurn < 19){
             triggerRandomEvent();
         }
@@ -119,16 +115,28 @@ public class Game {
         return isGameCompleted;
     }
 
+    public int getCurrentNumberOfActions(){
+        return currentNumberOfActions;
+    }
+    public int actionsRemaining(){
+        return actionsPerTurn - currentNumberOfActions;
+    }
     public void resetCurrentNumberOfActions(){
+
         currentNumberOfActions = 0;
     }
+
+
     public boolean isGameCompleted() {
+
         return isGameCompleted;
     }
 
-
     public boolean isGameOver(){
-        return currentTurn == maxTurnsPerGame;
+        if(currentTurn == maxTurnsPerGame){
+           isGameOver = true;
+        }
+        return isGameOver;
     }
 
 

@@ -9,10 +9,14 @@ import com.cbfacademy.apiassessment.Repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 
 @Service
 public class GameService {
 
+    //should i make gameRepository static?
     @Autowired
     private GameRepository gameRepository;
 
@@ -29,7 +33,7 @@ public class GameService {
         gameRepository.saveGameData(gameData);
     }
 
-    //Is it ideal for the user to constantly have to put the gameId in?
+
     public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException {
         Game game = GameRepository.retrieveGame(gameId);
         //this line is constantly repeated can I refactor?
@@ -47,6 +51,7 @@ public class GameService {
     public void removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException{
         Game game = gameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().removeEmployee(numberOfEmployees);
 
         game.getCompany().productivityBoost();
@@ -69,6 +74,7 @@ public class GameService {
     public void sniperInvest(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().sniperInvestment();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -77,6 +83,7 @@ public class GameService {
     public void passiveInvest(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().passiveInvestment();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -85,6 +92,7 @@ public class GameService {
     public void addDepartment(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().addDepartment();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -93,6 +101,7 @@ public class GameService {
     public void researchAndDev(String gameId) throws InvalidActionException{
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().researchAndDev();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -101,6 +110,7 @@ public class GameService {
     public void market(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().marketing();
 
         gameRepository.updateGameDataById(gameId, game);
@@ -114,18 +124,61 @@ public class GameService {
 
         gameRepository.updateGameDataById(gameId, game);
     }
+
+    //getters
+    public int getEmployees(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        return game.getCompany().getEmployees();
+    }
+
+    public int getDepartments(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game.getCompany().getDepartments();
+    }
+    //may have to put the formatted revenue in the game class and return it to here
+    public String getFormattedRevenue(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        double revenue = game.getCompany().getRevenue();
+
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+        return formatter.format(revenue);
+
+    }
+
+    public int getProductXP(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
+        return game.getCompany().getProductXP();
+    }
+
+    public int getCustomerBase(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game.getCompany().getCustomerBase();
+    }
+
+    public Company getCompany(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game.getCompany();
+    }
+
+    public Game getGame(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game;
+    }
+
+    public int getCurrentTurn(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game.getCurrentTurn();
+    }
+
+    public int getNumberOfRemainingActions(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        return game.actionsRemaining();
+    }
 }
 
 
-
-//
-//        public void advanceTurn() {
-//            if (game != null && !game.isGameCompleted()) {
-//                game.advanceTurn(); // Advancing the turn in the game
-//                // Other logic to handle turn advancements
-//            }
-//        }
-//
-//
-//    }
 

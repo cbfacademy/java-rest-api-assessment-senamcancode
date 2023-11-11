@@ -72,9 +72,14 @@ public class Company {
     }
 
     public void productivityBoost(){
-        if(employees > 10){
+        if(employees > 25){
             revenue += (1.5 * revenue);
         }
+    }
+
+    public void customerRevenueBoost(){
+        double customerRevenue = customerBase * 20;
+        revenue += customerRevenue;
     }
 
 
@@ -103,6 +108,7 @@ public class Company {
             productXP += 2;
             revenue -= 50000;
 
+            //might make a separate productXP boost so that I can tell the user that this happened - if not i can put it in the read me
             if (productXP % 10 == 0 && productXP != 100) {
                 customerBase += 1000;
             } else if(productXP == 100){

@@ -286,7 +286,7 @@ public class CompanyTest {
 
         double initRevenue = company.getRevenue();
 
-        company.setEmployees(20);
+        company.setEmployees(30);
 
         company.productivityBoost();
 
@@ -320,6 +320,24 @@ public class CompanyTest {
         company.setEmployees(5);
 
         assertThrows(InvalidActionException.class, () -> company.removeEmployee(6));
+
+    }
+
+
+    @Test
+    @DisplayName("Testing the customerRevenueBoost method increases the revenue by 5 * customerBase")
+    public void testCustomerRevenueBoost(){
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        double initRevenue = game.getCompany().getRevenue();
+        company.setCustomerBase(10);
+        company.customerRevenueBoost();
+
+        double newRevenue = game.getCompany().getRevenue();
+
+        assertEquals(initRevenue + 200, newRevenue);
+
 
     }
 

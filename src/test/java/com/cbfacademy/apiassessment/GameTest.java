@@ -2,12 +2,10 @@ package com.cbfacademy.apiassessment;
 
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
-import com.cbfacademy.apiassessment.FinTechClasses.Event;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
