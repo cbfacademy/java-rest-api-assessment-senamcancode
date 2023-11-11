@@ -1,5 +1,6 @@
 package com.cbfacademy.apiassessment;
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -24,19 +25,19 @@ public class GameTest {
 
     @Test
     @DisplayName("Testing that the game class is initialised with Jan as the initial month")
-    public void testInitialMonth(){
+    public void testInitialMonth() {
         Game game = new Game();
 
         String initialMonth = game.getMonth();
 
-        assertEquals( "Jan", initialMonth);
+        assertEquals("Jan", initialMonth);
 
     }
 
 
     @Test
     @DisplayName("Testing setMonth method changes the currentMonth Game")
-    public void testSetMonth(){
+    public void testSetMonth() {
         Game game = new Game();
 
         game.advanceTurn();
@@ -45,13 +46,13 @@ public class GameTest {
 
         String newMonth = game.getMonth();
 
-        assertEquals( "Feb", newMonth);
+        assertEquals("Feb", newMonth);
 
     }
 
     @Test
     @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
-    public void testCheckGameIsCompleted(){
+    public void testCheckGameIsCompleted() {
         Game game = new Game();
         game.getCompany().setRevenue(10000000);
         game.getCompany().setEmployees(50);
@@ -65,6 +66,34 @@ public class GameTest {
 
     }
 
+    @Test
+    @DisplayName("Testing the actionsManager limits the number of actions taken per turn to 3")
+    public void actionsManager() throws InvalidActionException {
+        Game game = new Game();
+
+        int initActions = game.getCurrentNumberOfActions();
+        game.actionsManager();
+        game.actionsManager();
+        game.actionsManager();
+
+        int newActions = game.getCurrentNumberOfActions();
+
+        assertEquals(initActions + 3, newActions);
+    }
+
+    @Test
+    @DisplayName("Testing the actionsManager limits the number of actions taken per turn to 3")
+    public void actionsManagerWithException() throws InvalidActionException {
+        Game game = new Game();
+
+        game.actionsManager(); //the actions is incremented from 0 to 1
+        game.actionsManager(); //the actions is incremented from 1 to 2
+        game.actionsManager(); //the actions is incremented from 2 to 3
+
+
+        assertThrows(InvalidActionException.class, game::actionsManager);
+    }
+}
 
     //need to find a way to test that the thing returned is a string
 //    @Test
@@ -76,4 +105,4 @@ public class GameTest {
 //        assertEquals("No Event", event);
 //    }
 
-}
+

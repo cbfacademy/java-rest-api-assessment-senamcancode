@@ -1,5 +1,6 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
+import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.EventClasses.*;
 import com.google.gson.annotations.Expose;
 
@@ -39,6 +40,7 @@ public class Game {
         listOfEvents.add(new SocialMediaViral("Social media viral event"));
     }
 
+    //how to re-structure this so that the randomEvent is shown to the user
     public String triggerRandomEvent(){
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());
@@ -126,6 +128,13 @@ public class Game {
         currentNumberOfActions = 0;
     }
 
+    public void actionsManager() throws InvalidActionException {
+        if(actionsPerTurn > currentNumberOfActions){
+            currentNumberOfActions++;
+        } else {
+            throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. To get access to more actions you need to advance your turn");
+        }
+    }
 
     public boolean isGameCompleted() {
 
@@ -138,6 +147,7 @@ public class Game {
         }
         return isGameOver;
     }
+
 
 
     //we need a method to limit the actions that the user can take

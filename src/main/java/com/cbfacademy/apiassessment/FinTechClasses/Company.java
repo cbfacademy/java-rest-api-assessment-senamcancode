@@ -75,6 +75,7 @@ public class Company {
         if(employees > 25){
             revenue += (1.5 * revenue);
         }
+        //this needs to be telegraphed to the user too
     }
 
     public void customerRevenueBoost(){

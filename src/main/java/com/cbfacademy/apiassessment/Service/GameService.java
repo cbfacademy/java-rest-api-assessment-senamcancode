@@ -34,16 +34,17 @@ public class GameService {
     }
 
 
-    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException {
+    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException, InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
         //this line is constantly repeated can I refactor?
-
         assert game != null;
+
+        game.actionsManager();
+
         game.getCompany().addEmployee(numberOfEmployees);
 
         game.getCompany().productivityBoost();
 
-        game.addToCurrentNumberOfActions();
 
         gameRepository.updateGameDataById(gameId, game);
     }
@@ -117,13 +118,6 @@ public class GameService {
     }
 
 
-    public void advanceTurn(String gameId){
-        Game game = GameRepository.retrieveGame(gameId);
-        assert game != null;
-        game.advanceTurn();
-
-        gameRepository.updateGameDataById(gameId, game);
-    }
 
     //getters
     public int getEmployees(String gameId){
@@ -177,6 +171,21 @@ public class GameService {
     public int getNumberOfRemainingActions(String gameId){
         Game game = GameRepository.retrieveGame(gameId);
         return game.actionsRemaining();
+    }
+
+    public void advanceTurn(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
+        game.advanceTurn();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void actionsManager(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        assert game != null;
+        game.actionsManager();
     }
 }
 

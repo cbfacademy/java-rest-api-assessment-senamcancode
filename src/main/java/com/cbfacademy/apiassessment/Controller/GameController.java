@@ -35,9 +35,11 @@ public class GameController {
     // }
 
     @PostMapping("/add-employee")
-    //need to chang the next 2 methods so that the numberofemployees information is not coming diretcly form the client
+    //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
     public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
+            gameService.actionsManager(gameId);
+
             int initEmployees = gameService.getEmployees(gameId);
 
             gameService.addEmployee(gameId, numberOfEmployees);
@@ -50,13 +52,16 @@ public class GameController {
 
         } catch (InsufficientFundsException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Adding employee(s) error: " + e.getMessage());
+        } catch (InvalidActionException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Actions error: " + e.getMessage());
         }
 
     }
 
     @PutMapping("/remove-employee")
-    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId){
+    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
+            gameService.actionsManager(gameId);
             int initEmployees = gameService.getEmployees(gameId);
 
             gameService.removeEmployee(gameId, numberOfEmployees);
@@ -67,14 +72,15 @@ public class GameController {
 
             return ResponseEntity.ok(employeesRemoved + " Employee(s) successfully removed. You now have a total of " + newEmployees + " employees");
 
-        } catch (InvalidActionException e){
+        } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Removing employee(s) error: " + e.getMessage());
         }
     }
 
-    @PostMapping("/crowd-fund")
+        @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
         try {
+            gameService.actionsManager(gameId);
             gameService.crowdFund(gameId);
 
             String formattedRevenue = gameService.getFormattedRevenue(gameId);
@@ -89,6 +95,7 @@ public class GameController {
     @PostMapping("/invest/{action}")
     public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException{
         try {
+            gameService.actionsManager(gameId);
             if("sniper".equals(action)){
                 gameService.sniperInvest(gameId);
                 //need to find a way to tell the user that they have lost or gained money
@@ -111,7 +118,7 @@ public class GameController {
     @PostMapping("/add-department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException {
         try {
-
+            gameService.actionsManager(gameId);
             gameService.addDepartment(gameId);
             int numberOfDepartments = gameService.getDepartments(gameId);
             return ResponseEntity.ok("Department added. You now have " +  numberOfDepartments + " departments");
@@ -123,6 +130,7 @@ public class GameController {
     @PostMapping("research-and-dev")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
         try {
+            gameService.actionsManager(gameId);
             gameService.researchAndDev(gameId);
 
             int productXP = gameService.getProductXP(gameId);
@@ -135,6 +143,7 @@ public class GameController {
     @PostMapping("marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException{
         try {
+            gameService.actionsManager(gameId);
             gameService.market(gameId);
 
             int customerBase = gameService.getCustomerBase(gameId);
@@ -167,7 +176,7 @@ public class GameController {
     @GetMapping("/advance-turn/{gameId}")
     public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) {
         gameService.advanceTurn(gameId);
-        return ResponseEntity.ok("You have advanced to the next turn");
+        return ResponseEntity.ok("You have advanced to the next turn" );
     }
 }
 

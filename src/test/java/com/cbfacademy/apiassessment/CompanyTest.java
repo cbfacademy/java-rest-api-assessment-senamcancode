@@ -44,7 +44,7 @@ public class CompanyTest {
         Game game = new Game();
         Company company = game.getCompany();
 
-        InsufficientFundsException exception = assertThrows(InsufficientFundsException.class, () -> {
+        assertThrows(InsufficientFundsException.class, () -> {
             company.addEmployee(100000);
         });
 
