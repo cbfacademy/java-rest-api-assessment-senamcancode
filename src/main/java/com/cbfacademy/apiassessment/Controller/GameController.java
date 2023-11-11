@@ -180,45 +180,8 @@ public class GameController {
     }
 }
 
-    //you need to be able to show the data from the company and the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
+    //you need to be able to show the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
 
 
-    //In which situation for this game would I be using a put request?
-    //in the situation of changing the number of employees
-
-
-//should probably have an update method which applies all the changes in the game object ie company too and writes it to the JSON file before giong to the next turn
-//    @RestController
-//    @RequestMapping("/game")
-//    public class GameController {
-//        private GameService gameService; // Inject GameService
-//
-//        @PostMapping("/start")
-//        public ResponseEntity<Object> startNewGame() {
-//            gameService.startNewGame(); // Start a new game
-//            // Other logic related to starting a game
-//            return ResponseEntity.ok("New game started.");
-//        }
-//
-//        @PostMapping("/advance-turn")
-//        public ResponseEntity<String> advanceTurn() {
-//            gameService.advanceTurn(); // Advance the turn in the game
-//            // Other logic related to advancing a turn eg resetting various values
-//            return ResponseEntity.ok("Turn advanced.");
-//        }
-//
-//        // Other endpoint handling game actions and responses
-//    }
-
-//@PostMapping("/start")
-//    public ResponseEntity<Object> start(){
-//        try {
-//            gameService.startNewGame();
-//            return ResponseEntity.ok("New game started and data written to file.");
-//        } catch (IOException e){
-//            e.printStackTrace();
-//            return ResponseEntity.internalServerError().body("Error occurred while writing game data to file");
-//        }
-//    }
 
 

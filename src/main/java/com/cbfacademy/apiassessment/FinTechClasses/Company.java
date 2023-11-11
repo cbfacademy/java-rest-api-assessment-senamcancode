@@ -190,10 +190,6 @@ public class Company {
 
 
 
-
-    //passive invest method - increases or decreases revenue after 3 turns
-    //how could I approach having a delay of the investment method
-
     public void incrementCrowdFundCount(){
         crowdFundCount++;
     }
