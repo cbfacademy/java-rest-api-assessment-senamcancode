@@ -13,7 +13,7 @@ public class CompanyTest {
     //need to find a way to test the investment method - the problem is that the method provides random results
 
     @Test
-    @DisplayName("Testing crowdFund method increases revenue by 100000 in Company ")
+    @DisplayName("Testing crowdFund method increases revenue by 500000 in Company ")
     public void testCrowdFund() throws InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();

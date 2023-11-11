@@ -164,11 +164,11 @@ public class GameController {
     }
 
     @GetMapping("/get-turn/{gameId}")
-    public ResponseEntity<Integer> getCurrentTurn(@PathVariable("gameId") String gameId){
-        return ResponseEntity.ok(gameService.getCurrentTurn(gameId));
+    public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId){
+        return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of 20");
     }
 
-    @GetMapping("/get-actions/{gameId}")
+    @GetMapping("/get-actions-num/{gameId}")
     public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId){
         return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
     }
