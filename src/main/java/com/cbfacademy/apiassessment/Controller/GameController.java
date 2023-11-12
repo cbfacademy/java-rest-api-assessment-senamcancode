@@ -6,7 +6,6 @@ import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.cbfacademy.apiassessment.Service.GameService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,7 +126,7 @@ public class GameController {
         }
     }
 
-    @PostMapping("research-and-dev")
+    @PostMapping("/research-and-dev")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
         try {
             gameService.actionsManager(gameId);
@@ -140,7 +139,7 @@ public class GameController {
         }
     }
 
-    @PostMapping("marketing")
+    @PostMapping("/marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException{
         try {
             gameService.actionsManager(gameId);
@@ -174,13 +173,26 @@ public class GameController {
     }
 
     @GetMapping("/advance-turn/{gameId}")
-    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) {
-        gameService.advanceTurn(gameId);
-        return ResponseEntity.ok("You have advanced to the next turn" );
+    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) throws InvalidActionException {
+        try {
+            gameService.advanceTurn(gameId);
+            return ResponseEntity.ok("You have advanced to the next turn");
+        } catch (InvalidActionException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Game Over: " + e.getMessage());
+
+        }
     }
+
+    @DeleteMapping("/delete-game")
+    public ResponseEntity<String>deleteGame(@RequestParam String gameId){
+        gameService.deleteGame(gameId);
+        return ResponseEntity.ok("You successfully deleted the game");
+    }
+
+
 }
 
-    //you need to be able to show the event that occured - how would i do this? can i have gameRepository methods in the game controller section?
+//you need to be able to show the event that occured - how would I do this? can I have gameRepository methods in the game controller section?
 
 
 

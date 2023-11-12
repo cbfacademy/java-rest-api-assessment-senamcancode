@@ -16,17 +16,22 @@ import java.text.NumberFormat;
 @Service
 public class GameService {
 
-    //should i make gameRepository static?
     @Autowired
     private GameRepository gameRepository;
 
 
     //we need to account for if there is a json file already - we need to append the new game to the json file
+    public void actionsManager(String gameId) throws InvalidActionException {
+        Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
+        game.actionsManager();
+    }
 
     public void newGame() {
+
         Game game = new Game();
-        Company company = game.getCompany();
+
         Database gameData = new Database();
         gameData.addGame(game);
 
@@ -39,13 +44,12 @@ public class GameService {
         //this line is constantly repeated can I refactor?
         assert game != null;
 
-        game.actionsManager();
 
         game.getCompany().addEmployee(numberOfEmployees);
 
         game.getCompany().productivityBoost();
 
-
+        game.actionsManager();
         gameRepository.updateGameDataById(gameId, game);
     }
 
@@ -57,7 +61,7 @@ public class GameService {
 
         game.getCompany().productivityBoost();
 
-        game.addToCurrentNumberOfActions();
+        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
     }
@@ -67,6 +71,8 @@ public class GameService {
 
         assert game != null;
         game.getCompany().crowdFund();
+
+        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
@@ -78,6 +84,8 @@ public class GameService {
         assert game != null;
         game.getCompany().sniperInvestment();
 
+        game.actionsManager();
+
         gameRepository.updateGameDataById(gameId, game);
     }
 
@@ -86,6 +94,8 @@ public class GameService {
 
         assert game != null;
         game.getCompany().passiveInvestment();
+
+        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
     }
@@ -96,6 +106,8 @@ public class GameService {
         assert game != null;
         game.getCompany().addDepartment();
 
+        game.actionsManager();
+
         gameRepository.updateGameDataById(gameId, game);
     }
 
@@ -105,6 +117,8 @@ public class GameService {
         assert game != null;
         game.getCompany().researchAndDev();
 
+        game.actionsManager();
+
         gameRepository.updateGameDataById(gameId, game);
     }
 
@@ -113,6 +127,8 @@ public class GameService {
 
         assert game != null;
         game.getCompany().marketing();
+
+        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
     }
@@ -173,20 +189,36 @@ public class GameService {
         return game.actionsRemaining();
     }
 
-    public void advanceTurn(String gameId){
+    public boolean checkGameIsOver(String gameId) throws InvalidActionException{
+        Game game = GameRepository.retrieveGame(gameId);
+
+        assert game != null;
+        return game.isGameOver();
+    }
+
+    public boolean advanceTurn(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
         game.advanceTurn();
 
+        if(checkGameIsOver(gameId)){
+            throw new InvalidActionException("You have reached the turn limit without reaching IPO status.You Lose!");
+        }
+
+        gameRepository.updateGameDataById(gameId, game);
+        return false;
+    }
+
+    public void deleteGame(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        gameRepository.deleteGameById(gameId, game);
+
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void actionsManager(String gameId) throws InvalidActionException {
-        Game game = GameRepository.retrieveGame(gameId);
 
-        assert game != null;
-        game.actionsManager();
-    }
+
 }
 
 
