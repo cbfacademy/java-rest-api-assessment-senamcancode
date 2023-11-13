@@ -9,6 +9,7 @@ import com.cbfacademy.apiassessment.Repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -29,13 +30,18 @@ public class GameService {
     }
 
     public void newGame() {
-
         Game game = new Game();
 
         Database gameData = new Database();
         gameData.addGame(game);
 
         gameRepository.saveGameData(gameData);
+
+
+    }
+
+    public void appendNewGame() throws FileNotFoundException {
+        gameRepository.appendGameData();
     }
 
     public void nameCompany(String gameId, String companyName){

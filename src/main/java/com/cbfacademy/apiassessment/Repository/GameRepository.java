@@ -19,10 +19,8 @@ import com.google.gson.reflect.TypeToken;
 @Repository
 public class GameRepository {
 
+//this is the one that works!
     public void saveGameData(Database database) {
-        //if the game-data.json is null then do this
-        //File file = new File("game-data.json")
-        //if(!file.exists()){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(database.getGames()); //this will change to the database class :)
         //because I am going to have 1 JSON file called the database with each game contained all the saved games
@@ -34,39 +32,39 @@ public class GameRepository {
             e.printStackTrace();
         }
     }
-//        }
-//        if there is a game-data.json already just append it to the json file
-//         if(file.exists()){
-//         String existingContent = new String(Files.readAllBytes(Paths.get("game-data.json)));
-//         if(!existingContent.trim().ieEmpty()){
-//         existingContent = existingContent.substring(0, existingContent.lastIndexOf("])) + ",";
-//         }
-//         json = existingContent + json
-//
-//        Files.write(Paths.get("game-data.json), json.getBytes());
-//
-
-    //}
 
 
-    public void appendGameData(Database database) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public void appendGameData() throws FileNotFoundException {
+            //this method should only be run if there is a game-data.json file
+        Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        Game game = new Game();
-        //need to read the database first
-        database.addGame(game);
+        try (FileReader reader = new FileReader("game-data.json")) {
+            TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
+            };
+            List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
 
-        String json = gson.toJson(database.getGames());
 
-        try (FileWriter writer = new FileWriter("game-data.json")) {
-            writer.write(json);
-            writer.flush();
+            if(!gamesList.isEmpty()){
+                gamesList.add(new Game());
+            }
+
+
+            try (FileWriter writer = new FileWriter("game-data.json")) {
+                gson.toJson(gamesList, writer);
+            }
+
+
+            //once you have the gamesList you want to check that the game isnt already present in the games list by gameId
+            //if its not present you add the game to the gamesList
+            //if it is present you do not add the game to the gamesList
+            //then you write everything in the gamesList to the game-data.json file
+
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    //I don't know how this should work if you have more than one game!
+
     public void updateGameDataById(String gameId, Game updatedGame) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+
 
 @RestController
 @RequestMapping("api/game")
@@ -26,6 +28,14 @@ public class GameController {
 
         return ResponseEntity.ok("New game started and data written to file");
     }
+
+    @PostMapping("/append-new-game")
+    public ResponseEntity<Object> appendNewGame() throws FileNotFoundException {
+        gameService.appendNewGame();
+
+        return ResponseEntity.ok("New game started and data appended to file");
+    }
+
 
 
     @PutMapping("/company-name")
