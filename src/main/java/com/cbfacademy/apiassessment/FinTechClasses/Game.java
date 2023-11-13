@@ -92,24 +92,25 @@ public class Game {
         if(currentTurn < 19){
             triggerRandomEvent();
         }
-        currentTurn++;
 
         setMonth();
         resetCurrentNumberOfActions();
         company.resetCrowdFundCount();
         company.resetInvestCount();
+        company.customerRevenueBoost();
 
         isGameOver();
         checkGameIsCompleted();
 
+        currentTurn++;
     }
 
     public boolean checkGameIsCompleted(){
-        if(company.getRevenue() == 5000000 &&
-                company.getDepartments() == 3
-                && company.getEmployees() == 30
-                && company.getCustomerBase() == 10000
-                && company.getProductXP() > 30
+        if(company.getRevenue() >= 5000000 &&
+                company.getDepartments() >= 3
+                && company.getEmployees() >= 30
+                && company.getCustomerBase() >= 10000
+                && company.getProductXP() >= 30
         ){
             return isGameCompleted = true;
         }

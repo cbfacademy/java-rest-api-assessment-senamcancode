@@ -1,6 +1,5 @@
 package com.cbfacademy.apiassessment;
 
-import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -54,11 +53,11 @@ public class GameTest {
     @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
     public void testCheckGameIsCompleted() {
         Game game = new Game();
-        game.getCompany().setRevenue(10000000);
-        game.getCompany().setEmployees(50);
-        game.getCompany().setDepartments(5);
+        game.getCompany().setRevenue(5000000);
+        game.getCompany().setEmployees(30);
+        game.getCompany().setDepartments(3);
         game.getCompany().setCustomerBase(10000);
-        game.getCompany().setProductXP(100);
+        game.getCompany().setProductXP(30);
 
         game.checkGameIsCompleted();
 
@@ -89,6 +88,7 @@ public class GameTest {
         game.actionsManager(); //the actions is incremented from 0 to 1
         game.actionsManager(); //the actions is incremented from 1 to 2
         game.actionsManager(); //the actions is incremented from 2 to 3
+        game.actionsManager(); //the actions is incremented from 3 to 4
 
 
         assertThrows(InvalidActionException.class, game::actionsManager);

@@ -320,7 +320,7 @@ public class CompanyTest {
 
         double newRevenue = game.getCompany().getRevenue();
 
-        assertEquals(initRevenue + 200, newRevenue);
+        assertEquals(initRevenue + 50, newRevenue);
 
 
     }
