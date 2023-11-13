@@ -34,7 +34,7 @@ public class GameRepository {
     }
 
 
-    public void appendGameData() throws FileNotFoundException {
+    public void appendGameData()  {
             //this method should only be run if there is a game-data.json file
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
@@ -92,7 +92,6 @@ public class GameRepository {
 
     public static Game retrieveGame(String gameId) { //use the relative path! & need gameId as argument
         String filePath = "game-data.json";
-        //Need to find the specific game by id
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
@@ -115,7 +114,7 @@ public class GameRepository {
         return null;
     }
 
-    public void deleteGameById(String gameId, Game deletedGame){
+    public void deleteGameById(String gameId, Game deletedGame) throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
         try (FileReader reader = new FileReader("game-data.json")) {
@@ -136,7 +135,7 @@ public class GameRepository {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+           throw new FileNotFoundException();
         }
     }
 
@@ -153,7 +152,7 @@ public class GameRepository {
             return sortedGames;
 
     } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileNotFoundException();
         }
 
     }

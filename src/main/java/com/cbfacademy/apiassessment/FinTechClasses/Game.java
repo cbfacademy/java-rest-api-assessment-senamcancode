@@ -22,9 +22,7 @@ public class Game {
     private int actionsPerTurn = 3;
     private Company company = new Company();
 
-    //NB - you can exclude this variable from the json using the key word transient
 
-    //change to a calendar object to get the date
 
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     public List<Event> listOfEvents = new ArrayList<>();
@@ -88,12 +86,13 @@ public class Game {
     }
 
     public void advanceTurn(){
-        if(currentTurn < 19){
-            triggerRandomEvent();
-        }
+//        if(currentTurn < 19){
+//            triggerRandomEvent();
+//        }
 
         setMonth();
         resetCurrentNumberOfActions();
+        triggerRandomEvent();
         company.resetCrowdFundCount();
         company.resetInvestCount();
         company.customerRevenueBoost();

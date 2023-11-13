@@ -39,7 +39,7 @@ public class GameController {
 
 
     @PutMapping("/company-name")
-    public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId) {
+    public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId) throws FileNotFoundException {
         gameService.nameCompany(gameId, companyName);
 
         String newCompanyName = gameService.getCompany(gameId).getCompanyName();
@@ -49,7 +49,7 @@ public class GameController {
 
     @PostMapping("/add-employee")
     //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
-    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) throws FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -80,12 +80,14 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Adding employee(s) error: " + e.getMessage());
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Actions error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
 
     }
 
     @PutMapping("/remove-employee")
-    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
+    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) throws FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -108,11 +110,13 @@ public class GameController {
 
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Removing employee(s) error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
     }
 
     @PostMapping("/crowd-fund")
-    public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
+    public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException, FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -131,12 +135,14 @@ public class GameController {
 
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Crowd funding error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
 
     }
 
     @PostMapping("/invest/{action}")
-    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException {
+    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException, FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -162,6 +168,8 @@ public class GameController {
 
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Investing error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
 
         return null;
@@ -169,7 +177,7 @@ public class GameController {
 
 
     @PostMapping("/add-department")
-    public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException {
+    public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException, FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -186,11 +194,13 @@ public class GameController {
             return ResponseEntity.ok("Department added. You now have " + numberOfDepartments + " department(s)");
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Add department error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
     }
 
     @PostMapping("/research-and-dev")
-    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException {
+    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException, FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -207,11 +217,13 @@ public class GameController {
             return ResponseEntity.ok("Research and development success, 2 XP added to the product. You now have a product XP of " + productXP);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Research and development error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
     }
 
     @PostMapping("/marketing")
-    public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException {
+    public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException, FileNotFoundException {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -228,36 +240,35 @@ public class GameController {
             return ResponseEntity.ok("Marketing was successful. You now have a customer base of " + customerBase);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("JSON file not found.");
         }
     }
 
 
     @GetMapping("get-all-games")
-    public ResponseEntity<List<Game>> getAllGames(){
-        try {
+    public ResponseEntity<List<Game>> getAllGames() throws FileNotFoundException {
             return ResponseEntity.ok(gameService.getAllGames());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     @GetMapping("/get-company/{gameId}")
-    public ResponseEntity<Company> companyInfo(@PathVariable("gameId") String gameId){
+    public ResponseEntity<Company> companyInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getCompany(gameId));
     }
 
     @GetMapping("/get-game/{gameId}")
-    public ResponseEntity<Game> gameInfo(@PathVariable("gameId") String gameId){
+    public ResponseEntity<Game> gameInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getGame(gameId));
     }
 
     @GetMapping("/get-turn/{gameId}")
-    public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId){
+    public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of 20");
     }
 
     @GetMapping("/get-actions-num/{gameId}")
-    public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId){
+    public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
     }
 
@@ -266,6 +277,10 @@ public class GameController {
         try {
             if(gameService.checkGameIsOver(gameId)){
                 return ResponseEntity.ok("GAME OVER! You failed to reach IPO status!");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                return ResponseEntity.ok("CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!");
             }
 
             gameService.advanceTurn(gameId);
@@ -277,7 +292,7 @@ public class GameController {
     }
 
     @DeleteMapping("/delete-game")
-    public ResponseEntity<String>deleteGame(@RequestParam String gameId){
+    public ResponseEntity<String>deleteGame(@RequestParam String gameId) throws FileNotFoundException {
         gameService.deleteGame(gameId);
         return ResponseEntity.ok("You successfully deleted the game");
     }

@@ -23,7 +23,7 @@ public class GameService {
 
 
     //we need to account for if there is a json file already - we need to append the new game to the json file
-    public void actionsManager(String gameId) throws InvalidActionException {
+    public void actionsManager(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -49,7 +49,7 @@ public class GameService {
         gameRepository.appendGameData();
     }
 
-    public void nameCompany(String gameId, String companyName){
+    public void nameCompany(String gameId, String companyName) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         game.getCompany().setCompanyName(companyName);
@@ -57,7 +57,7 @@ public class GameService {
 
     }
 
-    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException, InvalidActionException {
+    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException, InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         //this line is constantly repeated can I refactor?
         assert game != null;
@@ -70,7 +70,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException{
+    public void removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException, FileNotFoundException {
         Game game = gameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -82,7 +82,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void crowdFund(String gameId) throws InvalidActionException {
+    public void crowdFund(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -94,7 +94,7 @@ public class GameService {
 
     }
 
-    public void sniperInvest(String gameId) throws InvalidActionException {
+    public void sniperInvest(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -105,7 +105,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void passiveInvest(String gameId) throws InvalidActionException {
+    public void passiveInvest(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -116,7 +116,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void addDepartment(String gameId) throws InvalidActionException {
+    public void addDepartment(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -127,7 +127,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void researchAndDev(String gameId) throws InvalidActionException{
+    public void researchAndDev(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -138,7 +138,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void market(String gameId) throws InvalidActionException {
+    public void market(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -237,12 +237,10 @@ public class GameService {
         return false;
     }
 
-    public void endGame(String gameId) {
-
-    }
 
 
-    public void deleteGame(String gameId){
+
+    public void deleteGame(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         gameRepository.deleteGameById(gameId, game);

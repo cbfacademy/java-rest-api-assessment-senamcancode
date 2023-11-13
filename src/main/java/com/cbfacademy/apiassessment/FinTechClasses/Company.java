@@ -138,7 +138,7 @@ public class Company {
 //        return firstRandomNumber;
 //    }
 
-    //sniper invest method - increases or decreases revenue after 2 turns
+    //sniper invest method - increases or decreases revenue
     public void sniperInvestment() throws InvalidActionException{
         //How could I refactor this??
         if(investCount < maxInvestCount){
