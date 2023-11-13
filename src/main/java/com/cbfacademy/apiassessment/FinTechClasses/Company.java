@@ -6,6 +6,7 @@ import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import java.security.SecureRandom;
 
 public class Company {
+    private String companyName = "FinTech Company";
     private int employees = 1;
     private int departments = 0;
     public final static double costOfEmployee = 5000;
@@ -38,7 +39,7 @@ public class Company {
     }
 
     //hireEmployee method - company can add employees but no more than 10 employees per turn
-    public void addEmployee(int numberOfEmployees) throws InsufficientFundsException {
+    public void addEmployee(int numberOfEmployees) throws InsufficientFundsException, InvalidActionException {
         if(!hasSufficientFunds(numberOfEmployees)){
             throw new InsufficientFundsException("You do not have enough funds available");
         }
@@ -47,6 +48,9 @@ public class Company {
             employees += numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue -= costOfHiring;
+        }
+        if(numberOfEmployees > 10){
+            throw new InvalidActionException("You cannot add more than 10 employees each action");
         }
     }
 
@@ -71,15 +75,9 @@ public class Company {
 
     }
 
-    public void productivityBoost(){
-        if(employees > 25){
-            revenue += (1.5 * revenue);
-        }
-        //this needs to be telegraphed to the user too
-    }
 
     public void customerRevenueBoost(){
-        double customerRevenue = customerBase * 20;
+        double customerRevenue = customerBase * 5;
         revenue += customerRevenue;
     }
 
@@ -286,5 +284,13 @@ public class Company {
 
     public int getInvestCount() {
         return investCount;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

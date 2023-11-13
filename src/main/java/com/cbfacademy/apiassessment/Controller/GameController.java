@@ -28,24 +28,40 @@ public class GameController {
     }
 
 
-    //@PutMapping("/company-name)
-    //public ResponseEntity<String> addCompanyName(){
-    //  gameService.addName();
-    // }
+    @PutMapping("/company-name")
+    public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId){
+        gameService.nameCompany(gameId, companyName);
+
+        String newCompanyName = gameService.getCompany(gameId).getCompanyName();
+        return ResponseEntity.ok("Your FinTech Company name was successfully changed to " + newCompanyName);
+    }
+
 
     @PostMapping("/add-employee")
     //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
     public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
 
             int initEmployees = gameService.getEmployees(gameId);
 
             gameService.addEmployee(gameId, numberOfEmployees);
+            gameService.actionsManager(gameId);
 
             int newEmployees = gameService.getEmployees(gameId);
 
             int employeesAdded = newEmployees - initEmployees;
+
+            if(gameService.checkGameIsCompleted(gameId)){
+
+
+                return ResponseEntity.ok("Congratulations!Your company reached IPO status! You completed the game!!");
+            }
 
             return ResponseEntity.ok(employeesAdded + " Employee(s) successfully added. You now have a total of " + newEmployees + " employees");
 
@@ -60,10 +76,17 @@ public class GameController {
     @PutMapping("/remove-employee")
     public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
             int initEmployees = gameService.getEmployees(gameId);
 
             gameService.removeEmployee(gameId, numberOfEmployees);
+            gameService.actionsManager(gameId);
 
             int newEmployees = gameService.getEmployees(gameId);
 
@@ -76,11 +99,19 @@ public class GameController {
         }
     }
 
-        @PostMapping("/crowd-fund")
+    @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
             gameService.crowdFund(gameId);
+            gameService.actionsManager(gameId);
+
 
             String formattedRevenue = gameService.getFormattedRevenue(gameId);
             return ResponseEntity.ok("Crowd fund was successful. You now have £ " + formattedRevenue);
@@ -94,15 +125,24 @@ public class GameController {
     @PostMapping("/invest/{action}")
     public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException{
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
+
             if("sniper".equals(action)){
                 gameService.sniperInvest(gameId);
+                gameService.actionsManager(gameId);
                 //need to find a way to tell the user that they have lost or gained money
                 return ResponseEntity.ok("Sniper investment successfully made");
             }
 
             if ("passive".equals(action)){
                 gameService.passiveInvest(gameId);
+                gameService.actionsManager(gameId);
                 return ResponseEntity.ok("Passive investment successfully made");
             }
 
@@ -117,10 +157,18 @@ public class GameController {
     @PostMapping("/add-department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException {
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
             gameService.addDepartment(gameId);
+            gameService.actionsManager(gameId);
+
             int numberOfDepartments = gameService.getDepartments(gameId);
-            return ResponseEntity.ok("Department added. You now have " +  numberOfDepartments + " departments");
+            return ResponseEntity.ok("Department added. You now have " +  numberOfDepartments + " department(s)");
         } catch (InvalidActionException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Add department error: " + e.getMessage());
         }
@@ -129,8 +177,15 @@ public class GameController {
     @PostMapping("/research-and-dev")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
             gameService.researchAndDev(gameId);
+            gameService.actionsManager(gameId);
 
             int productXP = gameService.getProductXP(gameId);
             return ResponseEntity.ok("Research and development success, 2 XP added to the product. You now have a product XP of " + productXP);
@@ -142,8 +197,15 @@ public class GameController {
     @PostMapping("/marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException{
         try {
-            gameService.actionsManager(gameId);
+            if(gameService.checkGameIsOver(gameId)){
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if(gameService.checkGameIsCompleted(gameId)){
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+
             gameService.market(gameId);
+            gameService.actionsManager(gameId);
 
             int customerBase = gameService.getCustomerBase(gameId);
             return ResponseEntity.ok("Marketing was successful. You now have a customer base of " + customerBase);
@@ -175,6 +237,10 @@ public class GameController {
     @GetMapping("/advance-turn/{gameId}")
     public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) throws InvalidActionException {
         try {
+            if(gameService.checkGameIsOver(gameId)){
+                return ResponseEntity.ok("GAME OVER! You failed to reach IPO status!");
+            }
+
             gameService.advanceTurn(gameId);
             return ResponseEntity.ok("You have advanced to the next turn");
         } catch (InvalidActionException e){

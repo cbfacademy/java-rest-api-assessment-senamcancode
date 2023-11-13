@@ -52,7 +52,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing method increases employees in Company ")
-    public void testAddEmployee() throws InsufficientFundsException {
+    public void testAddEmployee() throws InsufficientFundsException, InvalidActionException {
         Game game = new Game();
         Company company = game.getCompany();
         double initialEmployee = company.getEmployees();
@@ -278,22 +278,6 @@ public class CompanyTest {
 
     }
 
-    @Test
-    @DisplayName("Testing productivity boost increases revenue")
-    public void testIncreasesRevenueIfEmployeesIsLargerThan10() throws InsufficientFundsException {
-        Game game = new Game();
-        Company company = game.getCompany();
-
-        double initRevenue = company.getRevenue();
-
-        company.setEmployees(30);
-
-        company.productivityBoost();
-
-        double newRevenue = company.getRevenue();
-
-        assertEquals(initRevenue + (initRevenue * 1.5), newRevenue);
-    }
 
     @Test
     @DisplayName("Testing the removeEmployee method removes employees and departments")

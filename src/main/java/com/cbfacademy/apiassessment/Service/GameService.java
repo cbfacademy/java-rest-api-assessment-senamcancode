@@ -38,6 +38,13 @@ public class GameService {
         gameRepository.saveGameData(gameData);
     }
 
+    public void nameCompany(String gameId, String companyName){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().setCompanyName(companyName);
+        gameRepository.updateGameDataById(gameId, game);
+
+    }
 
     public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException, InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
@@ -47,7 +54,6 @@ public class GameService {
 
         game.getCompany().addEmployee(numberOfEmployees);
 
-        game.getCompany().productivityBoost();
 
         game.actionsManager();
         gameRepository.updateGameDataById(gameId, game);
@@ -59,7 +65,6 @@ public class GameService {
         assert game != null;
         game.getCompany().removeEmployee(numberOfEmployees);
 
-        game.getCompany().productivityBoost();
 
         game.actionsManager();
 
@@ -134,7 +139,6 @@ public class GameService {
     }
 
 
-
     //getters
     public int getEmployees(String gameId){
         Game game = GameRepository.retrieveGame(gameId);
@@ -196,9 +200,22 @@ public class GameService {
         return game.isGameOver();
     }
 
+    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException{
+        Game game = GameRepository.retrieveGame(gameId);
+
+        assert game != null;
+        if(game.checkGameIsCompleted()){
+            return true;
+        }
+        gameRepository.updateGameDataById(gameId, game);
+        return false;
+    }
+
     public boolean advanceTurn(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
+        game.getCompany().customerRevenueBoost();
+
         game.advanceTurn();
 
         if(checkGameIsOver(gameId)){
@@ -208,6 +225,11 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
         return false;
     }
+
+    public void endGame(String gameId) {
+
+    }
+
 
     public void deleteGame(String gameId){
         Game game = GameRepository.retrieveGame(gameId);

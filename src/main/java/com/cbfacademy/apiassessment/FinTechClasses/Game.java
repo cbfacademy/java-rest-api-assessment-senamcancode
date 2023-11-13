@@ -12,14 +12,14 @@ import java.util.UUID;
 public class Game {
     private String gameId;
     //public final LocalDateTime creationDateTime;
+    private String month = "Jan";
     private int currentTurn = 1;
-    private final int maxTurnsPerGame = 20;
+    private final int maxTurnsPerGame = 21;
     private boolean isGameCompleted = false;
     private boolean isGameOver = false;
     private int currentNumberOfActions = 0;
     private int actionsPerTurn = 3;
     private Company company = new Company();
-    private String month = "Jan";
 
     //NB - you can exclude this variable from the json using the key word transient
 
@@ -78,10 +78,7 @@ public class Game {
         this.month = arrayOfMonths[index];
     }
 
-//    private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
-//        in.defaultReadObject();
-//        setMonth(); // Manually update month after deserialisation - this is done so that the month will still be altered but the arrayof months isnt present in the json file
-//    }
+
     public String getMonth() {
         return month;
     }
@@ -96,22 +93,25 @@ public class Game {
             triggerRandomEvent();
         }
         currentTurn++;
+
         setMonth();
         resetCurrentNumberOfActions();
         company.resetCrowdFundCount();
         company.resetInvestCount();
+
+        isGameOver();
         checkGameIsCompleted();
 
     }
 
     public boolean checkGameIsCompleted(){
-        if(company.getRevenue() == 10000000 &&
-                company.getDepartments() == 5
-                && company.getEmployees() == 50
+        if(company.getRevenue() == 5000000 &&
+                company.getDepartments() == 3
+                && company.getEmployees() == 30
                 && company.getCustomerBase() == 10000
-                && company.getProductXP() == 100
+                && company.getProductXP() > 30
         ){
-            isGameCompleted = true;
+            return isGameCompleted = true;
         }
 
         return isGameCompleted;
@@ -129,7 +129,8 @@ public class Game {
     }
 
     public void actionsManager() throws InvalidActionException {
-        if(actionsPerTurn > currentNumberOfActions){
+
+        if(actionsPerTurn >= currentNumberOfActions){
             currentNumberOfActions++;
         } else {
             throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions");
