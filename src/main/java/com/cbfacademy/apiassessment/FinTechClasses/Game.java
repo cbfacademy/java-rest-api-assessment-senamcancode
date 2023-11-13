@@ -14,7 +14,7 @@ public class Game {
     //public final LocalDateTime creationDateTime;
     private String month = "Jan";
     private int currentTurn = 1;
-    private final int maxTurnsPerGame = 21;
+    private final int maxTurnsPerGame = 20;
     private boolean isGameCompleted = false;
     private boolean isGameOver = false;
     private int currentNumberOfActions = 0;
