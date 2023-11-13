@@ -71,18 +71,18 @@ public class GameRepository {
         try (FileReader reader = new FileReader("game-data.json")) {
             TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
             };
-            List<Game> games = gson.fromJson(reader, gameListType.getType());
+            List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
 
-            if (games != null) {
-                for (int i = 0; i < games.size(); i++) {
-                    if (games.get(i).getGameId().equals(gameId)) {
-                        games.set(i, updatedGame);
+            if (gamesList != null) {
+                for (int i = 0; i < gamesList.size(); i++) {
+                    if (gamesList.get(i).getGameId().equals(gameId)) {
+                        gamesList.set(i, updatedGame);
                         break;
                     }
                 }
 
                 try (FileWriter writer = new FileWriter("game-data.json")) {
-                    gson.toJson(games, writer);
+                    gson.toJson(gamesList, writer);
                 }
             }
         } catch (IOException e) {
