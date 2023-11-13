@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 
 @Service
@@ -27,6 +28,10 @@ public class GameService {
 
         assert game != null;
         game.actionsManager();
+    }
+
+    public List<Game> getAllGames() throws FileNotFoundException {
+        return gameRepository.getAllGames();
     }
 
     public void newGame() {

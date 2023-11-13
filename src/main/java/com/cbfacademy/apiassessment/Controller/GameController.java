@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 
 @RestController
@@ -37,9 +38,8 @@ public class GameController {
     }
 
 
-
     @PutMapping("/company-name")
-    public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId){
+    public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId) {
         gameService.nameCompany(gameId, companyName);
 
         String newCompanyName = gameService.getCompany(gameId).getCompanyName();
@@ -51,12 +51,13 @@ public class GameController {
     //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
     public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             int initEmployees = gameService.getEmployees(gameId);
 
@@ -67,7 +68,7 @@ public class GameController {
 
             int employeesAdded = newEmployees - initEmployees;
 
-            if(gameService.checkGameIsCompleted(gameId)){
+            if (gameService.checkGameIsCompleted(gameId)) {
 
 
                 return ResponseEntity.ok("Congratulations!Your company reached IPO status! You completed the game!!");
@@ -86,12 +87,13 @@ public class GameController {
     @PutMapping("/remove-employee")
     public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             int initEmployees = gameService.getEmployees(gameId);
 
@@ -112,12 +114,13 @@ public class GameController {
     @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             gameService.crowdFund(gameId);
             gameService.actionsManager(gameId);
@@ -133,30 +136,31 @@ public class GameController {
     }
 
     @PostMapping("/invest/{action}")
-    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException{
+    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
 
-            if("sniper".equals(action)){
+            if ("sniper".equals(action)) {
                 gameService.sniperInvest(gameId);
                 gameService.actionsManager(gameId);
                 //need to find a way to tell the user that they have lost or gained money
                 return ResponseEntity.ok("Sniper investment successfully made");
             }
 
-            if ("passive".equals(action)){
+            if ("passive".equals(action)) {
                 gameService.passiveInvest(gameId);
                 gameService.actionsManager(gameId);
                 return ResponseEntity.ok("Passive investment successfully made");
             }
 
-        } catch (InvalidActionException e){
+        } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Investing error: " + e.getMessage());
         }
 
@@ -167,60 +171,73 @@ public class GameController {
     @PostMapping("/add-department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             gameService.addDepartment(gameId);
             gameService.actionsManager(gameId);
 
             int numberOfDepartments = gameService.getDepartments(gameId);
-            return ResponseEntity.ok("Department added. You now have " +  numberOfDepartments + " department(s)");
-        } catch (InvalidActionException e){
+            return ResponseEntity.ok("Department added. You now have " + numberOfDepartments + " department(s)");
+        } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Add department error: " + e.getMessage());
         }
     }
 
     @PostMapping("/research-and-dev")
-    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException{
+    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             gameService.researchAndDev(gameId);
             gameService.actionsManager(gameId);
 
             int productXP = gameService.getProductXP(gameId);
             return ResponseEntity.ok("Research and development success, 2 XP added to the product. You now have a product XP of " + productXP);
-        } catch (InvalidActionException e){
+        } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Research and development error: " + e.getMessage());
         }
     }
 
     @PostMapping("/marketing")
-    public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException{
+    public ResponseEntity<String> marketing(@RequestParam String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
+            if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
             }
 
-            if(gameService.checkGameIsCompleted(gameId)){
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");}
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
 
             gameService.market(gameId);
             gameService.actionsManager(gameId);
 
             int customerBase = gameService.getCustomerBase(gameId);
             return ResponseEntity.ok("Marketing was successful. You now have a customer base of " + customerBase);
-        } catch (InvalidActionException e){
+        } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("get-all-games")
+    public ResponseEntity<List<Game>> getAllGames(){
+        try {
+            return ResponseEntity.ok(gameService.getAllGames());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

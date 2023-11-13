@@ -2,16 +2,17 @@ package com.cbfacademy.apiassessment.FinTechClasses;
 
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.EventClasses.*;
-import com.google.gson.annotations.Expose;
+
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public class Game {
     private String gameId;
-    //public final LocalDateTime creationDateTime;
+    private final Date dateCreated = new Date();
     private String month = "Jan";
     private int currentTurn = 1;
     private final int maxTurnsPerGame = 20;
@@ -66,9 +67,7 @@ public class Game {
         return gameId;
     }
 
-//    public LocalDateTime getCreationDateTime(){
-//        return creationDateTime;
-//    }
+
     public Company getCompany() {
         return company;
     }
@@ -150,7 +149,9 @@ public class Game {
         return isGameOver;
     }
 
-
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
     //we need a method to limit the actions that the user can take
 }

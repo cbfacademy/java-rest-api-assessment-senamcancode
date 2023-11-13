@@ -7,7 +7,6 @@ import com.cbfacademy.apiassessment.FinTechClasses.Event;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -140,6 +139,21 @@ public class GameRepository {
         }
     }
 
+    public List<Game> getAllGames() throws FileNotFoundException {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
+
+        try (FileReader reader = new FileReader("game-data.json")) {
+            TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
+            };
+            List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
+
+            return gamesList;
+
+    } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
 
 
