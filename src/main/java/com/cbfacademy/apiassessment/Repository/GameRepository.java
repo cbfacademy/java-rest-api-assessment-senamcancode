@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 
@@ -19,12 +21,19 @@ import com.google.gson.reflect.TypeToken;
 @Repository
 public class GameRepository {
 
+    public static String getFilePath(){
+        String relativePath = "src/main/resources/game-data.json";
+        Path path = Paths.get(System.getProperty("user.dir"), relativePath);
+        return path.toString();
+    }
+
+
     public void saveGameData(Database database) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(database.getGames()); //this will change to the database class :)
         //because I am going to have 1 JSON file called the database with each game contained all the saved games
         //as an array of game objects
-        try (FileWriter writer = new FileWriter("game-data.json")) {
+        try (FileWriter writer = new FileWriter(getFilePath())) {
             writer.write(json);
             writer.flush();
         } catch (IOException e) {
@@ -37,7 +46,7 @@ public class GameRepository {
             //this method should only be run if there is a game-data.json file
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        try (FileReader reader = new FileReader("game-data.json")) {
+        try (FileReader reader = new FileReader(getFilePath())) {
             TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
             };
             List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
@@ -48,7 +57,7 @@ public class GameRepository {
             }
 
 
-            try (FileWriter writer = new FileWriter("game-data.json")) {
+            try (FileWriter writer = new FileWriter(getFilePath())) {
                 gson.toJson(gamesList, writer);
             }
 
@@ -67,7 +76,7 @@ public class GameRepository {
     public void updateGameDataById(String gameId, Game updatedGame) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        try (FileReader reader = new FileReader("game-data.json")) {
+        try (FileReader reader = new FileReader(getFilePath())) {
             TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
             };
             List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
@@ -80,7 +89,7 @@ public class GameRepository {
                     }
                 }
 
-                try (FileWriter writer = new FileWriter("game-data.json")) {
+                try (FileWriter writer = new FileWriter(getFilePath())) {
                     gson.toJson(gamesList, writer);
                 }
             }
@@ -90,11 +99,11 @@ public class GameRepository {
     }
 
     public static Game retrieveGame(String gameId) { //use the relative path! & need gameId as argument
-        String filePath = "game-data.json";
+        //String filePath = "game-data.json";
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        try (FileReader reader = new FileReader(filePath)) {
+        try (FileReader reader = new FileReader(getFilePath())) {
             Type gameListType = new TypeToken<List<Game>>() {
             }.getType();
             List<Game> gamesList = gson.fromJson(reader, gameListType);
@@ -116,7 +125,7 @@ public class GameRepository {
     public void deleteGameById(String gameId, Game deletedGame) throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        try (FileReader reader = new FileReader("game-data.json")) {
+        try (FileReader reader = new FileReader(getFilePath())) {
             TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
             };
             List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
@@ -129,7 +138,7 @@ public class GameRepository {
                     }
                 }
 
-                try (FileWriter writer = new FileWriter("game-data.json")) {
+                try (FileWriter writer = new FileWriter(getFilePath())) {
                     gson.toJson(gamesList, writer);
                 }
             }
@@ -141,7 +150,7 @@ public class GameRepository {
     public List<Game> getAllGames() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
-        try (FileReader reader = new FileReader("game-data.json")) {
+        try (FileReader reader = new FileReader(getFilePath())) {
             TypeToken<List<Game>> gameListType = new TypeToken<List<Game>>() {
             };
             List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
