@@ -134,8 +134,9 @@ public class Company {
 //        return firstRandomNumber;
 //    }
 
+
     //sniper invest method - increases or decreases revenue
-    public void sniperInvestment() throws InvalidActionException{
+    public String sniperInvestment() throws InvalidActionException{
         //How could I refactor this??
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
@@ -144,13 +145,11 @@ public class Company {
 
             if(firstRandomNumber == 0) {
                 revenue += secondRandomNumber;
-            } else if(revenue > secondRandomNumber) {
+                return "Congrats! You gained £" + secondRandomNumber;
+            }else{
                 revenue -= secondRandomNumber;
-            } else if(revenue < secondRandomNumber){
-                revenue = 0;
+                return "Unfortunately! You lost £" + secondRandomNumber;
             }
-
-            incrementInvestCount();
 
         //return firstRandomNumber because I want to be able to tell the user what happened
         //want to be able to return what investment was made - so that they know they either lost or made money
@@ -159,21 +158,20 @@ public class Company {
         }
     }
 
-    public void passiveInvestment() throws InvalidActionException{
+    public String passiveInvestment() throws InvalidActionException{
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
         int secondRandomNumber = rand.nextInt(100001);
 
-        if(firstRandomNumber == 0) {
-            revenue += secondRandomNumber;
-        } else if(revenue > secondRandomNumber) {
-            revenue -= secondRandomNumber;
-        } else if(revenue < secondRandomNumber){
-            revenue = 0;
-        }
+            if(firstRandomNumber == 0) {
+                revenue += secondRandomNumber;
+                return "Congrats! You gained £" + secondRandomNumber;
+            }else{
+                revenue -= secondRandomNumber;
+                return "Unfortunately! You lost £" + secondRandomNumber;
+            }
 
-        incrementInvestCount();
 
         //return firstRandomNumber because I want to be able to tell the user what happened
         //want to be able to return what investment was made - so that they know they either lost or made money
@@ -288,11 +286,21 @@ public class Company {
         this.revenue = revenue;
     }
 
+    public void setInvestCount(int investCount) {
+        this.investCount = investCount;
+    }
 
     public int getInvestCount() {
         return investCount;
     }
 
+    public int getMaxCrowdFundCount() {
+        return maxCrowdFundCount;
+    }
+
+    public int getMaxInvestCount() {
+        return maxInvestCount;
+    }
 
     public String getCompanyName() {
         return companyName;

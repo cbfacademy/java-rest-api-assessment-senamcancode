@@ -19,9 +19,9 @@ public class CompanyTest {
     private Game game;
     private Company company;
     @BeforeEach
-    public void gameAndCompanyInitializer(){
-        game = new Game();
-        company = game.getCompany();
+    public void setUp(){
+        this.game = new Game();
+        this.company = game.getCompany();
     }
 
     @Test
@@ -204,8 +204,6 @@ public class CompanyTest {
         company.setRevenue(1000);
 
         assertThrows(InvalidActionException.class, () -> company.marketing());
-
-
     }
 
 
@@ -229,6 +227,23 @@ public class CompanyTest {
 
         assertNotEquals(initRevenue, newRevenue);
     }
+
+    @Test
+    @DisplayName("Testing max investment count reached for sniperInvestment method")
+    public void testMaxInvestmentCountReachedForSniperInvestment() {
+        company.setInvestCount(company.getMaxInvestCount());
+
+        assertThrows(InvalidActionException.class, () -> company.sniperInvestment());
+    }
+
+    @Test
+    @DisplayName("Testing max investment count reached for passiveInvestment method")
+    public void testMaxInvestmentCountReachedForPassiveInvestment() {
+        company.setInvestCount(company.getMaxInvestCount());
+
+        assertThrows(InvalidActionException.class, () -> company.passiveInvestment());
+    }
+
 
     @Test
     @DisplayName("Testing increment crowdFund method")

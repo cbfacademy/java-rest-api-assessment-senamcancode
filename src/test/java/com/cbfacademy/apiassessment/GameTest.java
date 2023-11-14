@@ -10,17 +10,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
+    //For the GameTest I tested relevant game methods (ie not all methods like the Company test class)
 
-    @Test
-    @DisplayName("Testing crowdfund limit of once per turn")
-    public void testCrowdFundLimit() throws InvalidActionException {
-        Game game = new Game();
-        Company company = game.getCompany();
-
-        company.crowdFund();
-
-        assertThrows(InvalidActionException.class, company::crowdFund);
-    }
 
     @Test
     @DisplayName("Testing that the game class is initialised with Jan as the initial month")
@@ -49,21 +40,6 @@ public class GameTest {
 
     }
 
-    @Test
-    @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
-    public void testCheckGameIsCompleted() {
-        Game game = new Game();
-        game.getCompany().setRevenue(5000000);
-        game.getCompany().setEmployees(30);
-        game.getCompany().setDepartments(3);
-        game.getCompany().setCustomerBase(10000);
-        game.getCompany().setProductXP(30);
-
-        game.checkGameIsCompleted();
-
-        assertTrue(game.isGameCompleted());
-
-    }
 
     @Test
     @DisplayName("Testing the actionsManager limits the number of actions taken per turn to 3")
@@ -92,6 +68,41 @@ public class GameTest {
 
 
         assertThrows(InvalidActionException.class, game::actionsManager);
+    }
+
+    @Test
+    @DisplayName("Testing crowdfund limit of once per turn")
+    public void testCrowdFundLimit() throws InvalidActionException {
+        Game game = new Game();
+        Company company = game.getCompany();
+
+        company.crowdFund();
+
+        assertThrows(InvalidActionException.class, company::crowdFund);
+    }
+
+    //Need to test the advanceTurn method
+
+    //Need to test teh actionsRemaining
+
+    //Need to test the resetCurrentNumberOfActions
+
+    //Need to test isGameOver
+
+    @Test
+    @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
+    public void testCheckGameIsCompleted() {
+        Game game = new Game();
+        game.getCompany().setRevenue(5000000);
+        game.getCompany().setEmployees(30);
+        game.getCompany().setDepartments(3);
+        game.getCompany().setCustomerBase(10000);
+        game.getCompany().setProductXP(30);
+
+        game.checkGameIsCompleted();
+
+        assertTrue(game.isGameCompleted());
+
     }
 }
 

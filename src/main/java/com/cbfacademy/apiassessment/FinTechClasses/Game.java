@@ -22,8 +22,6 @@ public class Game {
     private int actionsPerTurn = 3;
     private Company company = new Company();
 
-
-
     private final String[] arrayOfMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     public List<Event> listOfEvents = new ArrayList<>();
 
@@ -32,6 +30,7 @@ public class Game {
     public Game(){
         this.gameId = UUID.randomUUID().toString();
         //this.creationDateTime = LocalDateTime.now();
+        listOfEvents.add(new NoEvent("No Event"));
         listOfEvents.add(new NoEvent("No Event"));
         listOfEvents.add(new CybersecurityLeak("Cybersecurity Leak"));
         listOfEvents.add(new EconomicBoom("Economic Boom"));
@@ -44,18 +43,11 @@ public class Game {
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());
         Event randomEvent = listOfEvents.get(randomIndex);
-        randomEvent.executeEvent(company);
-        return randomEvent.getEventName();
+        return randomEvent.executeEvent(company);
+        //return randomEvent.getEventName();
         //this will return the name of the triggered Event
     }
 
-    public void resetActionsTaken(){
-        currentNumberOfActions = 0;
-    }
-
-    public void addToCurrentNumberOfActions(){
-        currentNumberOfActions ++;
-    }
 
     public List<Event> getEvents() {
         return listOfEvents;
@@ -76,11 +68,6 @@ public class Game {
     }
 
 
-    public String getMonth() {
-        return month;
-    }
-
-
     public int getCurrentTurn() {
         return currentTurn;
     }
@@ -92,7 +79,6 @@ public class Game {
 
         setMonth();
         resetCurrentNumberOfActions();
-        triggerRandomEvent();
         company.resetCrowdFundCount();
         company.resetInvestCount();
         company.customerRevenueBoost();
@@ -116,9 +102,6 @@ public class Game {
         return isGameCompleted;
     }
 
-    public int getCurrentNumberOfActions(){
-        return currentNumberOfActions;
-    }
     public int actionsRemaining(){
         return actionsPerTurn - currentNumberOfActions;
     }
@@ -148,9 +131,19 @@ public class Game {
         return isGameOver;
     }
 
+    //getters and setters
+
     public Date getDateCreated() {
         return dateCreated;
     }
 
-    //we need a method to limit the actions that the user can take
+    public int getCurrentNumberOfActions(){
+        return currentNumberOfActions;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+
 }

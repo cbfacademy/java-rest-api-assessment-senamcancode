@@ -9,8 +9,9 @@ public class EconomicDownturn extends Event {
     }
 
     @Override
-    public void executeEvent(Company company){
+    public String executeEvent(Company company){
         company.reduceRevenue(15);
+        return "ECONOMIC DOWNTURN!! The economy is trending downwards (Isn't it always). Your revenue has taken a 15% hit"; //i want these to have personality
 
     }
 }

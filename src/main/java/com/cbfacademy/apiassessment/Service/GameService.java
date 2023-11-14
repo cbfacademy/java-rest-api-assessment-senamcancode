@@ -94,26 +94,33 @@ public class GameService {
 
     }
 
-    public void sniperInvest(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String sniperInvest(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().sniperInvestment();
+        String resultMessage = game.getCompany().sniperInvestment();
+        game.getCompany().incrementInvestCount();
 
         game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
     }
 
-    public void passiveInvest(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String passiveInvest(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().passiveInvestment();
+        String resultMessage = game.getCompany().passiveInvestment();
+        game.getCompany().incrementInvestCount();
+
 
         game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
     }
 
     public void addDepartment(String gameId) throws InvalidActionException, FileNotFoundException {
@@ -229,6 +236,7 @@ public class GameService {
 
         game.advanceTurn();
 
+
         if(checkGameIsOver(gameId)){
             throw new InvalidActionException("You have reached the turn limit without reaching IPO status.You Lose!");
         }
@@ -237,6 +245,16 @@ public class GameService {
         return false;
     }
 
+    public String triggerRandomEvent(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
+
+        String resultMessage = game.triggerRandomEvent();
+
+        gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
+    }
 
 
 

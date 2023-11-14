@@ -159,17 +159,19 @@ public class GameController {
             }
 
 
+            String resultMessage;
+
             if ("sniper".equals(action)) {
-                gameService.sniperInvest(gameId);
+                resultMessage = gameService.sniperInvest(gameId);
                 gameService.actionsManager(gameId);
                 //need to find a way to tell the user that they have lost or gained money
-                return ResponseEntity.ok("Sniper investment successfully made");
+                return ResponseEntity.ok("Sniper investment successfully made: " + resultMessage);
             }
 
             if ("passive".equals(action)) {
-                gameService.passiveInvest(gameId);
+                resultMessage = gameService.passiveInvest(gameId);
                 gameService.actionsManager(gameId);
-                return ResponseEntity.ok("Passive investment successfully made");
+                return ResponseEntity.ok("Passive investment successfully made: " + resultMessage);
             }
 
         } catch (InvalidActionException e) {
@@ -289,8 +291,10 @@ public class GameController {
                 return ResponseEntity.ok("CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!");
             }
 
+            String resultMessage = gameService.triggerRandomEvent(gameId);
+
             gameService.advanceTurn(gameId);
-            return ResponseEntity.ok("You have advanced to the next turn");
+            return ResponseEntity.ok("You have advanced to the next turn - " + resultMessage);
         } catch (InvalidActionException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Game Over: " + e.getMessage());
 
@@ -303,11 +307,6 @@ public class GameController {
         return ResponseEntity.ok("You successfully deleted the game");
     }
 
-
 }
-
-//you need to be able to show the event that occured - how would I do this? can I have gameRepository methods in the game controller section?
-
-
 
 

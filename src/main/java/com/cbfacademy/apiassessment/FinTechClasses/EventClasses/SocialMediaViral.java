@@ -9,9 +9,10 @@ public class SocialMediaViral extends Event {
     }
 
     @Override
-    public void executeEvent(Company company){
+    public String executeEvent(Company company){
         company.increaseCustomerBase(1500);
         company.increaseRevenue(2);
+        return "SOCIAL MEDIA VIRAL: Your company has gone social media viral (for the right reasons)! You now have 1500 more customers and an increase in revenue of 2%" ;
 
     }
 }

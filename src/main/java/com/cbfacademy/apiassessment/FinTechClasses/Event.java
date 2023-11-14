@@ -10,5 +10,5 @@ public abstract class Event {
         return eventName;
     }
 
-    public abstract void executeEvent(Company company);
+    public abstract String executeEvent(Company company);
 }
