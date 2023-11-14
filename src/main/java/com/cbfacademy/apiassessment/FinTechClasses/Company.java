@@ -20,9 +20,8 @@ public class Company {
     private int crowdFundCount = 0;
 
 
-
-    //company methods to be used in the API game
-    //crowdFund method - increases revenue but can only be used once per turn - not sure how to handle this
+    //company methods to used in the API game
+    //crowdFund method - increases revenue but can only be used once per turn
     public void crowdFund() throws InvalidActionException {
         if(crowdFundCount < maxCrowdFundCount) {
                 revenue += 500000;
@@ -54,6 +53,7 @@ public class Company {
         }
     }
 
+    //remove employee method - removes employees and adds their salary to revenue - departments will also be removed at 10 employee intervals ie if a user removes 10 employees they remove 1 department if they remove 20 employees 2 departments and so on
     public void removeEmployee(int numberOfEmployees) throws InvalidActionException{
         if(employees < numberOfEmployees){
             throw new InvalidActionException("You cannot get rid of more employees than you already have");
@@ -74,7 +74,6 @@ public class Company {
         }
 
     }
-
 
 
 
@@ -127,6 +126,7 @@ public class Company {
     }
 
 
+    //Sniper investment is more of a risk (like in real life) because the amount you can gain or lose is greater
     public String sniperInvestment() throws InvalidActionException{
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
@@ -145,6 +145,8 @@ public class Company {
         }
     }
 
+
+    //Passive investment is less of a risk (like in real life) because the amount you can gain or lose is less
     public String passiveInvestment() throws InvalidActionException{
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
@@ -162,7 +164,6 @@ public class Company {
             throw new InvalidActionException("You can only invest once per turn");
         }
     }
-
 
 
     public void incrementCrowdFundCount(){
@@ -209,6 +210,7 @@ public class Company {
         revenue += customerRevenue;
     }
 
+    //A reference back to the old sims cheat code - this will give the company IPO status
     public void motherLode(){
         setRevenue(5000000);
         setDepartments(3);
@@ -217,6 +219,7 @@ public class Company {
         setProductXP(30);
     }
 
+    //Another cheat code method to increase the revenue - making it even easier to win
     public void moneyMoneyMoney(){
         revenue = 9999999;
     }

@@ -7,15 +7,12 @@ import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CompanyTest {
-    //need to find a way to test the investment method - the problem is that the method provides random results
-
     private Game game;
     private Company company;
     @BeforeEach
