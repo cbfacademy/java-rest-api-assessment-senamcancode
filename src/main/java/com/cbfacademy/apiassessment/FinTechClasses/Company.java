@@ -180,6 +180,9 @@ public class Company {
         }
     }
 
+    public void moneyMoneyMoney(){
+        revenue = 9999999;
+    }
 
 
     public void incrementCrowdFundCount(){

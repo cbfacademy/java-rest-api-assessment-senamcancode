@@ -73,9 +73,6 @@ public class Game {
     }
 
     public void advanceTurn(){
-//        if(currentTurn < 19){
-//            triggerRandomEvent();
-//        }
 
         setMonth();
         resetCurrentNumberOfActions();
@@ -83,7 +80,7 @@ public class Game {
         company.resetInvestCount();
         company.customerRevenueBoost();
 
-        isGameOver();
+        checkGameIsOver();
         checkGameIsCompleted();
 
         currentTurn++;
@@ -99,7 +96,23 @@ public class Game {
             return isGameCompleted = true;
         }
 
-        return isGameCompleted;
+        return isGameCompleted = false;
+    }
+
+    public boolean checkGameIsOver(){
+        if(currentTurn >= maxTurnsPerGame && !checkGameIsCompleted()){
+            return isGameOver = true;
+
+        }
+        return false;
+    }
+
+    public void setGameIsCompleted(){
+        isGameCompleted = true;
+    }
+
+    public void setGameIsOver(){
+        isGameOver = true;
     }
 
     public int actionsRemaining(){
@@ -124,12 +137,6 @@ public class Game {
         return isGameCompleted;
     }
 
-    public boolean isGameOver(){
-        if(currentTurn == maxTurnsPerGame){
-           isGameOver = true;
-        }
-        return isGameOver;
-    }
 
     //getters and setters
 

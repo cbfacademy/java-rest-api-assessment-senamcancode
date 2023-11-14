@@ -12,7 +12,7 @@ public class SocialMediaViral extends Event {
     public String executeEvent(Company company){
         company.increaseCustomerBase(1500);
         company.increaseRevenue(2);
-        return "SOCIAL MEDIA VIRAL: Your company has gone social media viral (for the right reasons)! You now have 1500 more customers and an increase in revenue of 2%" ;
+        return "SOCIAL MEDIA VIRAL: Your company has gone social media viral (for the right reasons)! You now have 1500 more customers and an increase in revenue of 2%!" ;
 
     }
 }

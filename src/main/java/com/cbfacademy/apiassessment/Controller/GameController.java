@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -46,12 +47,6 @@ public class GameController {
         return ResponseEntity.ok("Your FinTech Company name was successfully changed to " + newCompanyName);
     }
 
-    @PutMapping("/motherlode")
-    public ResponseEntity<String> motherLoad(@RequestParam String gameId) throws FileNotFoundException {
-        gameService.motherLode(gameId);
-
-        return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status");
-    }
 
     @PostMapping("/add-employee")
     //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
@@ -294,17 +289,31 @@ public class GameController {
             String resultMessage = gameService.triggerRandomEvent(gameId);
 
             gameService.advanceTurn(gameId);
-            return ResponseEntity.ok("You have advanced to the next turn - " + resultMessage);
+            return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
         } catch (InvalidActionException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Game Over: " + e.getMessage());
 
         }
     }
 
+
     @DeleteMapping("/delete-game")
     public ResponseEntity<String>deleteGame(@RequestParam String gameId) throws FileNotFoundException {
         gameService.deleteGame(gameId);
         return ResponseEntity.ok("You successfully deleted the game");
+    }
+
+    @PutMapping("/money")
+    public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
+        gameService.moneyMoneyMoney(gameId);
+        return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
+    }
+
+    @PutMapping("/motherlode")
+    public ResponseEntity<String> motherLoad(@RequestParam String gameId) throws FileNotFoundException {
+        gameService.motherLode(gameId);
+
+        return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
     }
 
 }

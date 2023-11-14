@@ -206,6 +206,7 @@ public class GameService {
         return game.getCurrentTurn();
     }
 
+
     public int getNumberOfRemainingActions(String gameId){
         Game game = GameRepository.retrieveGame(gameId);
         return game.actionsRemaining();
@@ -215,7 +216,13 @@ public class GameService {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        return game.isGameOver();
+        if(game.checkGameIsOver()){
+            game.setGameIsOver();
+            return true;
+        }
+        gameRepository.updateGameDataById(gameId, game);
+
+        return false;
     }
 
     public boolean checkGameIsCompleted(String gameId) throws InvalidActionException{
@@ -223,6 +230,7 @@ public class GameService {
 
         assert game != null;
         if(game.checkGameIsCompleted()){
+            game.setGameIsCompleted();
             return true;
         }
         gameRepository.updateGameDataById(gameId, game);
@@ -232,17 +240,15 @@ public class GameService {
     public boolean advanceTurn(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
+
         game.getCompany().customerRevenueBoost();
 
         game.advanceTurn();
 
 
-        if(checkGameIsOver(gameId)){
-            throw new InvalidActionException("You have reached the turn limit without reaching IPO status.You Lose!");
-        }
-
         gameRepository.updateGameDataById(gameId, game);
         return false;
+
     }
 
     public String triggerRandomEvent(String gameId){
@@ -269,7 +275,17 @@ public class GameService {
     public void motherLode(String gameId){
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().motherLode();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
+    public void moneyMoneyMoney(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        assert game != null;
+        game.getCompany().moneyMoneyMoney();
 
         gameRepository.updateGameDataById(gameId, game);
     }

@@ -14,7 +14,7 @@ public class CybersecurityLeak extends Event {
         company.reduceRevenue(5);
         company.reduceCustomerBase(500);
 
-        return "CYBER SECURITY LEAK!! Your company has taken a hit! You have lost 5% revenue and 500 customers";
+        return "CYBER SECURITY LEAK!! Your company has taken a hit! You have lost 5% revenue and 500 customers!";
 
     }
 }
