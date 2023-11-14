@@ -34,7 +34,7 @@ public class GameService {
         return gameRepository.getAllGames();
     }
 
-    public void newGame() {
+    public void newGame() throws FileNotFoundException {
         Game game = new Game();
 
         Database gameData = new Database();
@@ -158,19 +158,19 @@ public class GameService {
 
 
     //getters
-    public int getEmployees(String gameId) {
+    public int getEmployees(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         return game.getCompany().getEmployees();
     }
 
-    public int getDepartments(String gameId) {
+    public int getDepartments(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany().getDepartments();
     }
 
     //may have to put the formatted revenue in the game class and return it to here
-    public String getFormattedRevenue(String gameId) {
+    public String getFormattedRevenue(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         double revenue = game.getCompany().getRevenue();
@@ -181,39 +181,39 @@ public class GameService {
 
     }
 
-    public int getProductXP(String gameId) {
+    public int getProductXP(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
         return game.getCompany().getProductXP();
     }
 
-    public int getCustomerBase(String gameId) {
+    public int getCustomerBase(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany().getCustomerBase();
     }
 
-    public Company getCompany(String gameId) {
+    public Company getCompany(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany();
     }
 
-    public Game getGame(String gameId) {
+    public Game getGame(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game;
     }
 
-    public int getCurrentTurn(String gameId) {
+    public int getCurrentTurn(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCurrentTurn();
     }
 
 
-    public int getNumberOfRemainingActions(String gameId) {
+    public int getNumberOfRemainingActions(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         return game.actionsRemaining();
     }
 
-    public boolean checkGameIsOver(String gameId) throws InvalidActionException {
+    public boolean checkGameIsOver(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -226,7 +226,7 @@ public class GameService {
         return false;
     }
 
-    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException {
+    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -238,7 +238,7 @@ public class GameService {
         return false;
     }
 
-    public boolean advanceTurn(String gameId) throws InvalidActionException {
+    public boolean advanceTurn(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
 
@@ -252,7 +252,7 @@ public class GameService {
 
     }
 
-    public String triggerRandomEvent(String gameId) {
+    public String triggerRandomEvent(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
 
@@ -272,7 +272,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void motherLode(String gameId) {
+    public void motherLode(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -281,7 +281,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void moneyMoneyMoney(String gameId) {
+    public void moneyMoneyMoney(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;

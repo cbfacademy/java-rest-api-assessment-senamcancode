@@ -21,14 +21,16 @@ import com.google.gson.reflect.TypeToken;
 @Repository
 public class GameRepository {
 
+    //for vs code the relativePath = "java-rest-api-assessment-senamcancode/src/main/game-data.json"
+
     public static String getFilePath(){
-        String relativePath = "src/main/resources/game-data.json";
+        String relativePath = "/src/main/game-data.json";
         Path path = Paths.get(System.getProperty("user.dir"), relativePath);
         return path.toString();
     }
 
 
-    public void saveGameData(Database database) {
+    public void saveGameData(Database database) throws FileNotFoundException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(database.getGames()); //this will change to the database class :)
         //because I am going to have 1 JSON file called the database with each game contained all the saved games
@@ -38,11 +40,13 @@ public class GameRepository {
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
+
+            throw new FileNotFoundException("Error writing to file");
         }
     }
 
 
-    public void appendGameData()  {
+    public void appendGameData()  throws FileNotFoundException{
             //this method should only be run if there is a game-data.json file
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
@@ -68,12 +72,14 @@ public class GameRepository {
             //then you write everything in the gamesList to the game-data.json file
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+
+            throw new FileNotFoundException("Error writing to file");
         }
     }
 
 
-    public void updateGameDataById(String gameId, Game updatedGame) {
+    public void updateGameDataById(String gameId, Game updatedGame) throws FileNotFoundException{
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
         try (FileReader reader = new FileReader(getFilePath())) {
@@ -95,10 +101,12 @@ public class GameRepository {
             }
         } catch (IOException e) {
             e.printStackTrace();
+
+            throw new FileNotFoundException("Error writing to file");
         }
     }
 
-    public static Game retrieveGame(String gameId) { //use the relative path! & need gameId as argument
+    public static Game retrieveGame(String gameId) throws FileNotFoundException{ //use the relative path! & need gameId as argument
         //String filePath = "game-data.json";
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
@@ -118,6 +126,9 @@ public class GameRepository {
             }
         } catch (IOException e) {
             e.printStackTrace();
+
+            throw new FileNotFoundException("Error reading file");
+
         }
         return null;
     }
@@ -143,7 +154,7 @@ public class GameRepository {
                 }
             }
         } catch (IOException e) {
-           throw new FileNotFoundException();
+           throw new FileNotFoundException("Error reading file");
         }
     }
 
@@ -160,12 +171,11 @@ public class GameRepository {
             return sortedGames;
 
     } catch (IOException e) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("Error reading file");
         }
 
     }
 }
-
 
         //1. read the JSON file
         //2. deserialise into the java object array
