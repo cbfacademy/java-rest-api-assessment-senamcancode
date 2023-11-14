@@ -248,6 +248,14 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
+    public void motherLode(String gameId){
+        Game game = GameRepository.retrieveGame(gameId);
+
+        game.getCompany().motherLode();
+
+        gameRepository.updateGameDataById(gameId, game);
+    }
+
 
 
 }

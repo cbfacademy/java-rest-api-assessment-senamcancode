@@ -19,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 @Repository
 public class GameRepository {
 
-//this is the one that works!
     public void saveGameData(Database database) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(database.getGames()); //this will change to the database class :)

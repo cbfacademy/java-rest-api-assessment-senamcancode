@@ -46,6 +46,12 @@ public class GameController {
         return ResponseEntity.ok("Your FinTech Company name was successfully changed to " + newCompanyName);
     }
 
+    @PutMapping("/motherlode")
+    public ResponseEntity<String> motherLoad(@RequestParam String gameId) throws FileNotFoundException {
+        gameService.motherLode(gameId);
+
+        return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status");
+    }
 
     @PostMapping("/add-employee")
     //need to chang the next 2 methods so that the numberofemployees information is not coming directly form the client
@@ -272,7 +278,7 @@ public class GameController {
         return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
     }
 
-    @GetMapping("/advance-turn/{gameId}")
+    @PostMapping("/advance-turn/{gameId}")
     public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) throws InvalidActionException {
         try {
             if(gameService.checkGameIsOver(gameId)){

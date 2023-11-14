@@ -76,10 +76,6 @@ public class Company {
     }
 
 
-    public void customerRevenueBoost(){
-        double customerRevenue = customerBase * 5;
-        revenue += customerRevenue;
-    }
 
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write
@@ -204,10 +200,6 @@ public class Company {
         investCount = 0;
     }
 
-    public int getCrowdFundCount() {
-        return crowdFundCount;
-    }
-
 
     public void reduceRevenue(double percentage){
         double reduction = (percentage / 100) * revenue;
@@ -231,9 +223,31 @@ public class Company {
         }
     }
 
+    public void customerRevenueBoost(){
+        double customerRevenue = customerBase * 5;
+        revenue += customerRevenue;
+    }
+
+    public void motherLode(){
+        setRevenue(5000000);
+        setDepartments(3);
+        setEmployees(30);
+        setCustomerBase(10000);
+        setProductXP(30);
+    }
+
 
 
     //company getters and setters
+    public int getCrowdFundCount() {
+        return crowdFundCount;
+    }
+
+
+    public void setCrowdFundCount(int crowdFundCount) {
+        this.crowdFundCount = crowdFundCount;
+    }
+
     public int getEmployees() {
         return employees;
     }
@@ -274,17 +288,11 @@ public class Company {
         this.revenue = revenue;
     }
 
-    public int getMaxCrowdFundCount() {
-        return maxCrowdFundCount;
-    }
-
-    public int getMaxInvestCount() {
-        return maxInvestCount;
-    }
 
     public int getInvestCount() {
         return investCount;
     }
+
 
     public String getCompanyName() {
         return companyName;

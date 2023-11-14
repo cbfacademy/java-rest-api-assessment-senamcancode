@@ -7,7 +7,9 @@ import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
+import org.junit.jupiter.params.ParameterizedTest;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ public class CompanyTest {
     private Game game;
     private Company company;
     @BeforeEach
-    public void gameAndCompanyInitialiser(){
+    public void gameAndCompanyInitializer(){
         game = new Game();
         company = game.getCompany();
     }
@@ -25,7 +27,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing crowdFund method increases revenue by 500000 in Company ")
     public void testCrowdFund() throws InvalidActionException {
-
         double initialRevenue = company.getRevenue();
 
         company.crowdFund();
@@ -39,8 +40,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing has sufficient funds method")
     public void testInsufficientFunds(){
-//        Game game = new Game();
-        Company company = game.getCompany();
         boolean result = company.hasSufficientFunds(1000);
 
         assertFalse(result);
@@ -50,8 +49,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing that the addEmployee method throws an Insufficient funds exception")
     public void testAddEmployeeException() throws InsufficientFundsException {
-        Game game = new Game();
-        Company company = game.getCompany();
 
         assertThrows(InsufficientFundsException.class, () -> {
             company.addEmployee(100000);
@@ -62,8 +59,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing method increases employees in Company ")
     public void testAddEmployee() throws InsufficientFundsException, InvalidActionException {
-        Game game = new Game();
-        Company company = game.getCompany();
         double initialEmployee = company.getEmployees();
 
         company.addEmployee(1);
@@ -77,8 +72,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing the removeEmployee method removes employees and departments")
     public void testRemoveEmployee() throws InvalidActionException {
-        Game game = new Game();
-        Company company = game.getCompany();
         company.setEmployees(20);
         company.setDepartments(2);
         int initDepartments = company.getDepartments();
@@ -92,8 +85,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing the removeEmployee method increases revenue")
     public void testRemoveEmployeeIncreasesRevenue() throws InvalidActionException {
-//        Game game = new Game();
-//        Company company = game.getCompany();
         company.setEmployees(20);
 
         double initRevenue = company.getRevenue();
@@ -160,9 +151,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing the researchAndDev method throws an exception when the revenue is less than the cost of research and development")
     public void testResearchAndDevThrowsException() throws InvalidActionException {
-        Game game = new Game();
-        Company company = game.getCompany();
-
         company.setRevenue(4999);
 
         assertThrows(InvalidActionException.class, () -> company.researchAndDev());
@@ -173,8 +161,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP to a multiple of 10 increases the customerBase ")
     public void testResearchAndDevAddsToCustomerBase() throws InvalidActionException {
-        Game game = new Game();
-        Company company = game.getCompany();
         int initProductXP = company.getProductXP();
         double initRevenue = company.getRevenue();
         int initCustomerBase = company.getCustomerBase();
@@ -193,7 +179,7 @@ public class CompanyTest {
         assertEquals( initRevenue - 250000, newRevenue);
         assertEquals(initCustomerBase + 1000, newCustomerBase);
     }
-    //need to add test for if revenue is insufficient
+
 
     @Test
     @DisplayName("Testing marketing method increases customerBase by 1000 and reduces revenue by 10000 ")
@@ -256,22 +242,30 @@ public class CompanyTest {
     }
 
     @Test
-    @DisplayName("Testing reset crowdFund Count resets crowdFundCount to 0")
-    public void testResetCrowdFund(){
-        int initCrowdFund = company.getCrowdFundCount();
+    @DisplayName("Testing resetCrowdFundCount method resets crowdFundCount to 0")
+    public void testResetCrowdFundCount(){
+        int initCrowdFundCount = company.getCrowdFundCount();
         company.incrementCrowdFundCount();
         company.resetCrowdFundCount();
 
-        assertEquals(initCrowdFund, 0);
+        assertEquals(initCrowdFundCount, 0);
     }
 
-    //Need a resetinvestcount test - start from here when making more tests 
+
+
+    @Test
+    @DisplayName("Testing resetInvestCount method resets investCount to 0" )
+    public void testResetInvestCount(){
+        int initInvestCount = company.getInvestCount();
+        company.incrementInvestCount();
+        company.resetInvestCount();
+
+        assertEquals(initInvestCount, 0);
+    }
 
     @Test
     @DisplayName("Testing reduceRevenue method reduces revenue by inputted percentage")
     public void testReduceRevenue() {
-        Game game = new Game();
-        Company company = game.getCompany();
         double initRevenue = company.getRevenue();
         company.reduceRevenue(10);
 
@@ -284,8 +278,6 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing increaseRevenue method increases revenue by inputted percentage")
     public void testIncreasesRevenue() {
-        Game game = new Game();
-        Company company = game.getCompany();
         double initRevenue = company.getRevenue();
         company.increaseRevenue(10);
 
@@ -298,11 +290,8 @@ public class CompanyTest {
     @Test
     @DisplayName("Testing increaseCustomerBase method increases customers by inputted number")
     public void testIncreasesCustomerBase() {
-        Game game = new Game();
-        Company company = game.getCompany();
         double initCustomerBase = company.getCustomerBase();
         company.increaseCustomerBase(10);
-
         double newCustomerBase = company.getCustomerBase();
 
         assertEquals(initCustomerBase + 10, newCustomerBase);
@@ -310,26 +299,11 @@ public class CompanyTest {
     }
 
 
-    @Test
-    @DisplayName("Testing reduceCustomerBase method sets customers to 0 if customer base is < inputted reduction number")
-    public void testReduceCustomerBase() {
-        Game game = new Game();
-        Company company = game.getCompany();
-
-        company.reduceCustomerBase(10);
-
-        double newCustomerBase = company.getCustomerBase();
-
-        assertEquals(0, newCustomerBase);
-
-    }
-
+    //@ParameterizedTest
+    ///I think I can make these a parameterised test - for the next 2 tests!!!
     @Test
     @DisplayName("Testing reduceCustomerBase method reduces customers by inputted number if customer base is greater than customer loss")
     public void testReduceCustomerBaseIfCustomerBaseIsGreaterThanLoss() {
-        Game game = new Game();
-        Company company = game.getCompany();
-
         company.increaseCustomerBase(10);
         double initCustomerBase = company.getCustomerBase();
 
@@ -341,21 +315,231 @@ public class CompanyTest {
     }
 
     @Test
+    @DisplayName("Testing reduceCustomerBase method sets customers to 0 if customer base is < inputted reduction number")
+    public void testReduceCustomerBase() {
+        company.reduceCustomerBase(10);
+        double newCustomerBase = company.getCustomerBase();
+
+        assertEquals(0, newCustomerBase);
+
+    }
+
+    @Test
     @DisplayName("Testing the customerRevenueBoost method increases the revenue by 5 * customerBase")
     public void testCustomerRevenueBoost(){
-        Game game = new Game();
-        Company company = game.getCompany();
-
         double initRevenue = game.getCompany().getRevenue();
         company.setCustomerBase(10);
         company.customerRevenueBoost();
-
         double newRevenue = game.getCompany().getRevenue();
 
         assertEquals(initRevenue + 50, newRevenue);
 
 
     }
+
+    @Test
+    @DisplayName("Testing the motherlode method sets revenue to 5,000,000, departments to 3, employees to 30, customerBase to 10000 and productXP to 30")
+    public void testMotherLode(){
+        double initRevenue = company.getRevenue();
+        int initDepartments = company.getDepartments();
+        int initEmployees = company.getEmployees();
+        int initCustomerBase = company.getCustomerBase();
+        int initProductXP = company.getProductXP();
+
+        company.motherLode();
+
+        double newRevenue = company.getRevenue();
+        int newDepartments = company.getDepartments();
+        int newEmployees = company.getEmployees();
+        int newCustomerBase = company.getCustomerBase();
+        int newProductXP = company.getProductXP();
+
+        assertEquals(initRevenue + 4000000, newRevenue);
+        assertEquals(initDepartments + 3, newDepartments);
+        assertEquals(initEmployees + 29, newEmployees);
+        assertEquals(initCustomerBase + 10000, newCustomerBase);
+        assertEquals(initProductXP + 30, newProductXP);
+
+    }
+
+    //Tests for getters and setters
+    @Test
+    @DisplayName("Testing the setter for the crowdFuncCount sets value")
+    public void setCrowdFundCount() throws NoSuchFieldException, IllegalAccessException {
+        company.setCrowdFundCount(100);
+
+        final Field field = company.getClass().getDeclaredField("crowdFundCount");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+    @Test
+    @DisplayName("Testing the getter for the crowdFundCount gets value")
+    public void getCrowdFundCount() throws NoSuchFieldException, IllegalAccessException{
+        final Field field = company.getClass().getDeclaredField("crowdFundCount");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getCrowdFundCount();
+
+        assertEquals(result, 100);
+    }
+
+    @Test
+    @DisplayName("Testing the setter for employees sets value")
+    public void setEmployees() throws NoSuchFieldException, IllegalAccessException {
+        company.setEmployees(100);
+
+        final Field field = company.getClass().getDeclaredField("employees");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for employees gets value")
+    public void getEmployees()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("employees");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getEmployees();
+
+        assertEquals(result, 100);
+    }
+
+    @Test
+    @DisplayName("Testing the setter for departments sets value")
+    public void setDepartments() throws NoSuchFieldException, IllegalAccessException {
+        company.setDepartments(100);
+
+        final Field field = company.getClass().getDeclaredField("departments");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for departments gets value")
+    public void getDepartments()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("departments");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getDepartments();
+
+        assertEquals(result, 100);
+    }
+
+    @DisplayName("Testing the setter for customerBase sets value")
+    public void setCustomerBase() throws NoSuchFieldException, IllegalAccessException {
+        company.setCustomerBase(100);
+
+        final Field field = company.getClass().getDeclaredField("customerBase");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for customerBase gets value")
+    public void getCustomerBase()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("customerBase");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getCustomerBase();
+
+        assertEquals(result, 100);
+    }
+
+    @DisplayName("Testing the setter for productXP sets value")
+    public void setProductXP() throws NoSuchFieldException, IllegalAccessException {
+        company.setProductXP(100);
+
+        final Field field = company.getClass().getDeclaredField("productXP");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for productXP gets value")
+    public void getProductXP()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("productXP");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getProductXP();
+
+        assertEquals(result, 100);
+    }
+
+    @DisplayName("Testing the setter for revenue sets value")
+    public void setRevenue() throws NoSuchFieldException, IllegalAccessException {
+        company.setRevenue(100);
+
+        final Field field = company.getClass().getDeclaredField("revenue");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for revenue gets value")
+    public void getRevenue()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("revenue");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final double result = company.getRevenue();
+
+        assertEquals(result, 100);
+    }
+
+    @Test
+    @DisplayName("Testing the getter for investCount gets value")
+    public void getInvestCount()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("investCount");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final double result = company.getInvestCount();
+
+        assertEquals(result, 100);
+    }
+
+    @Test
+    @DisplayName("Testing the getter for companyName gets value")
+    public void getCompanyName()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("companyName");
+        field.setAccessible(true);
+        field.set(company,"Hello World");
+
+        final String result = company.getCompanyName();
+
+        assertEquals(result, "Hello World");
+    }
+
+    @Test
+    @DisplayName("Testing the setter for companyName sets value")
+    public void setCompanyName() throws NoSuchFieldException, IllegalAccessException {
+        company.setCompanyName("Hello World");
+
+        final Field field = company.getClass().getDeclaredField("companyName");
+        field.setAccessible(true);
+
+        assertEquals(field.get(company), "Hello World");
+    }
+
+
+
 
 
 }
