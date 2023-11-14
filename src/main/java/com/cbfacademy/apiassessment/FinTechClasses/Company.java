@@ -148,7 +148,7 @@ public class Company {
                 return "Congrats! You gained £" + secondRandomNumber;
             }else{
                 revenue -= secondRandomNumber;
-                return "Unfortunately! You lost £" + secondRandomNumber;
+                return "You gambled and lost! You lost £" + secondRandomNumber;
             }
 
         //return firstRandomNumber because I want to be able to tell the user what happened
@@ -169,7 +169,7 @@ public class Company {
                 return "Congrats! You gained £" + secondRandomNumber;
             }else{
                 revenue -= secondRandomNumber;
-                return "Unfortunately! You lost £" + secondRandomNumber;
+                return "You gambled and lost! You lost £" + secondRandomNumber;
             }
 
 
