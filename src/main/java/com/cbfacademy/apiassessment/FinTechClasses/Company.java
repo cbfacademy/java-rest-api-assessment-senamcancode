@@ -126,18 +126,8 @@ public class Company {
         }
     }
 
-    //    public int investmentGenerator(){
-//        SecureRandom rand = new SecureRandom();
-//        int firstRandomNumber = rand.nextInt(2);
-//        int secondRandomNumber = rand.nextInt(100001);
-//
-//        return firstRandomNumber;
-//    }
 
-
-    //sniper invest method - increases or decreases revenue
     public String sniperInvestment() throws InvalidActionException{
-        //How could I refactor this??
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
@@ -150,9 +140,6 @@ public class Company {
                 revenue -= secondRandomNumber;
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
-
-        //return firstRandomNumber because I want to be able to tell the user what happened
-        //want to be able to return what investment was made - so that they know they either lost or made money
         } else {
             throw new InvalidActionException("You can only invest once per turn");
         }
@@ -171,18 +158,11 @@ public class Company {
                 revenue -= secondRandomNumber;
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
-
-
-        //return firstRandomNumber because I want to be able to tell the user what happened
-        //want to be able to return what investment was made - so that they know they either lost or made money
         } else {
             throw new InvalidActionException("You can only invest once per turn");
         }
     }
 
-    public void moneyMoneyMoney(){
-        revenue = 9999999;
-    }
 
 
     public void incrementCrowdFundCount(){
@@ -237,6 +217,9 @@ public class Company {
         setProductXP(30);
     }
 
+    public void moneyMoneyMoney(){
+        revenue = 9999999;
+    }
 
 
     //company getters and setters

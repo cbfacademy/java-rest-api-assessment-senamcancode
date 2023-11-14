@@ -353,7 +353,7 @@ public class CompanyTest {
     }
 
     @Test
-    @DisplayName("Testing the motherlode method sets revenue to 5,000,000, departments to 3, employees to 30, customerBase to 10000 and productXP to 30")
+    @DisplayName("Testing the motherlode cheat code method sets revenue to 5,000,000, departments to 3, employees to 30, customerBase to 10000 and productXP to 30")
     public void testMotherLode(){
         double initRevenue = company.getRevenue();
         int initDepartments = company.getDepartments();
@@ -375,6 +375,16 @@ public class CompanyTest {
         assertEquals(initCustomerBase + 10000, newCustomerBase);
         assertEquals(initProductXP + 30, newProductXP);
 
+    }
+
+    @Test
+    @DisplayName("Testing moneyMoneyMoney cheat codemethod sets revenue to 9999999")
+    public void moneyMoneyMoney(){
+        double initRevenue = company.getRevenue();
+        company.moneyMoneyMoney();
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initRevenue + 8999999, newRevenue);
     }
 
     //Tests for getters and setters
