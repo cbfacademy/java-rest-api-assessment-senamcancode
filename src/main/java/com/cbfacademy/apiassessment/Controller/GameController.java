@@ -278,12 +278,10 @@ public class GameController {
     @PostMapping("/advance-turn/{gameId}")
     public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) throws InvalidActionException {
         try {
-            if(gameService.checkGameIsOver(gameId)){
-                return ResponseEntity.ok("GAME OVER! You failed to reach IPO status!");
-            }
-
             if(gameService.checkGameIsCompleted(gameId)){
                 return ResponseEntity.ok("CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!");
+            } else  if(gameService.checkGameIsOver(gameId)){
+                return ResponseEntity.ok("GAME OVER! You failed to reach IPO status!");
             }
 
             String resultMessage = gameService.triggerRandomEvent(gameId);

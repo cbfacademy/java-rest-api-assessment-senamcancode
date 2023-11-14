@@ -68,10 +68,6 @@ public class Game {
     }
 
 
-    public int getCurrentTurn() {
-        return currentTurn;
-    }
-
     public void advanceTurn(){
 
         setMonth();
@@ -152,5 +148,11 @@ public class Game {
         return month;
     }
 
+    public int getMaxTurnsPerGame() {
+        return maxTurnsPerGame;
+    }
 
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
 }

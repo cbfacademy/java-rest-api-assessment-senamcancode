@@ -158,18 +158,19 @@ public class GameService {
 
 
     //getters
-    public int getEmployees(String gameId){
+    public int getEmployees(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
 
         return game.getCompany().getEmployees();
     }
 
-    public int getDepartments(String gameId){
+    public int getDepartments(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany().getDepartments();
     }
+
     //may have to put the formatted revenue in the game class and return it to here
-    public String getFormattedRevenue(String gameId){
+    public String getFormattedRevenue(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
 
         double revenue = game.getCompany().getRevenue();
@@ -180,43 +181,43 @@ public class GameService {
 
     }
 
-    public int getProductXP(String gameId){
+    public int getProductXP(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
         return game.getCompany().getProductXP();
     }
 
-    public int getCustomerBase(String gameId){
+    public int getCustomerBase(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany().getCustomerBase();
     }
 
-    public Company getCompany(String gameId){
+    public Company getCompany(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCompany();
     }
 
-    public Game getGame(String gameId){
+    public Game getGame(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game;
     }
 
-    public int getCurrentTurn(String gameId){
+    public int getCurrentTurn(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game.getCurrentTurn();
     }
 
 
-    public int getNumberOfRemainingActions(String gameId){
+    public int getNumberOfRemainingActions(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         return game.actionsRemaining();
     }
 
-    public boolean checkGameIsOver(String gameId) throws InvalidActionException{
+    public boolean checkGameIsOver(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        if(game.checkGameIsOver()){
+        if (game.checkGameIsOver()) {
             game.setGameIsOver();
             return true;
         }
@@ -225,11 +226,11 @@ public class GameService {
         return false;
     }
 
-    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException{
+    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        if(game.checkGameIsCompleted()){
+        if (game.checkGameIsCompleted()) {
             game.setGameIsCompleted();
             return true;
         }
@@ -251,7 +252,7 @@ public class GameService {
 
     }
 
-    public String triggerRandomEvent(String gameId){
+    public String triggerRandomEvent(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
 
@@ -263,7 +264,6 @@ public class GameService {
     }
 
 
-
     public void deleteGame(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
@@ -272,7 +272,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void motherLode(String gameId){
+    public void motherLode(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -281,7 +281,7 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    public void moneyMoneyMoney(String gameId){
+    public void moneyMoneyMoney(String gameId) {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -289,8 +289,6 @@ public class GameService {
 
         gameRepository.updateGameDataById(gameId, game);
     }
-
-
 
 }
 
