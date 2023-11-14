@@ -23,6 +23,7 @@ public class SortAlgo {
             if (games.get(j).getDateCreated().compareTo(pivot.getDateCreated()) >= 0) {
                 i++;
                 swap(games, i, j);
+                //NB - you can compare the names of the finTech companies too!!!
             }
         }
 
