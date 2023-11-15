@@ -123,7 +123,7 @@ public class Game {
 
         if(actionsPerTurn >= currentNumberOfActions){
             currentNumberOfActions++;
-        } else {
+        } else if(actionsRemaining() <= 0){
             throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions");
         }
     }

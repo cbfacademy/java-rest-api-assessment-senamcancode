@@ -20,16 +20,31 @@ public class Company {
     private int crowdFundCount = 0;
 
 
-    //company methods to used in the API game
+    //company methods to used in the API game - first iteration of the method
     //crowdFund method - increases revenue but can only be used once per turn
-    public void crowdFund() throws InvalidActionException {
+    //could make this random
+//    public void crowdFund() throws InvalidActionException {
+//        if(crowdFundCount < maxCrowdFundCount) {
+//                revenue += 500000;
+//                incrementCrowdFundCount();
+//            }
+//        else{
+//            throw new InvalidActionException("Invalid action - You can only crowd fund once per turn");
+//        }
+//    }
+
+
+    //If crowdfund is too powerful might randomise it so that its not always such a high number - remember to update the crowdFund test!!!!
+    public String crowdFund() throws InvalidActionException{
         if(crowdFundCount < maxCrowdFundCount) {
-                revenue += 500000;
-                incrementCrowdFundCount();
-            }
-        else{
-            throw new InvalidActionException("Invalid action - You can only crowd fund once per turn");
+
+        SecureRandom rand = new SecureRandom();
+        int randomNumber = rand.nextInt(500001);
+
+            revenue += randomNumber;
+            return "Congrats! You crowd funded £" + randomNumber;
         }
+        return null;
     }
 
     public boolean hasSufficientFunds(int numberOfEmployees){
@@ -38,41 +53,45 @@ public class Company {
     }
 
     //hireEmployee method - company can add employees but no more than 10 employees per turn
-    public void addEmployee(int numberOfEmployees) throws InsufficientFundsException, InvalidActionException {
+    public String addEmployee(int numberOfEmployees){
         if(!hasSufficientFunds(numberOfEmployees)){
-            throw new InsufficientFundsException("You do not have enough funds available");
+            return ". You do not have enough funds available to add " + numberOfEmployees + " employees";
         }
 
-        if(numberOfEmployees <= 10){
+        if(hasSufficientFunds(numberOfEmployees) && numberOfEmployees <= 10){
             employees += numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue -= costOfHiring;
+            return ".";
         }
-        if(numberOfEmployees > 10){
-            throw new InvalidActionException("You cannot add more than 10 employees each action");
+        if(hasSufficientFunds(numberOfEmployees) && numberOfEmployees > 10){
+            return ". You cannot add more than 10 employees each action.";
         }
+        return null;
     }
 
     //remove employee method - removes employees and adds their salary to revenue - departments will also be removed at 10 employee intervals ie if a user removes 10 employees they remove 1 department if they remove 20 employees 2 departments and so on
-    public void removeEmployee(int numberOfEmployees) throws InvalidActionException{
+    public String removeEmployee(int numberOfEmployees) {
         if(employees < numberOfEmployees){
-            throw new InvalidActionException("You cannot get rid of more employees than you already have");
+            return "You cannot get rid of more employees than you already have";
         }
 
         if(employees > 0 && employees > numberOfEmployees) {
             employees -= numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue += costOfHiring;
+            //need to also remove the department
+            int employeesNeededForDepartment = 10;
+            int departmentsToRemove = numberOfEmployees / employeesNeededForDepartment;
+
+            if(departmentsToRemove > 0){
+                departments -= departmentsToRemove;
+            }
+
+            return "you now have ";
         }
 
-        //need to also remove the department
-        int employeesNeededForDepartment = 10;
-        int departmentsToRemove = numberOfEmployees / employeesNeededForDepartment;
-
-        if(departmentsToRemove > 0){
-            departments -= departmentsToRemove;
-        }
-
+        return null;
     }
 
 
@@ -97,20 +116,21 @@ public class Company {
         }
 
 
-        if (revenue > 50000 && productXP < 100) {
+        //this needs to be changes to 30
+        if (revenue > 50000 && productXP < 30) {
 
             productXP += 2;
             revenue -= 50000;
 
             //might make a separate productXP boost so that I can tell the user that this happened - if not i can put it in the read me
-            if (productXP % 10 == 0 && productXP != 100) {
+            if (productXP % 10 == 0 && productXP != 30) {
+                customerBase += 500;
+            } else if(productXP >= 30){
                 customerBase += 1000;
-            } else if(productXP == 100){
-                customerBase += 2000;
             }
         }
 
-        if(productXP == 100){
+        if(productXP >= 30){
             throw new InvalidActionException("You have maxed out your product XP and so can no longer use the R&D method");
         }
     }

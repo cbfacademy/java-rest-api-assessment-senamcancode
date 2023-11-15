@@ -23,11 +23,12 @@ public class GameService {
 
 
     //we need to account for if there is a json file already - we need to append the new game to the json file
-    public void actionsManager(String gameId) throws InvalidActionException, FileNotFoundException {
+    public void actionsManager(String gameId) throws  FileNotFoundException, InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         game.actionsManager();
+
     }
 
     public List<Game> getAllGames() throws FileNotFoundException {
@@ -57,29 +58,32 @@ public class GameService {
 
     }
 
-    public void addEmployee(String gameId, int numberOfEmployees) throws InsufficientFundsException, InvalidActionException, FileNotFoundException {
+    public String addEmployee(String gameId, int numberOfEmployees) throws FileNotFoundException, InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
         //this line is constantly repeated can I refactor?
         assert game != null;
 
 
-        game.getCompany().addEmployee(numberOfEmployees);
+        String actionMessage = game.getCompany().addEmployee(numberOfEmployees);
 
 
         game.actionsManager();
         gameRepository.updateGameDataById(gameId, game);
+
+        return actionMessage;
     }
 
-    public void removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException, FileNotFoundException {
+    public String removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException, FileNotFoundException {
         Game game = gameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().removeEmployee(numberOfEmployees);
+        String actionMessage = game.getCompany().removeEmployee(numberOfEmployees);
 
 
         game.actionsManager();
-
         gameRepository.updateGameDataById(gameId, game);
+
+        return actionMessage;
     }
 
     public void crowdFund(String gameId) throws InvalidActionException, FileNotFoundException {
@@ -213,7 +217,7 @@ public class GameService {
         return game.actionsRemaining();
     }
 
-    public boolean checkGameIsOver(String gameId) throws InvalidActionException, FileNotFoundException {
+    public boolean checkGameIsOver(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
@@ -226,7 +230,7 @@ public class GameService {
         return false;
     }
 
-    public boolean checkGameIsCompleted(String gameId) throws InvalidActionException, FileNotFoundException {
+    public boolean checkGameIsCompleted(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
