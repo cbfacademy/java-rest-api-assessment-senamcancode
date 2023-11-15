@@ -44,8 +44,6 @@ public class Game {
         int randomIndex = random.nextInt(listOfEvents.size());
         Event randomEvent = listOfEvents.get(randomIndex);
         return randomEvent.executeEvent(company);
-        //return randomEvent.getEventName();
-        //this will return the name of the triggered Event
     }
 
 

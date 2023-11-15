@@ -87,11 +87,13 @@ public class GameController {
 
 
             return ResponseEntity.ok(employeesAdded + " employee(s) added" + resultMessage + " You have " + newEmployees + " employee(s)");
+            //might also add the number of departments
+
 
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("File not found: Unable to add employee(s)");
         } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Actions error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Action error: " + e.getMessage());
         }
 
     }
@@ -108,17 +110,22 @@ public class GameController {
                 return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
             }
 
+            double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
             int initEmployees = gameService.getEmployees(gameId);
 
-            gameService.removeEmployee(gameId, numberOfEmployees);
+            String resultMessage = gameService.removeEmployee(gameId, numberOfEmployees);
             gameService.actionsManager(gameId);
 
             int newEmployees = gameService.getEmployees(gameId);
 
             int employeesRemoved = initEmployees - newEmployees;
 
-            return ResponseEntity.ok(employeesRemoved + " employee(s) removed. " +
-                    + newEmployees + " employees");
+            int numOfDepartments = gameService.getDepartments(gameId);
+
+            double moneySaved = Double.parseDouble(gameService.getFormattedRevenue(gameId)) - initRevenue; ;
+
+            return ResponseEntity.ok(employeesRemoved + " employee(s) removed and £" + moneySaved + " saved" + resultMessage + "\n You have "
+                    + newEmployees + " employees and " + numOfDepartments + " department(s)");
 
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -202,14 +209,14 @@ public class GameController {
                 return ResponseEntity.ok("You completed the game, you cannot take any more actions");
             }
 
-            gameService.addDepartment(gameId);
+            String resultMessage = gameService.addDepartment(gameId);
             gameService.actionsManager(gameId);
 
             int numberOfDepartments = gameService.getDepartments(gameId);
-            return ResponseEntity.ok("Department added. You now have " + numberOfDepartments + " department(s)");
+            return ResponseEntity.ok(numberOfDepartments + " department(s) added" + resultMessage);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Add department error: " + e.getMessage());
+                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("File Not Found: Unable to add department");
         }
@@ -227,18 +234,18 @@ public class GameController {
                 throw new InvalidActionException("You completed the game, you cannot take any more actions");
             }
 
-            gameService.researchAndDev(gameId);
+            String resultMessage = gameService.researchAndDev(gameId);
             gameService.actionsManager(gameId);
 
             int productXP = gameService.getProductXP(gameId);
             return ResponseEntity
-                    .ok("Research and development success, 2 XP added to the product. You now have a product XP of "
+                    .ok(resultMessage + "You have a product XP of "
                             + productXP);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Research and development error: " + e.getMessage());
+                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("JSON file not found.");
+            throw new FileNotFoundException("File not found: Unable to add to do research and development");
         }
     }
 
@@ -254,15 +261,15 @@ public class GameController {
                 throw new InvalidActionException("You completed the game, you cannot take any more actions");
             }
 
-            gameService.market(gameId);
+            String resultMessage = gameService.market(gameId);
             gameService.actionsManager(gameId);
 
             int customerBase = gameService.getCustomerBase(gameId);
-            return ResponseEntity.ok("Marketing was successful! You now have a customer base of " + customerBase);
+            return ResponseEntity.ok(resultMessage + "You have a customer base of " + customerBase);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("JSON file not found.");
+            throw new FileNotFoundException("File not found: unable to market.");
         }
     }
 
@@ -296,7 +303,7 @@ public class GameController {
 
     //Might need to change the structure of this so that it mimics the post request
     @PostMapping("/advance-turn/{gameId}")
-    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId) throws InvalidActionException {
+    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId)  {
         try {
             if (gameService.checkGameIsCompleted(gameId)) {
                 return ResponseEntity
@@ -309,9 +316,6 @@ public class GameController {
 
             gameService.advanceTurn(gameId);
             return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Game Over: " + e.getMessage());
-
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

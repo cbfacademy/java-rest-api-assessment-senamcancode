@@ -127,37 +127,43 @@ public class GameService {
         return resultMessage;
     }
 
-    public void addDepartment(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String addDepartment(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().addDepartment();
+        String resultMessage = game.getCompany().addDepartment();
 
         game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
     }
 
-    public void researchAndDev(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String researchAndDev(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().researchAndDev();
+        String resultMessage = game.getCompany().researchAndDev();
 
         game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
     }
 
-    public void market(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String market(String gameId) throws InvalidActionException, FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
-        game.getCompany().marketing();
+        String resultMessage = game.getCompany().marketing();
 
         game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
+
+        return resultMessage;
     }
 
 
@@ -242,7 +248,7 @@ public class GameService {
         return false;
     }
 
-    public boolean advanceTurn(String gameId) throws InvalidActionException, FileNotFoundException {
+    public boolean advanceTurn(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         assert game != null;
 

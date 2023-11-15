@@ -73,7 +73,7 @@ public class Company {
     //remove employee method - removes employees and adds their salary to revenue - departments will also be removed at 10 employee intervals ie if a user removes 10 employees they remove 1 department if they remove 20 employees 2 departments and so on
     public String removeEmployee(int numberOfEmployees) {
         if(employees < numberOfEmployees){
-            return "You cannot get rid of more employees than you already have";
+            return ". You cannot get rid of more employees than you already have.";
         }
 
         if(employees > 0 && employees > numberOfEmployees) {
@@ -88,7 +88,7 @@ public class Company {
                 departments -= departmentsToRemove;
             }
 
-            return "you now have ";
+            return ".";
         }
 
         return null;
@@ -97,22 +97,23 @@ public class Company {
 
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write
-    public void addDepartment() throws InvalidActionException {
+    public String addDepartment() {
         int employeesNeeded = (departments + 1) * 10;
 
         if(employees < employeesNeeded){
-            throw new InvalidActionException("You do not have enough employees to make a department");
+            return ". You do not have enough employees to make a department";
 
         } else {
             departments++;
+            return ".";
         }
     }
 
 
     //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base)
-    public void researchAndDev() throws InvalidActionException {
+    public String researchAndDev() throws InvalidActionException {
         if(revenue < 50000){
-            throw new InvalidActionException("Insufficient funds: You don't have enough to do research and development");
+            return "Insufficient funds: You don't have enough to do research and development";
         }
 
 
@@ -128,26 +129,31 @@ public class Company {
             } else if(productXP >= 30){
                 customerBase += 1000;
             }
+
+            return "Research and development success, 2 XP added to the product";
         }
 
         if(productXP >= 30){
-            throw new InvalidActionException("You have maxed out your product XP and so can no longer use the R&D method");
+            return "You have maxed out your product XP and so can no longer use the R&D method";
         }
+
+        return null;
     }
 
     //marketing - adds 100 to customer base but costs money
-    public void marketing() throws InvalidActionException {
+    public String marketing() {
         if(revenue < 10000){
-            throw new InvalidActionException("Insufficient funds: You do not have enough funds to implement marketing");
+            return "Insufficient funds: You do not have enough funds to implement marketing";
         } else {
             customerBase += 1000;
             revenue -= 10000;
+            return "Marketing was successful!";
         }
     }
 
 
     //Sniper investment is more of a risk (like in real life) because the amount you can gain or lose is greater
-    public String sniperInvestment() throws InvalidActionException{
+    public String sniperInvestment() {
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
@@ -161,13 +167,14 @@ public class Company {
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
         } else {
-            throw new InvalidActionException("You can only invest once per turn");
+            return "You can only invest once per turn";
+            //should have code to check the invest count
         }
     }
 
 
     //Passive investment is less of a risk (like in real life) because the amount you can gain or lose is less
-    public String passiveInvestment() throws InvalidActionException{
+    public String passiveInvestment() {
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
         int firstRandomNumber = rand.nextInt(2);
@@ -181,7 +188,8 @@ public class Company {
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
         } else {
-            throw new InvalidActionException("You can only invest once per turn");
+            return "You can only invest once per turn";
+            //should have code to check the invest count
         }
     }
 
