@@ -1,6 +1,5 @@
 package com.cbfacademy.apiassessment.Controller;
 
-import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -9,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("api/game")
@@ -28,8 +25,7 @@ public class GameController {
 
             return ResponseEntity.ok("New game started and data written to file");
         }catch (FileNotFoundException e){
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error starting the game: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error starting the game: " + e.getMessage());
         }
 
     }
@@ -41,7 +37,7 @@ public class GameController {
 
             return ResponseEntity.ok("New game started and data appended to file");
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("File Not Found: Unable to add a new game.");
         }
     }
@@ -54,7 +50,7 @@ public class GameController {
             String newCompanyName = gameService.getCompany(gameId).getCompanyName();
             return ResponseEntity.ok("Your FinTech Company name was successfully changed to " + newCompanyName);
         }catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("File Not Found: Unable to change company name.");
         }
     }
@@ -62,8 +58,7 @@ public class GameController {
     @PostMapping("/add-employee")
     // need to chang the next 2 methods so that the numberofemployees information is
     // not coming directly form the client
-    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId)
-            throws FileNotFoundException {
+    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
 
             if (gameService.checkGameIsCompleted(gameId)) {
@@ -91,16 +86,15 @@ public class GameController {
 
 
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: Unable to add employee(s)");
+            return ResponseEntity.ok("File not found: Unable to add employee(s)");
         } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Action error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Action error: " + e.getMessage());
         }
 
     }
 
     @PutMapping("/remove-employee")
-    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId)
-            throws FileNotFoundException {
+    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
             if (gameService.checkGameIsCompleted(gameId)) {
                 return ResponseEntity.ok("You completed the game, you cannot take any more actions");
@@ -131,13 +125,12 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: Unable to remove employee(s)");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to remove employee(s)");
         }
     }
 
     @PostMapping("/crowd-fund")
-    public ResponseEntity<String> crowdFund(@RequestParam String gameId)
-            throws InvalidActionException, FileNotFoundException {
+    public ResponseEntity<String> crowdFund(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsCompleted(gameId)) {
                 return ResponseEntity.ok("You completed the game, you cannot take any more actions");
@@ -157,13 +150,13 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: Unable to crowd fund.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to crowd fund.");
         }
 
     }
 
     @PostMapping("/invest/{action}")
-    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId) throws FileNotFoundException {
+    public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId)  {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
@@ -191,14 +184,14 @@ public class GameController {
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Investing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File Not Found: Unable to make investment");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found: Unable to make investment");
         }
 
         return null;
     }
 
     @PostMapping("/add-department")
-    public ResponseEntity<String> addDepartment(@RequestParam String gameId) throws FileNotFoundException {
+    public ResponseEntity<String> addDepartment(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
@@ -217,13 +210,12 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File Not Found: Unable to add department");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found: Unable to add department");
         }
     }
 
     @PostMapping("/research-and-dev")
-    public ResponseEntity<String> researchAndDev(@RequestParam String gameId)
-            throws InvalidActionException, FileNotFoundException {
+    public ResponseEntity<String> researchAndDev(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -244,7 +236,7 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: Unable to add to do research and development");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to add to do research and development");
         }
     }
 
@@ -267,7 +259,7 @@ public class GameController {
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to do marketing action.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to do marketing action.");
         }
     }
 
@@ -275,11 +267,17 @@ public class GameController {
 
     //need to have a response to the filenotfound thingy for the following endpoints!!
     @GetMapping("get-all-games")
-    public ResponseEntity<List<Game>> getAllGames() throws FileNotFoundException {
-        return ResponseEntity.ok(gameService.getAllGames());
+    public ResponseEntity<?> getAllGames() {
+        try {
+            return ResponseEntity.ok(gameService.getAllGames());
+        } catch(FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to get all games.");
+        }
 
     }
 
+
+    //the fileNotFound Exception isn't being thrown!!!
     @GetMapping("/get-company/{gameId}")
     public ResponseEntity<Company> companyInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getCompany(gameId));
@@ -319,7 +317,7 @@ public class GameController {
             gameService.advanceTurn(gameId);
             return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to advance turn");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to advance turn");
         }
     }
 
@@ -329,7 +327,7 @@ public class GameController {
             gameService.deleteGame(gameId);
             return ResponseEntity.ok("You successfully deleted the game");
         } catch(FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to delete game");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to delete game");
         }
     }
 
@@ -339,7 +337,7 @@ public class GameController {
             gameService.moneyMoneyMoney(gameId);
             return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
         } catch(FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to use money cheat code");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to use money cheat code");
         }
     }
 
@@ -349,7 +347,7 @@ public class GameController {
             gameService.motherLode(gameId);
             return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to use motherlode cheat code");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to use motherlode cheat code");
         }
     }
 
