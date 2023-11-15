@@ -147,7 +147,6 @@ public class GameController {
                 return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
             }
 
-
             gameService.crowdFund(gameId);
             gameService.actionsManager(gameId);
 
@@ -250,8 +249,7 @@ public class GameController {
     }
 
     @PostMapping("/marketing")
-    public ResponseEntity<String> marketing(@RequestParam String gameId)
-            throws InvalidActionException, FileNotFoundException {
+    public ResponseEntity<String> marketing(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsOver(gameId)) {
                 throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
@@ -269,10 +267,13 @@ public class GameController {
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: unable to market.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to do marketing action.");
         }
     }
 
+
+
+    //need to have a response to the filenotfound thingy for the following endpoints!!
     @GetMapping("get-all-games")
     public ResponseEntity<List<Game>> getAllGames() throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getAllGames());
@@ -295,9 +296,10 @@ public class GameController {
         return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of 20");
     }
 
-    @GetMapping("/get-actions-num/{gameId}")
+    @GetMapping("/get-actions-rem/{gameId}")
     public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId)
             throws FileNotFoundException {
+
         return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
     }
 
@@ -317,28 +319,38 @@ public class GameController {
             gameService.advanceTurn(gameId);
             return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to advance turn");
         }
     }
 
     @DeleteMapping("/delete-game")
     public ResponseEntity<String> deleteGame(@RequestParam String gameId) throws FileNotFoundException {
-        gameService.deleteGame(gameId);
-        return ResponseEntity.ok("You successfully deleted the game");
+        try {
+            gameService.deleteGame(gameId);
+            return ResponseEntity.ok("You successfully deleted the game");
+        } catch(FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to delete game");
+        }
     }
 
     @PutMapping("/money")
     public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
-        gameService.moneyMoneyMoney(gameId);
-        return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
+        try {
+            gameService.moneyMoneyMoney(gameId);
+            return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
+        } catch(FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to use money cheat code");
+        }
     }
 
     @PutMapping("/motherlode")
     public ResponseEntity<String> motherLoad(@RequestParam String gameId) throws FileNotFoundException {
-        gameService.motherLode(gameId);
-
-        return ResponseEntity
-                .ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
+        try {
+            gameService.motherLode(gameId);
+            return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
+        } catch (FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File not found: unable to use motherlode cheat code");
+        }
     }
 
 }
