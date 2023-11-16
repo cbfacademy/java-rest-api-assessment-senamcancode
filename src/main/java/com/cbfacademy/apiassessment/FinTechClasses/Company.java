@@ -1,8 +1,5 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
-import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
-import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
-
 import java.security.SecureRandom;
 
 public class Company {
@@ -12,6 +9,8 @@ public class Company {
     public final static double costOfEmployee = 5000;
     private int customerBase = 0;
     private int productXP = 0;
+    private int maxProductXP = 30;
+    private int employeesNeededForDepartment = 10;
     private double revenue = 1000000;
     private final int maxCrowdFundCount = 1;
     private final int maxInvestCount = 1;
@@ -23,29 +22,35 @@ public class Company {
     //company methods to used in the API game - first iteration of the method
     //crowdFund method - increases revenue but can only be used once per turn
     //could make this random
-//    public void crowdFund() throws InvalidActionException {
-//        if(crowdFundCount < maxCrowdFundCount) {
-//                revenue += 500000;
-//                incrementCrowdFundCount();
-//            }
-//        else{
-//            throw new InvalidActionException("Invalid action - You can only crowd fund once per turn");
-//        }
-//    }
+    public String crowdFund() {
+        if(crowdFundCount < maxCrowdFundCount) {
+            double newRevenue = revenue += 500000;
+            incrementCrowdFundCount();
+
+                return "Congrats! You crowd funded £" + newRevenue;
+            }
+        else{
+           return "Invalid action - You can only crowd fund once per turn";
+        }
+    }
 
 
     //If crowdfund is too powerful might randomise it so that its not always such a high number - remember to update the crowdFund test!!!!
-    public String crowdFund() throws InvalidActionException{
-        if(crowdFundCount < maxCrowdFundCount) {
-
-        SecureRandom rand = new SecureRandom();
-        int randomNumber = rand.nextInt(500001);
-
-            revenue += randomNumber;
-            return "Congrats! You crowd funded £" + randomNumber;
-        }
-        return null;
-    }
+//    public String crowdFund(){
+//        if(crowdFundCount < maxCrowdFundCount) {
+//
+//        //SecureRandom rand = new SecureRandom();
+//        //int randomNumber = rand.nextInt(500001);
+//
+//            int number = 5000000;
+//
+//            revenue += number;
+//            return "Congrats! You crowd funded £" + number;
+//        } else {
+//            return "Invalid action - You can only crowd fund once per turn";
+//        }
+//
+//    }
 
     public boolean hasSufficientFunds(int numberOfEmployees){
         double costOfHiring = costOfEmployee * numberOfEmployees;
@@ -76,12 +81,14 @@ public class Company {
             return ". You cannot get rid of more employees than you already have.";
         }
 
-        if(employees > 0 && employees > numberOfEmployees) {
-            employees -= numberOfEmployees;
+        if(employees > 0 && employees >= numberOfEmployees) {
+            employees = employees - numberOfEmployees;
+
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue += costOfHiring;
+
+
             //need to also remove the department
-            int employeesNeededForDepartment = 10;
             int departmentsToRemove = numberOfEmployees / employeesNeededForDepartment;
 
             if(departmentsToRemove > 0){
@@ -98,7 +105,7 @@ public class Company {
 
     //addDepartment - add a department but they need a minimum number of employees - need to re-write
     public String addDepartment() {
-        int employeesNeeded = (departments + 1) * 10;
+        int employeesNeeded = (departments + 1) * employeesNeededForDepartment;
 
         if(employees < employeesNeeded){
             return ". You do not have enough employees to make a department";
@@ -111,22 +118,22 @@ public class Company {
 
 
     //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base)
-    public String researchAndDev() throws InvalidActionException {
+    public String researchAndDev()  {
         if(revenue < 50000){
             return "Insufficient funds: You don't have enough to do research and development";
         }
 
 
         //this needs to be changes to 30
-        if (revenue > 50000 && productXP < 30) {
+        if (revenue >= 50000 && productXP < maxProductXP) {
 
             productXP += 2;
             revenue -= 50000;
 
             //might make a separate productXP boost so that I can tell the user that this happened - if not i can put it in the read me
-            if (productXP % 10 == 0 && productXP != 30) {
+            if (productXP % 10 == 0 && productXP != maxProductXP) {
                 customerBase += 500;
-            } else if(productXP >= 30){
+            } else if(productXP >= maxProductXP){
                 customerBase += 1000;
             }
 
@@ -161,9 +168,11 @@ public class Company {
 
             if(firstRandomNumber == 0) {
                 revenue += secondRandomNumber;
+                incrementInvestCount();
                 return "Congrats! You gained £" + secondRandomNumber;
             }else{
                 revenue -= secondRandomNumber;
+                incrementInvestCount();
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
         } else {
@@ -182,9 +191,11 @@ public class Company {
 
             if(firstRandomNumber == 0) {
                 revenue += secondRandomNumber;
+                incrementInvestCount();
                 return "Congrats! You gained £" + secondRandomNumber;
             }else{
                 revenue -= secondRandomNumber;
+                incrementInvestCount();
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
         } else {
@@ -201,6 +212,7 @@ public class Company {
     public void incrementInvestCount(){
         investCount++;
     }
+
     //this method will be used in the advance turn method
     public void resetCrowdFundCount(){
         crowdFundCount = 0;
@@ -325,5 +337,13 @@ public class Company {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public int getMaxProductXP() {
+        return maxProductXP;
+    }
+
+    public int getEmployeesNeededForDepartment() {
+        return employeesNeededForDepartment;
     }
 }

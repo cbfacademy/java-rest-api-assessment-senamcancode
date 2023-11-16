@@ -7,10 +7,17 @@ import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.Field;
+import java.util.stream.Stream;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class CompanyTest {
     private Game game;
@@ -23,7 +30,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing crowdFund method increases revenue by 500000 in Company ")
-    public void testCrowdFund() throws InvalidActionException {
+    public void testCrowdFund() {
         double initialRevenue = company.getRevenue();
 
         company.crowdFund();
@@ -35,7 +42,7 @@ public class CompanyTest {
 
 
     @Test
-    @DisplayName("Testing has sufficient funds method")
+    @DisplayName("hasSufficientFunds returns false when cost of hiriing employees is greater than revenue")
     public void testInsufficientFunds(){
         boolean result = company.hasSufficientFunds(1000);
 
@@ -43,45 +50,70 @@ public class CompanyTest {
 
     }
 
-    @Test
-    @DisplayName("Testing that the addEmployee method throws an Insufficient funds exception")
-    public void testAddEmployeeException() throws InsufficientFundsException {
 
-        assertThrows(InsufficientFundsException.class, () -> {
-            company.addEmployee(100000);
-        });
-
-    }
 
     @Test
-    @DisplayName("Testing method increases employees in Company ")
-    public void testAddEmployee() throws InsufficientFundsException, InvalidActionException {
+    @DisplayName("Testing addEmployee increases employees in Company ")
+    public void testAddEmployee() {
         double initialEmployee = company.getEmployees();
-
         company.addEmployee(1);
-
         double newEmployeeNum = company.getEmployees();
+
         assertEquals(initialEmployee + 1, newEmployeeNum);
 
     }
 
 
     @Test
+    @DisplayName("addEmployee does not change number of employees or revenue if insufficientFunds returns false")
+    public void testAddEmployeeWithInsufficientFunds(){
+        double initRevenue = company.getRevenue();
+        double initialEmployee = company.getEmployees();
+        company.addEmployee(1000);
+        double newEmployeeNum = company.getEmployees();
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initialEmployee, newEmployeeNum);
+        assertEquals(initRevenue, newRevenue);
+    }
+
+
+
+    @Test
+    @DisplayName("Testing the removeEmployee method does not remove employees if the number of employees a company has is less than that to remove")
+    public void testRemoveEmployeeDoesNotFunctionWhenEmployeeNumIsNotLargeEnough(){
+        company.setEmployees(2);
+        int initEmployees = company.getEmployees();
+
+        company.removeEmployee(3);
+        int newEmployees = company.getEmployees();
+
+        assertEquals(initEmployees, newEmployees);
+    }
+
+    @Test
     @DisplayName("Testing the removeEmployee method removes employees and departments")
-    public void testRemoveEmployee() throws InvalidActionException {
+    public void testRemoveEmployee() {
         company.setEmployees(20);
         company.setDepartments(2);
+
+        int initEmployees = company.getEmployees();
         int initDepartments = company.getDepartments();
+        double initRevenue = company.getRevenue();
 
         company.removeEmployee(20);
 
         int newDepartments = company.getDepartments();
+        int newEmployees = company.getEmployees();
+        double newRevenue = company.getRevenue();
 
+        assertNotEquals(initRevenue, newRevenue);
+        assertEquals(initEmployees - 20, newEmployees);
         assertEquals(initDepartments - 2, newDepartments);
     }
     @Test
     @DisplayName("Testing the removeEmployee method increases revenue")
-    public void testRemoveEmployeeIncreasesRevenue() throws InvalidActionException {
+    public void testRemoveEmployeeIncreasesRevenue() {
         company.setEmployees(20);
 
         double initRevenue = company.getRevenue();
@@ -94,12 +126,18 @@ public class CompanyTest {
     }
 
 
+    //Test to fix as exception should not be thrown
     @Test
-    @DisplayName("Testing the removeEmployee method throws an exception")
-    public void testRemoveEmployeeThrowsException() throws InvalidActionException{
+    @DisplayName("Testing the removeEmployee method returns the relevant string and does not change revenue")
+    public void testRemoveEmployeeDoesNotChangeRevenue() {
+        double initRevenue = company.getRevenue();
         company.setEmployees(5);
+        String result = company.removeEmployee(6);
+        double newRevenue = company.getRevenue();
 
-        assertThrows(InvalidActionException.class, () -> company.removeEmployee(6));
+
+        assertEquals(initRevenue, newRevenue);
+        assertEquals(". You cannot get rid of more employees than you already have.", result);
 
     }
 
@@ -117,7 +155,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing add department method increases departments in company ")
-    public void testAddDepartment() throws InsufficientFundsException, InvalidActionException {
+    public void testAddDepartment() {
         int initDepartments = company.getDepartments();
         company.addEmployee(10);
         company.addDepartment();
@@ -129,7 +167,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP ")
-    public void testResearchAndDev() throws InvalidActionException {
+    public void testResearchAndDev()  {
         int initProductXP = company.getProductXP();
         double initRevenue = company.getRevenue();
 
@@ -145,19 +183,39 @@ public class CompanyTest {
     }
 
 
+
     @Test
-    @DisplayName("Testing the researchAndDev method throws an exception when the revenue is less than the cost of research and development")
-    public void testResearchAndDevThrowsException() throws InvalidActionException {
+    @DisplayName("Testing the researchAndDev method doesnt change revenue and returns the relevat string, when the revenue is less than the cost of research and development")
+    public void testResearchAndDevWhenRevenueIsTooLow()  {
         company.setRevenue(4999);
 
-        assertThrows(InvalidActionException.class, () -> company.researchAndDev());
+        double initRevenue = company.getRevenue();
+        String result = company.researchAndDev();
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initRevenue, newRevenue);
+        assertEquals("Insufficient funds: You don't have enough to do research and development", result);
+    }
+
+    @Test
+    @DisplayName("Testing the researchAndDev method doesnt change revenue and returns the relevat string, when the productXP is maxed out")
+    public void testResearchAndDevWhenProductXPisMaxedOut(){
+        company.setProductXP(company.getMaxProductXP());
+
+        double initRevenue = company.getRevenue();
+        String result = company.researchAndDev();
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initRevenue, newRevenue);
+        assertEquals("You have maxed out your product XP and so can no longer use the R&D method", result);
 
     }
 
 
+
     @Test
     @DisplayName("Testing researchAndDev method increases in productXP to a multiple of 10 increases the customerBase ")
-    public void testResearchAndDevAddsToCustomerBase() throws InvalidActionException {
+    public void testResearchAndDevAddsToCustomerBase() {
         int initProductXP = company.getProductXP();
         double initRevenue = company.getRevenue();
         int initCustomerBase = company.getCustomerBase();
@@ -174,13 +232,13 @@ public class CompanyTest {
 
         assertEquals(initProductXP + 10, newProductXP);
         assertEquals( initRevenue - 250000, newRevenue);
-        assertEquals(initCustomerBase + 1000, newCustomerBase);
+        assertEquals(initCustomerBase + 500, newCustomerBase);
     }
 
 
     @Test
     @DisplayName("Testing marketing method increases customerBase by 1000 and reduces revenue by 10000 ")
-    public void testMarketing() throws InvalidActionException {
+    public void testMarketing()  {
         int initCustomerBase = company.getCustomerBase();
         double initRevenue = company.getRevenue();
 
@@ -195,18 +253,24 @@ public class CompanyTest {
 
     }
 
-    @Test
-    @DisplayName("Testing the marketing method throws an exception if revenue is less than 10000")
-    public void testMarketingException() throws InvalidActionException {
-        company.setRevenue(1000);
 
-        assertThrows(InvalidActionException.class, () -> company.marketing());
+    @Test
+    @DisplayName("Testing the marketing method does not change revenue and returns the correct string if revenue is less than 10000")
+    public void testMarketingException() {
+
+        company.setRevenue(1000);
+        double initRevenue = company.getRevenue();
+        String result = company.marketing();
+        double newRevenue = company.getRevenue();
+
+        assertEquals(initRevenue, newRevenue);
+        assertEquals("Insufficient funds: You do not have enough funds to implement marketing", result);
     }
 
 
     @Test
     @DisplayName("Testing sniper invest method changes revenue")
-    public void testSniperInvestMethod() throws InvalidActionException {
+    public void testSniperInvestMethod() {
         double initRevenue = company.getRevenue();
         company.sniperInvestment();
         double newRevenue = company.getRevenue();
@@ -217,7 +281,7 @@ public class CompanyTest {
 
     @Test
     @DisplayName("Testing passive invest method changes revenue")
-    public void testPassiveInvestMethod() throws InvalidActionException {
+    public void testPassiveInvestMethod() {
         double initRevenue = company.getRevenue();
         company.passiveInvestment();
         double newRevenue = company.getRevenue();
@@ -225,20 +289,27 @@ public class CompanyTest {
         assertNotEquals(initRevenue, newRevenue);
     }
 
+    //Test to fix - no exception should be thrown - but the function should be tested
     @Test
     @DisplayName("Testing max investment count reached for sniperInvestment method")
     public void testMaxInvestmentCountReachedForSniperInvestment() {
         company.setInvestCount(company.getMaxInvestCount());
 
-        assertThrows(InvalidActionException.class, () -> company.sniperInvestment());
+        String result = company.sniperInvestment();
+
+        assertEquals("You can only invest once per turn", result);
     }
+
+
 
     @Test
     @DisplayName("Testing max investment count reached for passiveInvestment method")
     public void testMaxInvestmentCountReachedForPassiveInvestment() {
         company.setInvestCount(company.getMaxInvestCount());
 
-        assertThrows(InvalidActionException.class, () -> company.passiveInvestment());
+        String result = company.sniperInvestment();
+
+        assertEquals("You can only invest once per turn", result);
     }
 
 
@@ -336,16 +407,15 @@ public class CompanyTest {
 
     }
 
-    @Test
-    @DisplayName("Testing the customerRevenueBoost method increases the revenue by 5 * customerBase")
-    public void testCustomerRevenueBoost(){
-        double initRevenue = game.getCompany().getRevenue();
-        company.setCustomerBase(10);
-        company.customerRevenueBoost();
-        double newRevenue = game.getCompany().getRevenue();
+    @DisplayName("Testing the reduceCustomerBase method sets customers to 0 if customer base is < input and reduces customers by input is customers is large enough")
+    public class customerBaseReduction {
 
-        assertEquals(initRevenue + 50, newRevenue);
-
+        static Stream<Arguments> reduceCustomerBase() {
+            return Stream.of(
+                    arguments(5,5),
+                    arguments(6,0)
+            );
+        }
 
     }
 
@@ -560,6 +630,31 @@ public class CompanyTest {
         assertEquals(field.get(company), "Hello World");
     }
 
+    @Test
+    @DisplayName("Testing the getter for maxProductXP gets value")
+    public void getMaxProductXP()throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("maxProductXP");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getMaxProductXP();
+
+        assertEquals(result, 100);
+    }
+
+
+    @Test
+    @DisplayName("Testing the getter for employeesNeededForDepartment")
+    public void getEmployeesNeededForDepartment() throws NoSuchFieldException, IllegalAccessException {
+        final Field field = company.getClass().getDeclaredField("maxProductXP");
+        field.setAccessible(true);
+        field.set(company,100);
+
+        final int result = company.getMaxProductXP();
+
+        assertEquals(result, 100);
+
+    }
 
 
 

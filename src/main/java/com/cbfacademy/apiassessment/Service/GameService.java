@@ -1,7 +1,6 @@
 package com.cbfacademy.apiassessment.Service;
 
 import com.cbfacademy.apiassessment.Database.Database;
-import com.cbfacademy.apiassessment.ExceptionClasses.InsufficientFundsException;
 import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
@@ -53,6 +52,7 @@ public class GameService {
     public void nameCompany(String gameId, String companyName) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
+        assert game != null;
         game.getCompany().setCompanyName(companyName);
         gameRepository.updateGameDataById(gameId, game);
 
@@ -74,7 +74,7 @@ public class GameService {
     }
 
     public String removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException, FileNotFoundException {
-        Game game = gameRepository.retrieveGame(gameId);
+        Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String actionMessage = game.getCompany().removeEmployee(numberOfEmployees);
@@ -103,7 +103,6 @@ public class GameService {
 
         assert game != null;
         String resultMessage = game.getCompany().sniperInvestment();
-        game.getCompany().incrementInvestCount();
 
         game.actionsManager();
 
@@ -117,8 +116,6 @@ public class GameService {
 
         assert game != null;
         String resultMessage = game.getCompany().passiveInvestment();
-        game.getCompany().incrementInvestCount();
-
 
         game.actionsManager();
 
@@ -204,6 +201,7 @@ public class GameService {
 
     public Company getCompany(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
         return game.getCompany();
     }
 
@@ -214,12 +212,14 @@ public class GameService {
 
     public int getCurrentTurn(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
         return game.getCurrentTurn();
     }
 
 
     public int getNumberOfRemainingActions(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
         return game.actionsRemaining();
     }
 
@@ -299,6 +299,9 @@ public class GameService {
 
         gameRepository.updateGameDataById(gameId, game);
     }
+
+    //might have to move up the actions manager to the game service and then have it checked before each endpoint in the gameController
+
 
 }
 

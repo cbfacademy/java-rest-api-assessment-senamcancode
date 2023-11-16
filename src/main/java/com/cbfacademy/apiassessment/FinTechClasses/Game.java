@@ -117,13 +117,24 @@ public class Game {
         currentNumberOfActions = 0;
     }
 
-    public void actionsManager() throws InvalidActionException {
+//    public void actionsManager() throws InvalidActionException {
+//
+//        if(actionsPerTurn >= currentNumberOfActions){
+//            currentNumberOfActions++;
+//        } else if(actionsRemaining() <= 0){
+//            throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions");
+//        }
+//    }
+//
+    public boolean actionsManager()  {
 
         if(actionsPerTurn >= currentNumberOfActions){
             currentNumberOfActions++;
+            return true;
         } else if(actionsRemaining() <= 0){
-            throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions");
+            return false;
         }
+        return false;
     }
 
     public boolean isGameCompleted() {
