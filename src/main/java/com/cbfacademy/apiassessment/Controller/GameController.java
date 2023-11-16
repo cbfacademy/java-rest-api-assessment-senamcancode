@@ -4,6 +4,11 @@ import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
 import com.cbfacademy.apiassessment.FinTechClasses.Company;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.cbfacademy.apiassessment.Service.GameService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +17,29 @@ import java.io.FileNotFoundException;
 
 
 @RestController
-@RequestMapping("api/game")
+@RequestMapping("/")
+
+@OpenAPIDefinition(info = @Info(
+        title = "FinTech Tycoon - REST API Game",
+        description = "Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. For a comprehensive guide on rules and gameplay, please refer to the README. Get ready to navigate the world of finance and build your financial empire!.",
+        version = "1.0.0"))
+
+@Tag(name= "Game Actions")
 public class GameController {
 
     @Autowired
     private GameService gameService;
 
+    @Operation(
+            description = "'/start' endpoint creates an instance of the game class and an instance of the database class, then adds the game object created to the 'games' ArrayList in the database object, then writes the data from the arrayList to the game-data.json file",
+            summary = "Creates a game and writes the data to the game-data.json file",
+            responses = {
+                    @ApiResponse(
+                            description = "Error starting the game: Error writing to file",
+                            responseCode = "404"
+                    )
+    }
+    )
     @PostMapping("/start")
     public ResponseEntity<Object> startNewGame() {
         try {
@@ -30,7 +52,17 @@ public class GameController {
 
     }
 
-    @PostMapping("/add-new-game")
+    @Operation(
+            description = "'/add-game' endpoint adds a new game object to the 'games' ArrayList of the database object then writes the data to the game-data.json file",
+            summary = "Creates a new game and appends it to the data to a json file",
+            responses = {
+                    @ApiResponse(
+                            description = "File Not Found: Unable to add a new game.",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @PostMapping("/add-game")
     public ResponseEntity<Object> addNewGame() {
         try {
             gameService.appendNewGame();
@@ -42,6 +74,17 @@ public class GameController {
         }
     }
 
+
+    @Operation(
+            description = "'/company-name' endpoint uses the 'gameId' request parameter to update the name of the FinTech company to inputted in the request parameter then writes the data to the game-data.json file",
+            summary = "Updates the name of the FinTech company",
+            responses = {
+                    @ApiResponse(
+                            description = "File Not Found: Unable to change company name.",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/company-name")
     public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId) {
         try {
@@ -55,10 +98,21 @@ public class GameController {
         }
     }
 
+
+    @Operation(
+            description = "add-employee endpoint uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file",
+            summary = "Adds a specific number of employees to the company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to add employee(s)",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PostMapping("/add-employee")
-    // need to chang the next 2 methods so that the numberofemployees information is
+    // need to chang the next 2 methods so that the numberOfEmployees information is
     // not coming directly form the client
-    public ResponseEntity<String> addEmployee(@RequestParam int numberOfEmployees, String gameId) {
+    public ResponseEntity<String> addEmployee(@RequestParam int employeeNum, String gameId) {
         try {
 
             if (gameService.checkGameIsCompleted(gameId)) {
@@ -71,9 +125,9 @@ public class GameController {
 
             int initEmployees = gameService.getEmployees(gameId);
 
-            //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions"
+            //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions
 
-            String resultMessage = gameService.addEmployee(gameId, numberOfEmployees);
+            String resultMessage = gameService.addEmployee(gameId, employeeNum);
             gameService.actionsManager(gameId);
 
 
@@ -86,13 +140,25 @@ public class GameController {
 
 
         } catch (FileNotFoundException e) {
-            return ResponseEntity.ok("File not found: Unable to add employee(s)");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to add employee(s)");
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Action error: " + e.getMessage());
         }
 
     }
 
+
+
+    @Operation(
+            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a given number of employees to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file",
+            summary = "Removes a specific number of employees to the company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to remove employee(s)",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/remove-employee")
     public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
         try {
@@ -129,6 +195,17 @@ public class GameController {
         }
     }
 
+
+    @Operation(
+            description = "'/crowd-fund' endpoint uses the 'gameId' request parameter to add revenue to the company, then writes the data to the game-data.json file",
+            summary = "Adds 500000 to the revenue of the specified company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to crowd fund",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) {
         try {
@@ -155,6 +232,17 @@ public class GameController {
 
     }
 
+
+    @Operation(
+            description = "'invest' endpoint uses gameId and {action} request parameters to invest - which results in either loss or gain of revenue, then writes the data to the game-data.json file. '{action}' can be either 'sniper' or 'passive' which changes the potential maximum amount of the revenue the gained or lost",
+            summary = "Adds or minuses a random value from the revenue of the company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to make investment",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PostMapping("/invest/{action}")
     public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId)  {
         try {
@@ -190,7 +278,17 @@ public class GameController {
         return null;
     }
 
-    @PostMapping("/add-department")
+    @Operation(
+            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file.",
+            summary = "Adds a department to the company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to add department",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @PostMapping("/department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsOver(gameId)) {
@@ -214,7 +312,18 @@ public class GameController {
         }
     }
 
-    @PostMapping("/research-and-dev")
+
+    @Operation(
+            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file.",
+            summary = "Adds a department to the company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found:  Unable to add to do research and development",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @PostMapping("/research")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) {
         try {
             if (gameService.checkGameIsOver(gameId)) {
@@ -240,6 +349,16 @@ public class GameController {
         }
     }
 
+    @Operation(
+            description = "'marketing' endpoint uses the 'gameId' request parameter to add to 1000 the customer base of the company, provided the user has a sufficient funds, then writes the data to the game-data.json file.",
+            summary = "Adds to 1000 to the customer base of the specified company",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found:  Unable to do marketing action",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PostMapping("/marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) {
         try {
@@ -266,7 +385,17 @@ public class GameController {
 
 
     //need to have a response to the filenotfound thingy for the following endpoints!!
-    @GetMapping("get-all-games")
+    @Operation(
+            description = "'games' endpoint displays all games in the game-data.json file in order of most recently created",
+            summary = "Displays all games in the game-data.json file",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: unable to get all games.",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/games")
     public ResponseEntity<?> getAllGames() {
         try {
             return ResponseEntity.ok(gameService.getAllGames());
@@ -277,33 +406,84 @@ public class GameController {
     }
 
 
-    //the fileNotFound Exception isn't being thrown!!!
-    @GetMapping("/get-company/{gameId}")
+    //The fileNotFound Exception isn't being thrown!!! - need to control response that is output!!! for ALL get endpoints
+    @Operation(
+            description = "'company/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
+            summary = "Displays all information for the specified company",
+            responses = {
+                    @ApiResponse(
+                            description = "Not configured yet",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/company/{gameId}")
     public ResponseEntity<Company> companyInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getCompany(gameId));
     }
 
     //not sure why but this does not throw an exception
-    @GetMapping("/get-game/{gameId}")
+
+    @Operation(
+            description = "'game/{gameId}' endpoint uses the gameId path variable to display all information pertaining to the company in the game-data.json file ",
+            summary = "Displays all information for the specified game",
+            responses = {
+                    @ApiResponse(
+                            description = "",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/game/{gameId}")
     public ResponseEntity<Game> gameInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
         return ResponseEntity.ok(gameService.getGame(gameId));
     }
 
-    @GetMapping("/get-turn/{gameId}")
+    @Operation(
+            description = "'turn/{gameId}' endpoint uses the gameId path variable to display the current turn that the player is on out of the total amount of turns within the game ",
+            summary = "Displays the current turn of the player for the specified game",
+            responses = {
+                    @ApiResponse(
+                            description = "",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/turn/{gameId}")
     public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId) throws FileNotFoundException {
-        return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of 20");
+        return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of " + gameService.getMaxTurns(gameId));
     }
 
-    @GetMapping("/get-actions-rem/{gameId}")
+    @Operation(
+            description = "action{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
+            summary = "Displays the number of actions the player has remaining in the current turn of a specified game",
+            responses = {
+                    @ApiResponse(
+                            description = "",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/actions/{gameId}")
     public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId)
             throws FileNotFoundException {
 
         return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
     }
 
-    //Might need to change the structure of this so that it mimics the post request
-    @PostMapping("/advance-turn/{gameId}")
-    public ResponseEntity<String> advanceTurn(@PathVariable("gameId") String gameId)  {
+    
+    @Operation(
+            description = "'/advance-turn' endpoint uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file ",
+            summary = "Advances the currentTurn variable of the specified game",
+            responses = {
+                    @ApiResponse(
+                            description = "File Not Found: Unable to advance turn ",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @PostMapping("/advance-turn")
+    public ResponseEntity<String> advanceTurn(@RequestParam String gameId)   {
         try {
             if (gameService.checkGameIsCompleted(gameId)) {
                 return ResponseEntity
@@ -317,20 +497,40 @@ public class GameController {
             gameService.advanceTurn(gameId);
             return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to advance turn");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not found: Unable to advance turn");
         }
     }
 
-    @DeleteMapping("/delete-game")
+    @Operation(
+            description = "'/game' endpoint uses the gameId request parameter to delete the game object from the gamesList in the database class, then writes the data to the game-data.json file ",
+            summary = "Deletes the specified game",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to delete game",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @DeleteMapping("/game")
     public ResponseEntity<String> deleteGame(@RequestParam String gameId) throws FileNotFoundException {
         try {
             gameService.deleteGame(gameId);
             return ResponseEntity.ok("You successfully deleted the game");
         } catch(FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to delete game");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to delete game");
         }
     }
 
+    @Operation(
+            description = "'/money' endpoint uses the gameId request parameter to updates the revenue of the specified company to 9999999",
+            summary = "Updates the revenue of the company to 9999999",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: unable to use money cheat code",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/money")
     public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
         try {
@@ -341,13 +541,24 @@ public class GameController {
         }
     }
 
+    //want to see what happens if the throws filenotfoundexception is not found
+    @Operation(
+            description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30)",
+            summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company to those required for IPO status",
+            responses = {
+                    @ApiResponse(
+                            description = "File not found: Unable to use motherlode cheat code",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/motherlode")
-    public ResponseEntity<String> motherLoad(@RequestParam String gameId) throws FileNotFoundException {
+    public ResponseEntity<String> motherLoad(@RequestParam String gameId) {
         try {
             gameService.motherLode(gameId);
             return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
         } catch (FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to use motherlode cheat code");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to use motherlode cheat code");
         }
     }
 

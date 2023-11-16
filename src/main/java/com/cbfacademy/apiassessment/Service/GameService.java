@@ -216,6 +216,11 @@ public class GameService {
         return game.getCurrentTurn();
     }
 
+    public int getMaxTurns(String gameId) throws FileNotFoundException {
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game != null;
+        return game.getMaxTurnsPerGame();
+    }
 
     public int getNumberOfRemainingActions(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
