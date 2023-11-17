@@ -4,7 +4,7 @@ import com.cbfacademy.apiassessment.FinTechClasses.Game;
 
 import java.util.List;
 
-public class SortAlgo {
+public class QuickSortAlgo {
     public static List<Game> quickSort(List<Game> games, int low, int high) {
         if (low < high) {
             int pivotIndex = partition(games, low, high);

@@ -5,7 +5,7 @@ import com.cbfacademy.apiassessment.Database.Database;
 import com.cbfacademy.apiassessment.EventDeserializer;
 import com.cbfacademy.apiassessment.FinTechClasses.Event;
 import com.cbfacademy.apiassessment.FinTechClasses.Game;
-import com.cbfacademy.apiassessment.SortAlgo;
+import com.cbfacademy.apiassessment.QuickSortAlgo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Repository;
@@ -166,7 +166,7 @@ public class GameRepository {
             };
             List<Game> gamesList = gson.fromJson(reader, gameListType.getType());
 
-            List<Game> sortedGames = SortAlgo.quickSort(gamesList, 0, gamesList.size() - 1);
+            List<Game> sortedGames = QuickSortAlgo.quickSort(gamesList, 0, gamesList.size() - 1);
 
             return sortedGames;
 

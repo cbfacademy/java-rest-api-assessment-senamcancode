@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 
 @OpenAPIDefinition(info = @Info(
         title = "FinTech Tycoon - REST API Game",
-        description = "Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. For a comprehensive guide on rules and gameplay, please refer to the README. Get ready to navigate the world of finance and build your financial empire!.",
+        description = "Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. For a comprehensive guide on rules and gameplay, please refer to the README within the com.cbfacademy.appiassessment package. Get ready to navigate the world of finance and build your financial empire!.",
         version = "1.0.0"))
 
 @Tag(name= "Game Actions")
@@ -346,9 +346,8 @@ public class GameController {
 
             String resultMessage = gameService.addDepartment(gameId);
             gameService.actionsManager(gameId);
-
             int numberOfDepartments = gameService.getDepartments(gameId);
-            //ammend this as there is only one department added
+
             return ResponseEntity.ok(numberOfDepartments + " department added" + resultMessage);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
