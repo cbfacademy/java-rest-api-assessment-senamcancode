@@ -7,6 +7,7 @@ import com.cbfacademy.apiassessment.Service.GameService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,14 @@ public class GameController {
             summary = "Creates a game and writes the data to the game-data.json file",
             responses = {
                     @ApiResponse(
+                            description = "New game successfully started and written to game-data.json file",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(
                             description = "Error starting the game: Error writing to file",
-                            responseCode = "404"
+                            responseCode = "404",
+                            content = @Content(mediaType = "text/plain")
                     )
     }
     )
@@ -57,6 +64,11 @@ public class GameController {
             summary = "Creates a new game and appends it to the data to a json file",
             responses = {
                     @ApiResponse(
+                            description = "New game successfully added to file",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(
                             description = "File Not Found: Unable to add a new game.",
                             responseCode = "404"
                     )
@@ -67,7 +79,7 @@ public class GameController {
         try {
             gameService.appendNewGame();
 
-            return ResponseEntity.ok("New game started and data appended to file");
+            return ResponseEntity.ok("New game added to file");
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("File Not Found: Unable to add a new game.");
@@ -80,8 +92,14 @@ public class GameController {
             summary = "Updates the name of the FinTech company",
             responses = {
                     @ApiResponse(
+                            description = "FinTech company name successfully updated to inputted company name",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(
                             description = "File Not Found: Unable to change company name.",
-                            responseCode = "404"
+                            responseCode = "404",
+                            content = @Content(mediaType = "text/plain")
                     )
             }
     )
@@ -103,6 +121,11 @@ public class GameController {
             description = "add-employee endpoint uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file",
             summary = "Adds a specific number of employees to the company",
             responses = {
+                    @ApiResponse(
+                            description = "Employees successfully added if there are sufficient funds",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
                     @ApiResponse(
                             description = "File not found: Unable to add employee(s)",
                             responseCode = "404"
@@ -150,9 +173,14 @@ public class GameController {
 
 
     @Operation(
-            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a given number of employees to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file",
+            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a given number of employees to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file" + "{employeesRemoved}, {moneySaved}, {newEmployees} and {numOfDepartments} are all calculated and retrieved from the company object",
             summary = "Removes a specific number of employees to the company",
             responses = {
+                    @ApiResponse(
+                            description = "Employees successfully removed if there are a sufficient number of employees",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
                     @ApiResponse(
                             description = "File not found: Unable to remove employee(s)",
                             responseCode = "404"
@@ -201,6 +229,11 @@ public class GameController {
             summary = "Adds 500000 to the revenue of the specified company",
             responses = {
                     @ApiResponse(
+                            description = "Successful crowd fund",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(
                             description = "File not found: Unable to crowd fund",
                             responseCode = "404"
                     )
@@ -233,10 +266,16 @@ public class GameController {
     }
 
 
+    //add to this!!
     @Operation(
             description = "'invest' endpoint uses gameId and {action} request parameters to invest - which results in either loss or gain of revenue, then writes the data to the game-data.json file. '{action}' can be either 'sniper' or 'passive' which changes the potential maximum amount of the revenue the gained or lost",
             summary = "Adds or minuses a random value from the revenue of the company",
             responses = {
+                    @ApiResponse(
+                            description = "Sniper investment successfully made or Passive investment successfully made",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
                     @ApiResponse(
                             description = "File not found: Unable to make investment",
                             responseCode = "404"
@@ -278,10 +317,16 @@ public class GameController {
         return null;
     }
 
+    //change these!
     @Operation(
-            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file.",
+            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file.There are a number of 200 responses that can be shown depending on the game state e.g if the user has maxed out the product XP the following message can also be shown: 0 department(s) added. You do not have enough employees to make a department.",
             summary = "Adds a department to the company",
             responses = {
+                    @ApiResponse(
+                            description = "Department successfully added provided there is a sufficient number of employees",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
                     @ApiResponse(
                             description = "File not found: Unable to add department",
                             responseCode = "404"
@@ -303,7 +348,8 @@ public class GameController {
             gameService.actionsManager(gameId);
 
             int numberOfDepartments = gameService.getDepartments(gameId);
-            return ResponseEntity.ok(numberOfDepartments + " department(s) added" + resultMessage);
+            //ammend this as there is only one department added
+            return ResponseEntity.ok(numberOfDepartments + " department added" + resultMessage);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
@@ -314,9 +360,14 @@ public class GameController {
 
 
     @Operation(
-            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file.",
+            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state e.g if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}",
             summary = "Adds a department to the company",
             responses = {
+                    @ApiResponse(
+                            description = " Research and development success, 2 XP added to the product",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
                     @ApiResponse(
                             description = "File not found:  Unable to add to do research and development",
                             responseCode = "404"
@@ -354,6 +405,11 @@ public class GameController {
             summary = "Adds to 1000 to the customer base of the specified company",
             responses = {
                     @ApiResponse(
+                            description = "Customer base successfully added to provided there is sufficient funds",
+                            responseCode = "200",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(
                             description = "File not found:  Unable to do marketing action",
                             responseCode = "404"
                     )
@@ -386,9 +442,15 @@ public class GameController {
 
     //need to have a response to the filenotfound thingy for the following endpoints!!
     @Operation(
-            description = "'games' endpoint displays all games in the game-data.json file in order of most recently created",
+            description = "'/games' endpoint displays all games in the game-data.json file in order of most recently created",
             summary = "Displays all games in the game-data.json file",
             responses = {
+
+                    @ApiResponse(
+                            description = "All games successfully displayed.",
+                            responseCode = "200",
+                            content = @Content(mediaType = "application/json")
+                    ),
                     @ApiResponse(
                             description = "File not found: unable to get all games.",
                             responseCode = "404"
@@ -408,11 +470,16 @@ public class GameController {
 
     //The fileNotFound Exception isn't being thrown!!! - need to control response that is output!!! for ALL get endpoints
     @Operation(
-            description = "'company/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
+            description = "'/company/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
             summary = "Displays all information for the specified company",
             responses = {
                     @ApiResponse(
-                            description = "Not configured yet",
+                            description = "Company data successfully displayed.",
+                            responseCode = "200",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            description = "Company data not found",
                             responseCode = "404"
                     )
             }
@@ -425,11 +492,16 @@ public class GameController {
     //not sure why but this does not throw an exception
 
     @Operation(
-            description = "'game/{gameId}' endpoint uses the gameId path variable to display all information pertaining to the company in the game-data.json file ",
+            description = "'/game/{gameId}' endpoint uses the gameId path variable to display all information pertaining to the company in the game-data.json file ",
             summary = "Displays all information for the specified game",
             responses = {
                     @ApiResponse(
-                            description = "",
+                            description = "Game data successfully displayed.",
+                            responseCode = "200",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            description = "Game data not found",
                             responseCode = "404"
                     )
             }
@@ -440,11 +512,16 @@ public class GameController {
     }
 
     @Operation(
-            description = "'turn/{gameId}' endpoint uses the gameId path variable to display the current turn that the player is on out of the total amount of turns within the game ",
+            description = "'/turn/{gameId}' endpoint uses the gameId path variable to display the current turn that the player is on out of the total amount of turns within the game ",
             summary = "Displays the current turn of the player for the specified game",
             responses = {
                     @ApiResponse(
-                            description = "",
+                            description = "Current turn successfully displayed",
+                            responseCode = "200",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            description = "Current turn data not found",
                             responseCode = "404"
                     )
             }
@@ -455,11 +532,16 @@ public class GameController {
     }
 
     @Operation(
-            description = "action{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
+            description = "/actions/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
             summary = "Displays the number of actions the player has remaining in the current turn of a specified game",
             responses = {
                     @ApiResponse(
-                            description = "",
+                            description = "Actions remaining turn successfully displayed",
+                            responseCode = "200",
+                            content = @Content(mediaType = "plain/text")
+                    ),
+                    @ApiResponse(
+                            description = "Actions remaining not found",
                             responseCode = "404"
                     )
             }
@@ -476,6 +558,11 @@ public class GameController {
             description = "'/advance-turn' endpoint uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file ",
             summary = "Advances the currentTurn variable of the specified game",
             responses = {
+                    @ApiResponse(
+                            description = "Successfully advanced turn",
+                            responseCode = "200",
+                            content = @Content(mediaType = "plain/text")
+                    ),
                     @ApiResponse(
                             description = "File Not Found: Unable to advance turn ",
                             responseCode = "404"
@@ -506,6 +593,11 @@ public class GameController {
             summary = "Deletes the specified game",
             responses = {
                     @ApiResponse(
+                            description = "Successful game deletion",
+                            responseCode = "200",
+                            content = @Content(mediaType = "plain/text")
+                    ),
+                    @ApiResponse(
                             description = "File not found: Unable to delete game",
                             responseCode = "404"
                     )
@@ -525,6 +617,11 @@ public class GameController {
             description = "'/money' endpoint uses the gameId request parameter to updates the revenue of the specified company to 9999999",
             summary = "Updates the revenue of the company to 9999999",
             responses = {
+                    @ApiResponse(
+                            description = "Successful update to revenue",
+                            responseCode = "200",
+                            content = @Content(mediaType = "plain/text")
+                    ),
                     @ApiResponse(
                             description = "File not found: unable to use money cheat code",
                             responseCode = "404"
@@ -546,6 +643,11 @@ public class GameController {
             description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30)",
             summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company to those required for IPO status",
             responses = {
+                    @ApiResponse(
+                            description = "Successful setting of company variables to achieve IPO status",
+                            responseCode = "200",
+                            content = @Content(mediaType = "plain/text")
+                    ),
                     @ApiResponse(
                             description = "File not found: Unable to use motherlode cheat code",
                             responseCode = "404"

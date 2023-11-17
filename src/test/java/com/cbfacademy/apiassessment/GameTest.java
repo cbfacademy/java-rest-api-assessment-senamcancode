@@ -13,6 +13,23 @@ public class GameTest {
     //For the GameTest I tested relevant game methods (ie not all methods like the Company test class)
 
 
+   //Need to test the advanceTurn method
+    //Need to test the actionsRemaining
+    // Need to test the resetCurrentNumberOfActions
+    // Need to test isGameOver
+
+
+    //Need to test actions Manager - refer back to old test!!!!!!
+
+    //need to find a way to test that the thing returned is a string
+//    @Test
+//    @DisplayName("Testing that the trigger random event returns a string")
+//    public void testRandomEventTriggerMethod(){
+//        Game game = new Game();
+//        String event = game.triggerRandomEvent();
+//
+//        assertEquals("No Event", event);
+//    }
     @Test
     @DisplayName("Testing that the game class is initialised with Jan as the initial month")
     public void testInitialMonth() {
@@ -81,13 +98,6 @@ public class GameTest {
         assertThrows(InvalidActionException.class, company::crowdFund);
     }
 
-    //Need to test the advanceTurn method
-
-    //Need to test teh actionsRemaining
-
-    //Need to test the resetCurrentNumberOfActions
-
-    //Need to test isGameOver
 
     @Test
     @DisplayName("Testing checkGameIsCompleted method returns a true isGameCompleted")
@@ -106,14 +116,5 @@ public class GameTest {
     }
 }
 
-    //need to find a way to test that the thing returned is a string
-//    @Test
-//    @DisplayName("Testing that the trigger random event returns a string")
-//    public void testRandomEventTriggerMethod(){
-//        Game game = new Game();
-//        String event = game.triggerRandomEvent();
-//
-//        assertEquals("No Event", event);
-//    }
 
 
