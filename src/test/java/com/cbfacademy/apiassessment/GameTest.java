@@ -153,12 +153,12 @@ public class GameTest {
         int newCurrentNumberOfActions = game.getCurrentNumberOfActions();
         int newCurrentTurn = game.getCurrentTurn();
 
-        assertEquals("Feb", newMonth);
         assertEquals(0,newCurrentNumberOfActions);
         assertEquals(0, crowdFundCount);
         assertEquals(0, investCount);
         assertEquals(initRevenue + 50,newRevenue);
         assertEquals(initCurrentTurn + 1, newCurrentTurn);
+        assertEquals("Feb", newMonth);
 
     }
 
