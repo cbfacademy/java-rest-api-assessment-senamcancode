@@ -31,6 +31,8 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
+    //need to re-do descriptions for the invalid action error!!!
+
     @Operation(
             description = "'/start' endpoint creates an instance of the game class and an instance of the database class, then adds the game object created to the 'games' ArrayList in the database object, then writes the data from the arrayList to the game-data.json file",
             summary = "Creates a game and writes the data to the game-data.json file",
@@ -118,7 +120,8 @@ public class GameController {
 
 
     @Operation(
-            description = "add-employee endpoint uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file",
+            //change variable potentially - in the description
+            description = "add-employee endpoint uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file. If there are insufficient funds the following 200 OK response will be shown: 0 employees added. You have {numberOfEmployees} employee(s), where {numberOfEmployees} is the numberOfEmployees ?variable retrieved from the company object",
             summary = "Adds a specific number of employees to the company",
             responses = {
                     @ApiResponse(
@@ -159,7 +162,6 @@ public class GameController {
 
 
             return ResponseEntity.ok(employeesAdded + " employee(s) added" + resultMessage + " You have " + newEmployees + " employee(s)");
-            //might also add the number of departments
 
 
         } catch (FileNotFoundException e) {
@@ -173,7 +175,7 @@ public class GameController {
 
 
     @Operation(
-            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a given number of employees to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file" + "{employeesRemoved}, {moneySaved}, {newEmployees} and {numOfDepartments} are all calculated and retrieved from the company object",
+            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a specific number of employees (provided by 'employeeNum' parameter) to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file. If there is an insufficient number of employees to remove from the following 200 OK response is displayed: 0 employee(s) added removed and £0 saved. You cannot get rid of more employees than you already have. You have {newEmployees} employees and {numDepartments} departments, where {newEmployees} and {numDepartments} are retrieved from the company object ",
             summary = "Removes a specific number of employees to the company",
             responses = {
                     @ApiResponse(
@@ -319,7 +321,7 @@ public class GameController {
 
     //change these!
     @Operation(
-            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file.There are a number of 200 responses that can be shown depending on the game state e.g if the user has maxed out the product XP the following message can also be shown: 0 department(s) added. You do not have enough employees to make a department.",
+            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state. If the user has maxed out the product XP the following message can also be shown: 0 department(s) added. You do not have enough employees to make a department.If the user has an insufficient number of employees to make a department the following 200 OK response is shown: 0 department(s) added. You do not have enough employees to make a department",
             summary = "Adds a department to the company",
             responses = {
                     @ApiResponse(
@@ -348,7 +350,7 @@ public class GameController {
             gameService.actionsManager(gameId);
             int numberOfDepartments = gameService.getDepartments(gameId);
 
-            return ResponseEntity.ok(numberOfDepartments + " department added" + resultMessage);
+            return ResponseEntity.ok(numberOfDepartments + " department(s) added" + resultMessage);
         } catch (InvalidActionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Action error: " + e.getMessage());
@@ -359,7 +361,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state e.g if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}",
+            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state: if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}, where {productXP} is retrieved from the company object",
             summary = "Adds a department to the company",
             responses = {
                     @ApiResponse(
@@ -400,7 +402,7 @@ public class GameController {
     }
 
     @Operation(
-            description = "'marketing' endpoint uses the 'gameId' request parameter to add to 1000 the customer base of the company, provided the user has a sufficient funds, then writes the data to the game-data.json file.",
+            description = "'marketing' endpoint uses the 'gameId' request parameter to add to 1000 the customer base of the company, provided the user has a sufficient funds, then writes the data to the game-data.json file.There are a number of 200 responses that can be shown depending on the game state: If there is insufficient funds, the 200 OK response is: You have a customer base of Insufficient funds: You do not have enough funds to implement marketing. If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
             summary = "Adds to 1000 to the customer base of the specified company",
             responses = {
                     @ApiResponse(
@@ -441,12 +443,12 @@ public class GameController {
 
     //need to have a response to the filenotfound thingy for the following endpoints!!
     @Operation(
-            description = "'/games' endpoint displays all games in the game-data.json file in order of most recently created",
-            summary = "Displays all games in the game-data.json file",
+            description = "'/games' endpoint gets and displays all games in the game-data.json file in order of most recently created",
+            summary = "Gets all games in the game-data.json file",
             responses = {
 
                     @ApiResponse(
-                            description = "All games successfully displayed.",
+                            description = "All games successfully fetched and transmitted to the message body",
                             responseCode = "200",
                             content = @Content(mediaType = "application/json")
                     ),
@@ -461,7 +463,7 @@ public class GameController {
         try {
             return ResponseEntity.ok(gameService.getAllGames());
         } catch(FileNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to get all games.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get all games.");
         }
 
     }
@@ -469,11 +471,11 @@ public class GameController {
 
     //The fileNotFound Exception isn't being thrown!!! - need to control response that is output!!! for ALL get endpoints
     @Operation(
-            description = "'/company/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
-            summary = "Displays all information for the specified company",
+            description = "'/company/{gameId}' endpoint uses the gameId path variable to get and display all information in a specific company object in the game-data.json file ",
+            summary = "Gets all information for the specified company",
             responses = {
                     @ApiResponse(
-                            description = "Company data successfully displayed.",
+                            description = "Company data successfully fetched and transmitted to the message body",
                             responseCode = "200",
                             content = @Content(mediaType = "application/json")
                     ),
@@ -484,18 +486,22 @@ public class GameController {
             }
     )
     @GetMapping("/company/{gameId}")
-    public ResponseEntity<Company> companyInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
-        return ResponseEntity.ok(gameService.getCompany(gameId));
+    public ResponseEntity<?> companyInfo(@PathVariable("gameId") String gameId) {
+        try {
+            return ResponseEntity.ok(gameService.getCompany(gameId));
+        }catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get company");
+        }
     }
 
     //not sure why but this does not throw an exception
 
     @Operation(
-            description = "'/game/{gameId}' endpoint uses the gameId path variable to display all information pertaining to the company in the game-data.json file ",
-            summary = "Displays all information for the specified game",
+            description = "'/game/{gameId}' endpoint uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
+            summary = "Gets all information for the specified game",
             responses = {
                     @ApiResponse(
-                            description = "Game data successfully displayed.",
+                            description = "Game data successfully fetched and transmitted to the message body",
                             responseCode = "200",
                             content = @Content(mediaType = "application/json")
                     ),
@@ -506,16 +512,20 @@ public class GameController {
             }
     )
     @GetMapping("/game/{gameId}")
-    public ResponseEntity<Game> gameInfo(@PathVariable("gameId") String gameId) throws FileNotFoundException {
-        return ResponseEntity.ok(gameService.getGame(gameId));
+    public ResponseEntity<?> gameInfo(@PathVariable("gameId") String gameId) {
+        try {
+            return ResponseEntity.ok(gameService.getGame(gameId));
+        } catch (FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get game");
+        }
     }
 
     @Operation(
-            description = "'/turn/{gameId}' endpoint uses the gameId path variable to display the current turn that the player is on out of the total amount of turns within the game ",
-            summary = "Displays the current turn of the player for the specified game",
+            description = "'/turn/{gameId}' endpoint uses the gameId path variable to get and display the current turn that the player is on out of the total amount of turns within the game ",
+            summary = "Gets the current turn of the player for the specified game",
             responses = {
                     @ApiResponse(
-                            description = "Current turn successfully displayed",
+                            description = "Current turn successfully fetched and transmitted to the message body",
                             responseCode = "200",
                             content = @Content(mediaType = "application/json")
                     ),
@@ -526,16 +536,20 @@ public class GameController {
             }
     )
     @GetMapping("/turn/{gameId}")
-    public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId) throws FileNotFoundException {
-        return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of " + gameService.getMaxTurns(gameId));
+    public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId) {
+       try {
+           return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of " + gameService.getMaxTurns(gameId));
+       } catch (FileNotFoundException e) {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get current turn");
+       }
     }
 
     @Operation(
-            description = "/actions/{gameId}' endpoint uses the gameId path variable to displays all information pertaining to the company in the game-data.json file ",
-            summary = "Displays the number of actions the player has remaining in the current turn of a specified game",
+            description = "/actions/{gameId}' endpoint uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
+            summary = "Gets the number of actions the player has remaining in the current turn of a specified game",
             responses = {
                     @ApiResponse(
-                            description = "Actions remaining turn successfully displayed",
+                            description = "Actions remaining turn successfully fetched and transmitted to the message body",
                             responseCode = "200",
                             content = @Content(mediaType = "plain/text")
                     ),
@@ -546,15 +560,17 @@ public class GameController {
             }
     )
     @GetMapping("/actions/{gameId}")
-    public ResponseEntity<Integer> getActionsRemaining(@PathVariable("gameId") String gameId)
-            throws FileNotFoundException {
-
-        return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
+    public ResponseEntity<?> getActionsRemaining(@PathVariable("gameId") String gameId) {
+        try {
+            return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
+        } catch (FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get number of remaining actions");
+        }
     }
 
     
     @Operation(
-            description = "'/advance-turn' endpoint uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file ",
+            description = "'/advance-turn' endpoint uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file. There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: GAME OVER! You failed to reach IPO status!. you cannot take any more actions. If the game is completed the 200 OK response is: CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!",
             summary = "Advances the currentTurn variable of the specified game",
             responses = {
                     @ApiResponse(
@@ -614,7 +630,7 @@ public class GameController {
 
     @Operation(
             description = "'/money' endpoint uses the gameId request parameter to updates the revenue of the specified company to 9999999",
-            summary = "Updates the revenue of the company to 9999999",
+            summary = "Updates the revenue of the company to 9999999. There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
             responses = {
                     @ApiResponse(
                             description = "Successful update to revenue",
@@ -630,16 +646,25 @@ public class GameController {
     @PutMapping("/money")
     public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
         try {
+            if (gameService.checkGameIsOver(gameId)) {
+                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
             gameService.moneyMoneyMoney(gameId);
             return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
         } catch(FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to use money cheat code");
+        } catch (InvalidActionException e) {
+            throw new RuntimeException(e);
         }
     }
 
     //want to see what happens if the throws filenotfoundexception is not found
     @Operation(
-            description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30)",
+            description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30). There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
             summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company to those required for IPO status",
             responses = {
                     @ApiResponse(
@@ -656,10 +681,19 @@ public class GameController {
     @PutMapping("/motherlode")
     public ResponseEntity<String> motherLoad(@RequestParam String gameId) {
         try {
+            if (gameService.checkGameIsOver(gameId)) {
+            throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+        }
+
+            if (gameService.checkGameIsCompleted(gameId)) {
+                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+            }
             gameService.motherLode(gameId);
             return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to use motherlode cheat code");
+        } catch (InvalidActionException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -125,6 +125,21 @@ public class Game {
 //        }
 //    }
 //
+
+    public boolean invalidAction(){
+        if(actionsPerTurn >= currentNumberOfActions){
+            return true;
+        } else if(actionsRemaining() <= 0){
+            return false;
+        }
+        return false;
+    }
+
+    public void actionIncrement(){
+        currentNumberOfActions++;
+
+    }
+
     public boolean actionsManager()  {
 
         if(actionsPerTurn >= currentNumberOfActions){

@@ -154,6 +154,7 @@ public class GameRepository {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
            throw new FileNotFoundException("Error reading file");
         }
     }
@@ -171,6 +172,7 @@ public class GameRepository {
             return sortedGames;
 
     } catch (IOException e) {
+            e.printStackTrace();
             throw new FileNotFoundException("Error reading file");
         }
 

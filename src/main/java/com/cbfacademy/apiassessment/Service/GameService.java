@@ -21,7 +21,6 @@ public class GameService {
     private GameRepository gameRepository;
 
 
-    //we need to account for if there is a json file already - we need to append the new game to the json file
     public void actionsManager(String gameId) throws  FileNotFoundException, InvalidActionException {
         Game game = GameRepository.retrieveGame(gameId);
 

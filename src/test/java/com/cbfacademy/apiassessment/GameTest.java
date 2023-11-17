@@ -12,8 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
     //For the GameTest I tested relevant game methods (ie not all methods like the Company test class)
 
-
-   //Need to test the advanceTurn method
+    //Need to test the advanceTurn method
     //Need to test the actionsRemaining
     // Need to test the resetCurrentNumberOfActions
     // Need to test isGameOver
