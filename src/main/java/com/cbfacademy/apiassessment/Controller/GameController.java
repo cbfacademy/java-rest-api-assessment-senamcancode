@@ -136,40 +136,42 @@ public class GameController {
             }
     )
     @PostMapping("/add-employee")
-    // need to chang the next 2 methods so that the numberOfEmployees information is
-    // not coming directly form the client
     public ResponseEntity<String> addEmployee(@RequestParam int employeeNum, String gameId) {
         try {
+            if(gameService.validActionCheck(gameId)) {
 
-            if (gameService.checkGameIsCompleted(gameId)) {
-                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                int initEmployees = gameService.getEmployees(gameId);
+
+                //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions
+
+                String resultMessage = gameService.addEmployee(gameId, employeeNum);
+
+
+
+                int newEmployees = gameService.getEmployees(gameId);
+                int employeesAdded = newEmployees - initEmployees;
+
+                //This code is here to prevent the actionCount being incremented if the user fails to successfully add the employees
+                if(initEmployees != newEmployees){
+                    gameService.actionCountIncrement(gameId);
+                }
+
+                return ResponseEntity.ok(employeesAdded + " employee(s) added" + resultMessage + " You have " + newEmployees + " employee(s)");
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-
-            if (gameService.checkGameIsOver(gameId)) {
-                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-            }
-
-            int initEmployees = gameService.getEmployees(gameId);
-
-            //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions
-
-            String resultMessage = gameService.addEmployee(gameId, employeeNum);
-            gameService.actionsManager(gameId);
-
-
-            int newEmployees = gameService.getEmployees(gameId);
-            int employeesAdded = newEmployees - initEmployees;
-
-
-            return ResponseEntity.ok(employeesAdded + " employee(s) added" + resultMessage + " You have " + newEmployees + " employee(s)");
-
 
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to add employee(s)");
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Action error: " + e.getMessage());
         }
-
     }
 
 
@@ -190,36 +192,42 @@ public class GameController {
             }
     )
     @PutMapping("/remove-employee")
-    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) {
+    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) throws FileNotFoundException {
         try {
-            if (gameService.checkGameIsCompleted(gameId)) {
-                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+            if(gameService.validActionCheck(gameId)){
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+                int initEmployees = gameService.getEmployees(gameId);
+
+                String resultMessage = gameService.removeEmployee(gameId, numberOfEmployees);
+
+
+                int newEmployees = gameService.getEmployees(gameId);
+
+                int employeesRemoved = initEmployees - newEmployees;
+
+                int numOfDepartments = gameService.getDepartments(gameId);
+
+                double moneySaved = Double.parseDouble(gameService.getFormattedRevenue(gameId)) - initRevenue;
+
+                //This code is here to prevent the actionCount being incremented if the user fails to successfully remove the employees
+                if(initEmployees != newEmployees){
+                    gameService.actionCountIncrement(gameId);
+                }
+
+                return ResponseEntity.ok(employeesRemoved + " employee(s) removed and £" + moneySaved + " saved" + resultMessage + "\n You have "
+                        + newEmployees + " employees and " + numOfDepartments + " department(s)");
+        } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
 
-            if (gameService.checkGameIsOver(gameId)) {
-                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-            }
-
-            double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
-            int initEmployees = gameService.getEmployees(gameId);
-
-            String resultMessage = gameService.removeEmployee(gameId, numberOfEmployees);
-            gameService.actionsManager(gameId);
-
-            int newEmployees = gameService.getEmployees(gameId);
-
-            int employeesRemoved = initEmployees - newEmployees;
-
-            int numOfDepartments = gameService.getDepartments(gameId);
-
-            double moneySaved = Double.parseDouble(gameService.getFormattedRevenue(gameId)) - initRevenue; ;
-
-            return ResponseEntity.ok(employeesRemoved + " employee(s) removed and £" + moneySaved + " saved" + resultMessage + "\n You have "
-                    + newEmployees + " employees and " + numOfDepartments + " department(s)");
-
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to remove employee(s)");
         }
@@ -244,23 +252,28 @@ public class GameController {
     @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) {
         try {
-            if (gameService.checkGameIsCompleted(gameId)) {
-                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+            if(gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+                double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                gameService.crowdFund(gameId);
+
+                double formattedNewRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                //This code is here to prevent the actionCount being incremented if the user fails to successfully crowd fund
+                if (initRevenue != formattedNewRevenue) {
+                    gameService.actionCountIncrement(gameId);
+                }
+                return ResponseEntity.ok("Crowd fund was successful! You now have £" + formattedNewRevenue);
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-
-            if (gameService.checkGameIsOver(gameId)) {
-                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-            }
-
-            gameService.crowdFund(gameId);
-            gameService.actionsManager(gameId);
-
-            String formattedRevenue = gameService.getFormattedRevenue(gameId);
-            return ResponseEntity.ok("Crowd fund was successful! You now have £" + formattedRevenue);
-
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to crowd fund.");
         }
@@ -287,31 +300,46 @@ public class GameController {
     @PostMapping("/invest/{action}")
     public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId)  {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+            if(gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                String resultMessage;
+
+                if ("sniper".equals(action)) {
+                    double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                    resultMessage = gameService.sniperInvest(gameId);
+
+                    double newRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                    if(initRevenue != newRevenue){
+                        gameService.actionCountIncrement(gameId);
+                    }
+                    return ResponseEntity.ok("Sniper investment: " + resultMessage);
+                }
+
+                if ("passive".equals(action)) {
+                    double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                    resultMessage = gameService.passiveInvest(gameId);
+                    double newRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
+
+                    //This code is here to prevent the actionCount being incremented if the user fails to successfully invest
+                    if(initRevenue != newRevenue){
+                        gameService.actionCountIncrement(gameId);
+                    }
+
+                    return ResponseEntity.ok("Passive investment: " + resultMessage);
+                }
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-
-            if (gameService.checkGameIsCompleted(gameId)) {
-                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
-            }
-
-            String resultMessage;
-
-            if ("sniper".equals(action)) {
-                resultMessage = gameService.sniperInvest(gameId);
-                gameService.actionsManager(gameId);
-                // need to find a way to tell the user that they have lost or gained money
-                return ResponseEntity.ok("Sniper investment successfully made: " + resultMessage);
-            }
-
-            if ("passive".equals(action)) {
-                resultMessage = gameService.passiveInvest(gameId);
-                gameService.actionsManager(gameId);
-                return ResponseEntity.ok("Passive investment successfully made: " + resultMessage);
-            }
-
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Investing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found: Unable to make investment");
         }
@@ -338,22 +366,28 @@ public class GameController {
     @PostMapping("/department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+            if(gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                int initNumOfDepartments = gameService.getDepartments(gameId);
+                String resultMessage = gameService.addDepartment(gameId);
+                int newNumberOfDepartments = gameService.getDepartments(gameId);
+
+                //This code is here to prevent the actionCount being incremented if the user fails to successfully add a department
+                if(initNumOfDepartments != newNumberOfDepartments){
+                    gameService.actionCountIncrement(gameId);
+                }
+
+                return ResponseEntity.ok(newNumberOfDepartments + " department(s) added" + resultMessage);
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-
-            if (gameService.checkGameIsCompleted(gameId)) {
-                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
-            }
-
-            String resultMessage = gameService.addDepartment(gameId);
-            gameService.actionsManager(gameId);
-            int numberOfDepartments = gameService.getDepartments(gameId);
-
-            return ResponseEntity.ok(numberOfDepartments + " department(s) added" + resultMessage);
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found: Unable to add department");
         }
@@ -361,7 +395,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/research' endpoint uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state: if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}, where {productXP} is retrieved from the company object",
+            description = "'/research' endpoint (short for research and development )uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state: if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}, where {productXP} is retrieved from the company object",
             summary = "Adds a department to the company",
             responses = {
                     @ApiResponse(
@@ -378,24 +412,32 @@ public class GameController {
     @PostMapping("/research")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            if (gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+                int initProductXP = gameService.getProductXP(gameId);
+
+                String resultMessage = gameService.researchAndDev(gameId);
+
+                int newProductXP = gameService.getProductXP(gameId);
+
+                //This code is here to prevent the actionCount being incremented if the user fails to successfully do research and development
+                if (initProductXP != newProductXP) {
+                    gameService.actionCountIncrement(gameId);
+                }
+
+                return ResponseEntity
+                        .ok(resultMessage + "You have a product XP of "
+                                + newProductXP);
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
 
-            if (gameService.checkGameIsCompleted(gameId)) {
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");
-            }
-
-            String resultMessage = gameService.researchAndDev(gameId);
-            gameService.actionsManager(gameId);
-
-            int productXP = gameService.getProductXP(gameId);
-            return ResponseEntity
-                    .ok(resultMessage + "You have a product XP of "
-                            + productXP);
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Action error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to add to do research and development");
         }
@@ -419,21 +461,27 @@ public class GameController {
     @PostMapping("/marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
+            if (gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
+
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+
+                int initCustomerBase = gameService.getCustomerBase(gameId);
+                String resultMessage = gameService.market(gameId);
+                int newCustomerBase = gameService.getCustomerBase(gameId);
+
+                //This code is here to prevent the actionCount from being incremented if the user fails to successfully do marketing
+                if(initCustomerBase != newCustomerBase){
+                    gameService.actionCountIncrement(gameId);
+                }
+                return ResponseEntity.ok(resultMessage + "You have a customer base of " + newCustomerBase);
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-
-            if (gameService.checkGameIsCompleted(gameId)) {
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");
-            }
-
-            String resultMessage = gameService.market(gameId);
-            gameService.actionsManager(gameId);
-
-            int customerBase = gameService.getCustomerBase(gameId);
-            return ResponseEntity.ok(resultMessage + "You have a customer base of " + customerBase);
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Marketing error: " + e.getMessage());
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to do marketing action.");
         }
@@ -441,7 +489,6 @@ public class GameController {
 
 
 
-    //need to have a response to the filenotfound thingy for the following endpoints!!
     @Operation(
             description = "'/games' endpoint gets and displays all games in the game-data.json file in order of most recently created",
             summary = "Gets all games in the game-data.json file",
@@ -469,7 +516,6 @@ public class GameController {
     }
 
 
-    //The fileNotFound Exception isn't being thrown!!! - need to control response that is output!!! for ALL get endpoints
     @Operation(
             description = "'/company/{gameId}' endpoint uses the gameId path variable to get and display all information in a specific company object in the game-data.json file ",
             summary = "Gets all information for the specified company",
@@ -597,7 +643,7 @@ public class GameController {
             String resultMessage = gameService.triggerRandomEvent(gameId);
 
             gameService.advanceTurn(gameId);
-            return ResponseEntity.ok("You have advanced to the next turn\n " + resultMessage);
+            return ResponseEntity.ok("You have advanced to the next turn " + resultMessage);
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not found: Unable to advance turn");
         }
@@ -643,26 +689,28 @@ public class GameController {
                     )
             }
     )
-    @PutMapping("/money")
+    @PutMapping("/money") //the actionCountIncrement method is missing from the money method as this  method is a cheat code
     public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-                throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
-            }
+            if (gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
 
-            if (gameService.checkGameIsCompleted(gameId)) {
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+                gameService.moneyMoneyMoney(gameId);
+                return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-            gameService.moneyMoneyMoney(gameId);
-            return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
         } catch(FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: unable to use money cheat code");
-        } catch (InvalidActionException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    //want to see what happens if the throws filenotfoundexception is not found
+
     @Operation(
             description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30). There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
             summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company to those required for IPO status",
@@ -678,22 +726,24 @@ public class GameController {
                     )
             }
     )
-    @PutMapping("/motherlode")
+    @PutMapping("/motherlode") //the actionCountIncrement method is missing from the motherlode method as this  method is a cheat code
     public ResponseEntity<String> motherLoad(@RequestParam String gameId) {
         try {
-            if (gameService.checkGameIsOver(gameId)) {
-            throw new InvalidActionException("You failed to complete the game, you cannot take any more actions");
-        }
+            if (gameService.validActionCheck(gameId)) {
+                if (gameService.checkGameIsOver(gameId)) {
+                    ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+                }
 
-            if (gameService.checkGameIsCompleted(gameId)) {
-                throw new InvalidActionException("You completed the game, you cannot take any more actions");
+                if (gameService.checkGameIsCompleted(gameId)) {
+                    ResponseEntity.ok("You completed the game, you cannot take any more actions");
+                }
+                gameService.motherLode(gameId);
+                return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
+            } else {
+                return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
-            gameService.motherLode(gameId);
-            return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to use motherlode cheat code");
-        } catch (InvalidActionException e) {
-            throw new RuntimeException(e);
         }
     }
 

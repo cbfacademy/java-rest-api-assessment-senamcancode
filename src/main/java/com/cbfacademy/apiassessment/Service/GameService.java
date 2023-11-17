@@ -57,7 +57,7 @@ public class GameService {
 
     }
 
-    public String addEmployee(String gameId, int numberOfEmployees) throws FileNotFoundException, InvalidActionException {
+    public String addEmployee(String gameId, int numberOfEmployees) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
         //this line is constantly repeated can I refactor?
         assert game != null;
@@ -66,96 +66,88 @@ public class GameService {
         String actionMessage = game.getCompany().addEmployee(numberOfEmployees);
 
 
-        game.actionsManager();
         gameRepository.updateGameDataById(gameId, game);
 
         return actionMessage;
     }
 
-    public String removeEmployee(String gameId, int numberOfEmployees) throws InvalidActionException, FileNotFoundException {
+    public String removeEmployee(String gameId, int numberOfEmployees) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String actionMessage = game.getCompany().removeEmployee(numberOfEmployees);
 
 
-        game.actionsManager();
         gameRepository.updateGameDataById(gameId, game);
 
         return actionMessage;
     }
 
-    public void crowdFund(String gameId) throws InvalidActionException, FileNotFoundException {
+    public void crowdFund(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         game.getCompany().crowdFund();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
     }
 
-    public String sniperInvest(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String sniperInvest(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String resultMessage = game.getCompany().sniperInvestment();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
         return resultMessage;
     }
 
-    public String passiveInvest(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String passiveInvest(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String resultMessage = game.getCompany().passiveInvestment();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
         return resultMessage;
     }
 
-    public String addDepartment(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String addDepartment(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String resultMessage = game.getCompany().addDepartment();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
         return resultMessage;
     }
 
-    public String researchAndDev(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String researchAndDev(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String resultMessage = game.getCompany().researchAndDev();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
         return resultMessage;
     }
 
-    public String market(String gameId) throws InvalidActionException, FileNotFoundException {
+    public String market(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);
 
         assert game != null;
         String resultMessage = game.getCompany().marketing();
 
-        game.actionsManager();
 
         gameRepository.updateGameDataById(gameId, game);
 
@@ -306,6 +298,25 @@ public class GameService {
 
     //might have to move up the actions manager to the game service and then have it checked before each endpoint in the gameController
 
+    public boolean validActionCheck(String gameId) throws FileNotFoundException {
+        Game game = GameRepository.retrieveGame(gameId);
+
+        assert game!= null;
+        boolean result = game.invalidAction();
+
+        return result;
+
+    }
+
+    public void actionCountIncrement(String gameId) throws FileNotFoundException {
+        Game game = GameRepository.retrieveGame(gameId);
+        assert game!= null;
+
+        game.actionIncrement();
+
+        gameRepository.updateGameDataById(gameId, game);
+
+    }
 
 }
 

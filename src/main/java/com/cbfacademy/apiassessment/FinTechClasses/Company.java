@@ -1,5 +1,7 @@
 package com.cbfacademy.apiassessment.FinTechClasses;
 
+
+import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import java.security.SecureRandom;
 
 public class Company {
@@ -27,7 +29,7 @@ public class Company {
             double newRevenue = revenue += 500000;
             incrementCrowdFundCount();
 
-                return "Congrats! You crowd funded £" + newRevenue;
+            return "Congrats! You crowd funded £" + newRevenue;
             }
         else{
            return "Invalid action - You can only crowd fund once per turn";
@@ -67,6 +69,7 @@ public class Company {
             employees += numberOfEmployees;
             double costOfHiring = costOfEmployee * numberOfEmployees;
             revenue -= costOfHiring;
+
             return ".";
         }
         if(hasSufficientFunds(numberOfEmployees) && numberOfEmployees > 10){
@@ -176,7 +179,7 @@ public class Company {
                 return "You gambled and lost! You lost £" + secondRandomNumber;
             }
         } else {
-            return "You can only invest once per turn";
+            return "Invalid Action: You can only invest once per turn";
             //should have code to check the invest count
         }
     }
