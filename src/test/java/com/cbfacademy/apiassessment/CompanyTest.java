@@ -37,6 +37,16 @@ public class CompanyTest {
 
     }
 
+    @Test
+    @DisplayName("Testing crowdfund limit of once per turn")
+    public void testCrowdFundLimit() {
+        company.setCrowdFundCount(1);
+
+        String result = company.crowdFund();
+
+        assertEquals("Invalid action - You can only crowd fund once per turn", result);
+    }
+
 
     @Test
     @DisplayName("hasSufficientFunds returns false when cost of hiriing employees is greater than revenue")

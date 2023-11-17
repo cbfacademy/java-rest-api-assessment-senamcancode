@@ -28,7 +28,6 @@ public class Game {
 
     public Game(){
         this.gameId = UUID.randomUUID().toString();
-        //this.creationDateTime = LocalDateTime.now();
         listOfEvents.add(new NoEvent("No Event"));
         listOfEvents.add(new NoEvent("No Event"));
         listOfEvents.add(new CybersecurityLeak("Cybersecurity Leak"));
@@ -37,7 +36,12 @@ public class Game {
         listOfEvents.add(new SocialMediaViral("Social media viral event"));
     }
 
-    //how to re-structure this so that the randomEvent is shown to the user
+    public void setMonth(){
+        int index = (currentTurn - 1) % arrayOfMonths.length;
+        this.month = arrayOfMonths[index];
+    }
+
+
     public String triggerRandomEvent(){
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());
@@ -46,39 +50,10 @@ public class Game {
     }
 
 
-    public List<Event> getEvents() {
-        return listOfEvents;
+    public void actionIncrement(){
+        currentNumberOfActions++;
+
     }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setMonth(){
-        int index = (currentTurn - 1) % arrayOfMonths.length;
-        this.month = arrayOfMonths[index];
-    }
-
-
-    public void advanceTurn(){
-
-        setMonth();
-        resetCurrentNumberOfActions();
-        company.resetCrowdFundCount();
-        company.resetInvestCount();
-        company.customerRevenueBoost();
-
-        checkGameIsOver();
-        checkGameIsCompleted();
-
-        currentTurn++;
-    }
-
     public boolean checkGameIsCompleted(){
         if(company.getRevenue() >= 5000000 &&
                 company.getDepartments() >= 3
@@ -100,31 +75,9 @@ public class Game {
         return false;
     }
 
-    public void setGameIsCompleted(){
-        isGameCompleted = true;
-    }
-
-    public void setGameIsOver(){
-        isGameOver = true;
-    }
-
-    public int actionsRemaining(){
-        return actionsPerTurn - currentNumberOfActions;
-    }
     public void resetCurrentNumberOfActions(){
-
         currentNumberOfActions = 0;
     }
-
-//    public void actionsManager() throws InvalidActionException {
-//
-//        if(actionsPerTurn >= currentNumberOfActions){
-//            currentNumberOfActions++;
-//        } else if(actionsRemaining() <= 0){
-//            throw new InvalidActionException("Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions");
-//        }
-//    }
-//
 
     public boolean invalidAction(){
         if(actionsPerTurn >= currentNumberOfActions){
@@ -135,29 +88,40 @@ public class Game {
         return false;
     }
 
-    public void actionIncrement(){
-        currentNumberOfActions++;
 
+    public int actionsRemaining(){
+        return actionsPerTurn - currentNumberOfActions;
     }
 
-    public boolean actionsManager()  {
+    public void advanceTurn(){
 
-        if(actionsPerTurn >= currentNumberOfActions){
-            currentNumberOfActions++;
-            return true;
-        } else if(actionsRemaining() <= 0){
-            return false;
-        }
-        return false;
+
+        resetCurrentNumberOfActions();
+        company.resetCrowdFundCount();
+        company.resetInvestCount();
+        company.customerRevenueBoost();
+
+        checkGameIsOver();
+        checkGameIsCompleted();
+
+        currentTurn++;
+        setMonth();
     }
-
-    public boolean isGameCompleted() {
-
-        return isGameCompleted;
-    }
-
 
     //getters and setters
+    public List<Event> getEvents() {
+        return listOfEvents;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+
+    public Company getCompany() {
+        return company;
+    }
+
 
     public Date getDateCreated() {
         return dateCreated;
@@ -178,4 +142,44 @@ public class Game {
     public int getCurrentTurn() {
         return currentTurn;
     }
+
+
+    public int getActionsPerTurn() {
+        return actionsPerTurn;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public void setGameCompleted(boolean gameCompleted) {
+        isGameCompleted = gameCompleted;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
+    }
+
+    public void setCurrentNumberOfActions(int currentNumberOfActions) {
+        this.currentNumberOfActions = currentNumberOfActions;
+    }
+
+    public void setActionsPerTurn(int actionsPerTurn) {
+        this.actionsPerTurn = actionsPerTurn;
+    }
+
+    public boolean isGameCompleted() {
+
+        return isGameCompleted;
+    }
+
+    public void setGameIsOverToTrue(){
+        isGameOver = true;
+    }
+
+    public void setGameIsCompletedToTrue(){
+        isGameCompleted = true;
+    }
+
+
 }

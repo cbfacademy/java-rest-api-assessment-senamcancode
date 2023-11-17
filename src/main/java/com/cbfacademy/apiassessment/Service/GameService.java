@@ -21,14 +21,6 @@ public class GameService {
     private GameRepository gameRepository;
 
 
-    public void actionsManager(String gameId) throws  FileNotFoundException, InvalidActionException {
-        Game game = GameRepository.retrieveGame(gameId);
-
-        assert game != null;
-        game.actionsManager();
-
-    }
-
     public List<Game> getAllGames() throws FileNotFoundException {
         return gameRepository.getAllGames();
     }
@@ -224,7 +216,7 @@ public class GameService {
 
         assert game != null;
         if (game.checkGameIsOver()) {
-            game.setGameIsOver();
+            game.setGameIsOverToTrue();
             return true;
         }
         gameRepository.updateGameDataById(gameId, game);
@@ -237,7 +229,7 @@ public class GameService {
 
         assert game != null;
         if (game.checkGameIsCompleted()) {
-            game.setGameIsCompleted();
+            game.setGameIsCompletedToTrue();
             return true;
         }
         gameRepository.updateGameDataById(gameId, game);
