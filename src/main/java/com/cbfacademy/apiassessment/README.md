@@ -127,22 +127,32 @@ String relativePath = "/src/main/game-data.json";
 
     http://127.0.0.1:8080/start
 - This POST request will initiate a new game and create and write to a game-data.json file. You should see the following: 
-```sh```
-
+```sh
+https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/7f4cd789-b621-461f-a3ed-e951888aacee
+```
 
 3. Then input the following request URL as a GET request into the request bar:
 
     http://127.0.0.1:8080/games 
 - This GET request will display all games created, in the order of most recently created to least. 
-- Currently, this will result in only have one game being displayed
+- Currently, this will result in only have one game being displayed. This will look as follows:
+```sh
+https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/dd3ff368-b576-494d-9ebd-eaed67ddff8e
+```
 
-
-4. Copy the gameId of the game displayed. This is represented as a UUID and will allow you to make further game actions
+4. Copy the gameId of the game displayed. This is represented as a UUID and will allow you to make further game actions.
 
 
 5. Call the GET company or GET games endpoints to have an overview of your starting point using the following request URLs:
     http://127.0.0.1:8080/games 
     http://127.0.0.1:8080/company/{gameId} 
-- From this point, you need to refer to the API documentation to discover all the API endpoints (game actions) at your disposal.
+
+- The company GET request should look as follows: 
+```sh
+https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/2b18a097-7fed-45e8-8e02-8644e6ba914c
+```
+
+
+6. From this point, you need to refer to the API documentation to discover all the API endpoints (game actions) at your disposal.
 
 
