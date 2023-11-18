@@ -115,7 +115,7 @@ public class Company {
 
         } else {
             departments++;
-            return ".";
+            return "";
         }
     }
 
@@ -123,7 +123,7 @@ public class Company {
     //researchAndDev - adds 2 to the product XP (when XP is a multiple of 10 this adds 1000 to customer base)
     public String researchAndDev()  {
         if(revenue < 50000){
-            return "Insufficient funds: You don't have enough to do research and development";
+            return "Insufficient funds: You don't have enough to do research and development.";
         }
 
 
@@ -140,11 +140,11 @@ public class Company {
                 customerBase += 1000;
             }
 
-            return "Research and development success, 2 XP added to the product";
+            return "Research and development success, 2 XP added to the product.";
         }
 
         if(productXP >= 30){
-            return "You have maxed out your product XP and so can no longer use the R&D method";
+            return "You have maxed out your product XP and so can no longer use the R&D method.";
         }
 
         return null;

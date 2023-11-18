@@ -102,7 +102,7 @@ public class GameController {
                     )
             }
     )
-    @PutMapping("/company-name")
+    @PutMapping("/name")
     public ResponseEntity<String> setCompanyName(@RequestParam String companyName, String gameId) {
         try {
             gameService.nameCompany(gameId, companyName);
@@ -135,16 +135,16 @@ public class GameController {
     @PostMapping("/add-employee")
     public ResponseEntity<String> addEmployee(@RequestParam int employeeNum, String gameId) {
         try {
-            if(gameService.validActionCheck(gameId)) {
 
-                if (gameService.checkGameIsCompleted(gameId)) {
+            if (gameService.checkGameIsCompleted(gameId)) {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
-                }
+            }
 
-                if (gameService.checkGameIsOver(gameId)) {
+            if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-                }
+            }
 
+            if(gameService.validActionCheck(gameId)) {
                 int initEmployees = gameService.getEmployees(gameId);
 
                 //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions
@@ -189,9 +189,8 @@ public class GameController {
             }
     )
     @PutMapping("/remove-employee")
-    public ResponseEntity<String> removeEmployee(@RequestParam int numberOfEmployees, String gameId) throws FileNotFoundException {
+    public ResponseEntity<String> removeEmployee(@RequestParam int employeeNum, String gameId) throws FileNotFoundException {
         try {
-            if(gameService.validActionCheck(gameId)){
                 if (gameService.checkGameIsCompleted(gameId)) {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
@@ -200,10 +199,12 @@ public class GameController {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
 
+                if(gameService.validActionCheck(gameId)){
+
                 double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
                 int initEmployees = gameService.getEmployees(gameId);
 
-                String resultMessage = gameService.removeEmployee(gameId, numberOfEmployees);
+                String resultMessage = gameService.removeEmployee(gameId, employeeNum);
 
 
                 int newEmployees = gameService.getEmployees(gameId);
@@ -249,7 +250,7 @@ public class GameController {
     @PostMapping("/crowd-fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) {
         try {
-            if(gameService.validActionCheck(gameId)) {
+
                 if (gameService.checkGameIsCompleted(gameId)) {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
@@ -257,6 +258,8 @@ public class GameController {
                 if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
+
+            if(gameService.validActionCheck(gameId)) {
                 double initRevenue = Double.parseDouble(gameService.getFormattedRevenue(gameId));
 
                 gameService.crowdFund(gameId);
@@ -297,7 +300,6 @@ public class GameController {
     @PostMapping("/invest/{action}")
     public ResponseEntity<String> invest(@PathVariable String action, @RequestParam String gameId)  {
         try {
-            if(gameService.validActionCheck(gameId)) {
                 if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
@@ -306,6 +308,7 @@ public class GameController {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
 
+            if(gameService.validActionCheck(gameId)) {
                 String resultMessage;
 
                 if ("sniper".equals(action)) {
@@ -363,7 +366,6 @@ public class GameController {
     @PostMapping("/department")
     public ResponseEntity<String> addDepartment(@RequestParam String gameId) {
         try {
-            if(gameService.validActionCheck(gameId)) {
                 if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
@@ -372,6 +374,7 @@ public class GameController {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
 
+            if(gameService.validActionCheck(gameId)) {
                 int initNumOfDepartments = gameService.getDepartments(gameId);
                 String resultMessage = gameService.addDepartment(gameId);
                 int newNumberOfDepartments = gameService.getDepartments(gameId);
@@ -381,7 +384,9 @@ public class GameController {
                     gameService.actionCountIncrement(gameId);
                 }
 
-                return ResponseEntity.ok(newNumberOfDepartments + " department(s) added" + resultMessage);
+                int departmentsAdded = newNumberOfDepartments - initNumOfDepartments;
+
+                return ResponseEntity.ok(departmentsAdded + " department(s) added" + resultMessage + ". You have " + newNumberOfDepartments + " departments");
             } else {
                 return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
             }
@@ -409,7 +414,7 @@ public class GameController {
     @PostMapping("/research")
     public ResponseEntity<String> researchAndDev(@RequestParam String gameId) {
         try {
-            if (gameService.validActionCheck(gameId)) {
+
                 if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
@@ -417,6 +422,8 @@ public class GameController {
                 if (gameService.checkGameIsCompleted(gameId)) {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
+
+            if (gameService.validActionCheck(gameId)) {
                 int initProductXP = gameService.getProductXP(gameId);
 
                 String resultMessage = gameService.researchAndDev(gameId);
@@ -429,7 +436,7 @@ public class GameController {
                 }
 
                 return ResponseEntity
-                        .ok(resultMessage + "You have a product XP of "
+                        .ok(resultMessage + " You have a product XP of "
                                 + newProductXP);
             } else {
                 return ResponseEntity.ok("Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions");
@@ -458,7 +465,7 @@ public class GameController {
     @PostMapping("/marketing")
     public ResponseEntity<String> marketing(@RequestParam String gameId) {
         try {
-            if (gameService.validActionCheck(gameId)) {
+
                 if (gameService.checkGameIsOver(gameId)) {
                     return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
                 }
@@ -467,6 +474,7 @@ public class GameController {
                     return ResponseEntity.ok("You completed the game, you cannot take any more actions");
                 }
 
+            if (gameService.validActionCheck(gameId)) {
                 int initCustomerBase = gameService.getCustomerBase(gameId);
                 String resultMessage = gameService.market(gameId);
                 int newCustomerBase = gameService.getCustomerBase(gameId);
@@ -627,13 +635,15 @@ public class GameController {
                     )
             }
     )
-    @PostMapping("/advance-turn")
+    @PostMapping("/advance")
     public ResponseEntity<String> advanceTurn(@RequestParam String gameId)   {
         try {
             if (gameService.checkGameIsCompleted(gameId)) {
                 return ResponseEntity
                         .ok("CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!");
-            } else if (gameService.checkGameIsOver(gameId)) {
+            }
+
+            if(gameService.checkGameIsOver(gameId)) {
                 return ResponseEntity.ok("GAME OVER! You failed to reach IPO status!");
             }
 
@@ -689,14 +699,15 @@ public class GameController {
     @PutMapping("/money") //the actionCountIncrement method is missing from the money method as this  method is a cheat code
     public ResponseEntity<String> moneyMoneyMoney(@RequestParam String gameId) throws FileNotFoundException {
         try {
-            if (gameService.validActionCheck(gameId)) {
-                if (gameService.checkGameIsOver(gameId)) {
-                    ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-                }
+            if (gameService.checkGameIsOver(gameId)) {
+                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+            }
 
-                if (gameService.checkGameIsCompleted(gameId)) {
-                    ResponseEntity.ok("You completed the game, you cannot take any more actions");
-                }
+            if (gameService.checkGameIsCompleted(gameId)) {
+                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+            }
+
+            if (gameService.validActionCheck(gameId)) {
                 gameService.moneyMoneyMoney(gameId);
                 return ResponseEntity.ok("Money money money! Must be funny in a rich man's world! Here's £9999999 on us!");
             } else {
@@ -726,14 +737,16 @@ public class GameController {
     @PutMapping("/motherlode") //the actionCountIncrement method is missing from the motherlode method as this  method is a cheat code
     public ResponseEntity<String> motherLoad(@RequestParam String gameId) {
         try {
-            if (gameService.validActionCheck(gameId)) {
-                if (gameService.checkGameIsOver(gameId)) {
-                    ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
-                }
 
-                if (gameService.checkGameIsCompleted(gameId)) {
-                    ResponseEntity.ok("You completed the game, you cannot take any more actions");
-                }
+            if (gameService.checkGameIsOver(gameId)) {
+                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if (gameService.checkGameIsCompleted(gameId)) {
+                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+            }
+
+            if (gameService.validActionCheck(gameId)) {
                 gameService.motherLode(gameId);
                 return ResponseEntity.ok("Your FinTech Company has all it needs for IPO status - Don't worry your secret's safe with us ;)");
             } else {
