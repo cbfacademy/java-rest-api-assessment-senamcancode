@@ -33,9 +33,7 @@ public class GameRepository {
 
     public void saveGameData(Database database) throws FileNotFoundException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(database.getGames()); //this will change to the database class :)
-        //because I am going to have 1 JSON file called the database with each game contained all the saved games
-        //as an array of game objects
+        String json = gson.toJson(database.getGames());
         try (FileWriter writer = new FileWriter(getFilePath())) {
             writer.write(json);
             writer.flush();
@@ -48,7 +46,6 @@ public class GameRepository {
 
 
     public void appendGameData()  throws FileNotFoundException{
-            //this method should only be run if there is a game-data.json file
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
         try (FileReader reader = new FileReader(getFilePath())) {
@@ -65,12 +62,6 @@ public class GameRepository {
             try (FileWriter writer = new FileWriter(getFilePath())) {
                 gson.toJson(gamesList, writer);
             }
-
-
-            //once you have the gamesList you want to check that the game isnt already present in the games list by gameId
-            //if its not present you add the game to the gamesList
-            //if it is present you do not add the game to the gamesList
-            //then you write everything in the gamesList to the game-data.json file
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,8 +98,7 @@ public class GameRepository {
         }
     }
 
-    public static Game retrieveGame(String gameId) throws FileNotFoundException{ //use the relative path! & need gameId as argument
-        //String filePath = "game-data.json";
+    public static Game retrieveGame(String gameId) throws FileNotFoundException{
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Event.class, new EventDeserializer()).setPrettyPrinting().create();
 
@@ -180,9 +170,3 @@ public class GameRepository {
     }
 }
 
-        //1. read the JSON file
-        //2. deserialise into the java object array
-        //3. find the object that has the gameId
-        //return the object with the id
-        //then in the addemployee method in the game service call the retreiveData method of the gameRepository and add the employee to the object
-        //then call the gameRepository method of the saveGamedata

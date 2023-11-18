@@ -21,9 +21,7 @@ public class Company {
     private int crowdFundCount = 0;
 
 
-    //company methods to used in the API game - first iteration of the method
-    //crowdFund method - increases revenue but can only be used once per turn
-    //could make this random
+
     public String crowdFund() {
         if(crowdFundCount < maxCrowdFundCount) {
             double newRevenue = revenue += 500000;
@@ -35,24 +33,6 @@ public class Company {
            return "Invalid Action: You can only crowd fund once per turn";
         }
     }
-
-
-    //If crowdfund is too powerful might randomise it so that its not always such a high number - remember to update the crowdFund test!!!!
-//    public String crowdFund(){
-//        if(crowdFundCount < maxCrowdFundCount) {
-//
-//        //SecureRandom rand = new SecureRandom();
-//        //int randomNumber = rand.nextInt(500001);
-//
-//            int number = 5000000;
-//
-//            revenue += number;
-//            return "Congrats! You crowd funded £" + number;
-//        } else {
-//            return "Invalid action - You can only crowd fund once per turn";
-//        }
-//
-//    }
 
     public boolean hasSufficientFunds(int numberOfEmployees){
         double costOfHiring = costOfEmployee * numberOfEmployees;
@@ -106,7 +86,7 @@ public class Company {
 
 
 
-    //addDepartment - add a department but they need a minimum number of employees - need to re-write
+    //addDepartment - add a department, but they need a minimum number of employees
     public String addDepartment() {
         int employeesNeeded = (departments + 1) * employeesNeededForDepartment;
 
@@ -148,7 +128,7 @@ public class Company {
         return null;
     }
 
-    //marketing - adds 1000 to customer base but costs money
+    //marketing - adds 1000 to customer base but costs 10000
     public String marketing() {
         if(revenue < 10000){
             return "Insufficient funds: You do not have enough funds to implement marketing";
@@ -160,7 +140,7 @@ public class Company {
     }
 
 
-    //Sniper investment is more of a risk (like in real life) because the amount you can gain or lose is greater
+    //Sniper investment is more of a risk because the amount you can gain or lose is greater
     public String sniperInvestment() {
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();
@@ -182,7 +162,7 @@ public class Company {
     }
 
 
-    //Passive investment is less of a risk (like in real life) because the amount you can gain or lose is less
+    //Passive investment is less of a risk because the amount you can gain or lose is less
     public String passiveInvestment() {
         if(investCount < maxInvestCount){
         SecureRandom rand = new SecureRandom();

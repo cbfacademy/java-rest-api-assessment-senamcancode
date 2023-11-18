@@ -41,7 +41,7 @@ public class Game {
         this.month = arrayOfMonths[index];
     }
 
-
+    //triggers a random event
     public String triggerRandomEvent(){
         SecureRandom random = new SecureRandom();
         int randomIndex = random.nextInt(listOfEvents.size());

@@ -7,6 +7,7 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 
 public class EventDeserializer implements JsonDeserializer<Event> {
+    //Used to allow events to be deserialised
     @Override
     public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
         throws JsonParseException {

@@ -287,7 +287,6 @@ public class GameService {
         gameRepository.updateGameDataById(gameId, game);
     }
 
-    //might have to move up the actions manager to the game service and then have it checked before each endpoint in the gameController
 
     public boolean validActionCheck(String gameId) throws FileNotFoundException {
         Game game = GameRepository.retrieveGame(gameId);

@@ -28,7 +28,6 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    //need to re-do descriptions for the invalid action error!!!
 
     @Operation(
             description = "Creates an instance of the game class and an instance of the database class, then adds the game object created to the 'games' ArrayList in the database object, then writes the data from the arrayList to the game-data.json file",
@@ -117,7 +116,6 @@ public class GameController {
 
 
     @Operation(
-            //change variable potentially - in the description
             description = "Uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file. No more than 10 employees can be added to the company with each 'add-employee' POST request. There are a number of additional 200 responses that can be shown depending on the game state. <br /> (1) If there are insufficient funds the following 200 OK response will be shown: 0 employees added. You have {numberOfEmployees} employee(s), where {numberOfEmployees} is the numberOfEmployees variable retrieved from the company object. <br /> (2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br /> (3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more action",
             summary = "Adds a specific number of employees to the company",
             responses = {
@@ -146,13 +144,7 @@ public class GameController {
 
             if(gameService.validActionCheck(gameId)) {
                 int initEmployees = gameService.getEmployees(gameId);
-
-                //Invalid action - You can only make 3 actions per turn. Advance turn to get access to more actions
-
                 String resultMessage = gameService.addEmployee(gameId, employeeNum);
-
-
-
                 int newEmployees = gameService.getEmployees(gameId);
                 int employeesAdded = newEmployees - initEmployees;
 
@@ -545,7 +537,6 @@ public class GameController {
         }
     }
 
-    //not sure why but this does not throw an exception
 
     @Operation(
             description = "Uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",

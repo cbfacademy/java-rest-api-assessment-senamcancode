@@ -5,21 +5,21 @@ import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import java.util.List;
 
 public class QuickSortAlgo {
-    public static List<Game> quickSort(List<Game> games, int low, int high) {
-        if (low < high) {
-            int pivotIndex = partition(games, low, high);
+    public static List<Game> quickSort(List<Game> games, int begin, int end) {
+        if (begin < end) {
+            int pivotIndex = partition(games, begin, end);
 
-            quickSort(games, low, pivotIndex - 1);
-            quickSort(games, pivotIndex + 1, high);
+            quickSort(games, begin, pivotIndex - 1);
+            quickSort(games, pivotIndex + 1, end);
         }
         return games;
     }
 
-    private static int partition(List<Game> games, int low, int high) {
-        Game pivot = games.get(high);
-        int i = low - 1;
+    private static int partition(List<Game> games, int begin, int end) {
+        Game pivot = games.get(end);
+        int i = begin - 1;
 
-        for (int j = low; j < high; j++) {
+        for (int j = begin; j < end; j++) {
             if (games.get(j).getDateCreated().compareTo(pivot.getDateCreated()) >= 0) {
                 i++;
                 swap(games, i, j);
@@ -27,7 +27,7 @@ public class QuickSortAlgo {
             }
         }
 
-        swap(games, i + 1, high);
+        swap(games, i + 1, end);
         return i + 1;
     }
 

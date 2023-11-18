@@ -10,7 +10,7 @@ public class NoEvent extends Event {
 
     @Override
     public String  executeEvent(Company company){
-        //this event does nothingreturn false;
+        //this event has no effect
         return "NO EVENT OCCURRED (phew!)";
     }
 }

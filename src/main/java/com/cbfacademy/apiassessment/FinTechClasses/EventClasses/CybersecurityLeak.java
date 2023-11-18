@@ -13,7 +13,6 @@ public class CybersecurityLeak extends Event {
     //reduce the company revenue by 5% and customer base by 500 unless they have less than 500 customers - in which case the customer base is reset to 0
         company.reduceRevenue(5);
         company.reduceCustomerBase(500);
-        //should change the customerBase reduction to 1000
 
 
 
