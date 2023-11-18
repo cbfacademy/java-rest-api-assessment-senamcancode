@@ -25,7 +25,7 @@ public class GameRepository {
     //for IntelliJ the String relativePath = "/src/main/game-data.json"
 
     public static String getFilePath(){
-        String relativePath = "/src/main/game-data.json";
+        String relativePath = "java-rest-api-assessment-senamcancode/src/main/game-data.json";
         Path path = Paths.get(System.getProperty("user.dir"), relativePath);
         return path.toString();
     }
