@@ -2,7 +2,7 @@
 A resource management game which requires the user to grow their FinTech company to reach IPO status. 
 
 ## Introduction
-
+Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. Get ready to navigate the world of finance and build your financial empire!
 
 ## Game Rules
 The purpose of this REST API game is to acquire IPO status for your finTech company. The following parameters are required in order to reach IPO status:
@@ -51,7 +51,7 @@ There are additional cheat code actions that you can take: <br />
 
 
 ### Documentation - Game Action Endpoints
-The above game actions are taken by calling specific endpoints in the API documentation. Please refer to the API documentation to see details about all the API endpoints in the following swagger documentation URL:
+The above game actions are taken by calling specific endpoints in the API documentation. Please refer to the API documentation to see details about all the API endpoints in the following swagger documentation URL: (This will only work when the application is running. The information needed to run teh application is found in the steps for set up section)
 
 http://127.0.0.1:8080/swagger-ui/index.html
 
