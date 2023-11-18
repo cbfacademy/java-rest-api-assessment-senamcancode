@@ -26,7 +26,7 @@ class AppTests {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		this.base = new URL("http://localhost:" + port + "/greeting");
+		this.base = new URL("http://localhost:" + port + "/api/game");
 	}
 
 	@Test
