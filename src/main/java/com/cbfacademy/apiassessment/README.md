@@ -1,5 +1,5 @@
 # FinTech Tycoon REST API GAME
-A resource management game which requires the user to grow their finTech company to reach IPO status. 
+A resource management game which requires the user to grow their FinTech company to reach IPO status. 
 
 ## Introduction
 
@@ -52,8 +52,8 @@ There are additional cheat code actions that you can take: <br />
 
 ### Documentation - Game Action Endpoints
 The above game actions are taken by calling specific endpoints in the API documentation. Please refer to the API documentation to see details about all the API endpoints in the following swagger documentation URL:
-http://127.0.0.1:8080/swagger-ui/index.html
 
+http://127.0.0.1:8080/swagger-ui/index.html
 
 ## Random Events
 These are events that are have a major influence on the company and are triggered when the advance action is taken.
@@ -85,11 +85,64 @@ Also make sure you have accounts for the following:
 
 
 ### Steps for Set Up
-1. point about the filePath
-2. http://127.0.0.1:8080 (postman)
-3. Run the application in your preferred IDE - **BE AWARE** - If using IntelliJ you will have to change the relative filePath in the gameRepository class to the following: /src/main/game-data.json)
 
-5. Call the get company or get games endpoints to have an overview of your starting point it should look like this: 
-- From this point, you need to refer to the API documentation to discover all the API endpoints at your disposal.
+#### Clone the repository 
+
+```sh
+git clone https://github.com/cbfacademy/java-rest-api-assessment-senamcancode.git
+cd java-rest-api-assessment-senamcancode
+```
+
+### Install Dependencies
+
+Open a terminal at the root of the repo directory and run the following command: 
+
+For Mac: 
+```sh
+./mvnw clean dependency:resolve
+```
+
+For Windows: 
+```cmd
+mvnw clean dependency:resolve
+```
+
+### Run the Application
+- In VS Code you can start the application by pressing F5 or clicking the play button
+- If using IntelliJ you can start the application by pressing the play button within the App file
+
+### FinTech Tycoon Set Up
+1. Before using postman - you will have to check that the relative filePath in the is correct for your preferred IDE. 
+- If using VSCode the relative file path should be as follows: 
+```java
+String relativePath = "java-rest-api-assessment-senamcancode/src/main/game-data.json"; 
+```
+
+If using IntelliJ the relative file path should be as follows: 
+```java
+String relativePath = "/src/main/game-data.json";
+```
+
+2. Open postman and input the following request URL as a POST request into the request bar:
+
+    http://127.0.0.1:8080/start
+- This POST request will initiate a new game and create and write to a game-data.json file. You should see the following: 
+```sh```
+
+
+3. Then input the following request URL as a GET request into the request bar:
+
+    http://127.0.0.1:8080/games 
+- This GET request will display all games created, in the order of most recently created to least. 
+- Currently, this will result in only have one game being displayed
+
+
+4. Copy the gameId of the game displayed. This is represented as a UUID and will allow you to make further game actions
+
+
+5. Call the GET company or GET games endpoints to have an overview of your starting point using the following request URLs:
+    http://127.0.0.1:8080/games 
+    http://127.0.0.1:8080/company/{gameId} 
+- From this point, you need to refer to the API documentation to discover all the API endpoints (game actions) at your disposal.
 
 

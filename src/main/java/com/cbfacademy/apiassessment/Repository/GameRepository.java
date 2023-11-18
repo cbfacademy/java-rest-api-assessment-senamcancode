@@ -21,7 +21,8 @@ import com.google.gson.reflect.TypeToken;
 @Repository
 public class GameRepository {
 
-    //for vs code the relativePath = "java-rest-api-assessment-senamcancode/src/main/game-data.json"
+    //for vs code the String relativePath = "java-rest-api-assessment-senamcancode/src/main/game-data.json"
+    //for IntelliJ the String relativePath = "/src/main/game-data.json"
 
     public static String getFilePath(){
         String relativePath = "/src/main/game-data.json";
