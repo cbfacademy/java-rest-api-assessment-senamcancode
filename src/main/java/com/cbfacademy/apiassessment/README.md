@@ -127,30 +127,33 @@ String relativePath = "/src/main/game-data.json";
 
     http://127.0.0.1:8080/start
 - This POST request will initiate a new game and create and write to a game-data.json file. You should see the following: 
-```sh
-![new-game](https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/7f4cd789-b621-461f-a3ed-e951888aacee)
-```
+
+<img width="1554" alt="Screenshot 2023-11-18 at 21 24 49 - Start" src="https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/47297eb1-5c85-415b-8b25-005c15ba066e">
+
+
 
 3. Then input the following request URL as a GET request into the request bar:
 
     http://127.0.0.1:8080/games 
 - This GET request will display all games created, in the order of most recently created to least. 
-- Currently, this will result in only have one game being displayed. This will look as follows:
-```sh
-https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/dd3ff368-b576-494d-9ebd-eaed67ddff8e
-```
+- Currently, this will result in only have one game being displayed. This should look as follows:
+<img width="1556" alt="Screenshot 2023-11-18 at 21 25 18 - Games" src="https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/03257242-5c02-4e59-9927-84b6db5d2c01">
 
-4. Copy the gameId of the game displayed. This is represented as a UUID and will allow you to make further game actions.
+4. Copy the gameId of the game displayed. This is represented as a UUID and will allow you to make further game actions. An example of a gameId is shown below:
+
+   
+<img width="368" alt="Screenshot 2023-11-18 at 22 02 07" src="https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/4a8eda10-b9c7-43a9-9ad1-ee3fb108213e">
 
 
-5. Call the GET company or GET games endpoints to have an overview of your starting point using the following request URLs:
+
+
+6. Call the GET company or GET games endpoints to have an overview of your starting point using the following request URLs:
     http://127.0.0.1:8080/games 
     http://127.0.0.1:8080/company/{gameId} 
 
 - The company GET request should look as follows: 
-```sh
-https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/2b18a097-7fed-45e8-8e02-8644e6ba914c
-```
+<img width="1552" alt="Screenshot 2023-11-18 at 21 26 00 - Company" src="https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/51eb27b3-08fa-4146-b97d-88289e1f535b">
+
 
 
 6. From this point, you need to refer to the API documentation to discover all the API endpoints (game actions) at your disposal.
