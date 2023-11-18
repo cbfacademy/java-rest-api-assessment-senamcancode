@@ -94,8 +94,6 @@ public class Game {
     }
 
     public void advanceTurn(){
-
-
         resetCurrentNumberOfActions();
         company.resetCrowdFundCount();
         company.resetInvestCount();

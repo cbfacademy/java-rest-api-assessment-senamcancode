@@ -1,8 +1,5 @@
 package com.cbfacademy.apiassessment.Controller;
 
-import com.cbfacademy.apiassessment.ExceptionClasses.InvalidActionException;
-import com.cbfacademy.apiassessment.FinTechClasses.Company;
-import com.cbfacademy.apiassessment.FinTechClasses.Game;
 import com.cbfacademy.apiassessment.Service.GameService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +19,7 @@ import java.io.FileNotFoundException;
 
 @OpenAPIDefinition(info = @Info(
         title = "FinTech Tycoon - REST API Game",
-        description = "Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. For a comprehensive guide on rules and gameplay, please refer to the README within the com.cbfacademy.appiassessment package. Get ready to navigate the world of finance and build your financial empire!.",
+        description = "Welcome to FinTech Tycoon! This is a dynamic resource management game where players strive to achieve IPO status through strategic decision-making.Our REST API facilitates this gaming experience, offering specific endpoints to trigger in-game actions. Users can create, read, update, and delete game elements using the standard HTTP methods: POST, GET, PUT, and DELETE. For a comprehensive guide on rules and gameplay, please refer to the README within the com.cbfacademy.appiassessment package.<br /> Get ready to navigate the world of finance and build your financial empire!",
         version = "1.0.0"))
 
 @Tag(name= "Game Actions")
@@ -34,7 +31,7 @@ public class GameController {
     //need to re-do descriptions for the invalid action error!!!
 
     @Operation(
-            description = "'/start' endpoint creates an instance of the game class and an instance of the database class, then adds the game object created to the 'games' ArrayList in the database object, then writes the data from the arrayList to the game-data.json file",
+            description = "Creates an instance of the game class and an instance of the database class, then adds the game object created to the 'games' ArrayList in the database object, then writes the data from the arrayList to the game-data.json file",
             summary = "Creates a game and writes the data to the game-data.json file",
             responses = {
                     @ApiResponse(
@@ -62,7 +59,7 @@ public class GameController {
     }
 
     @Operation(
-            description = "'/add-game' endpoint adds a new game object to the 'games' ArrayList of the database object then writes the data to the game-data.json file",
+            description = "Adds a new game object to the 'games' ArrayList of the database object then writes the data to the game-data.json file",
             summary = "Creates a new game and appends it to the data to a json file",
             responses = {
                     @ApiResponse(
@@ -90,7 +87,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/company-name' endpoint uses the 'gameId' request parameter to update the name of the FinTech company to inputted in the request parameter then writes the data to the game-data.json file",
+            description = "Uses the 'gameId' request parameter to update the name of the FinTech company to inputted in the request parameter then writes the data to the game-data.json file",
             summary = "Updates the name of the FinTech company",
             responses = {
                     @ApiResponse(
@@ -121,7 +118,7 @@ public class GameController {
 
     @Operation(
             //change variable potentially - in the description
-            description = "add-employee endpoint uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file. If there are insufficient funds the following 200 OK response will be shown: 0 employees added. You have {numberOfEmployees} employee(s), where {numberOfEmployees} is the numberOfEmployees ?variable retrieved from the company object",
+            description = "Uses 'gameId' and 'employeeNum' request parameters to add a given number of employees to the company, provided there is sufficient funds, then writes the data to the game-data.json file. There are a number of additional 200 responses that can be shown depending on the game state. <br /> (1) If there are insufficient funds the following 200 OK response will be shown: 0 employees added. You have {numberOfEmployees} employee(s), where {numberOfEmployees} is the numberOfEmployees variable retrieved from the company object. <br /> (2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br /> (3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more action",
             summary = "Adds a specific number of employees to the company",
             responses = {
                     @ApiResponse(
@@ -177,8 +174,8 @@ public class GameController {
 
 
     @Operation(
-            description = "remove-employee endpoint uses 'gameId' and 'employeeNum' request parameters to remove a specific number of employees (provided by 'employeeNum' parameter) to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file. If there is an insufficient number of employees to remove from the following 200 OK response is displayed: 0 employee(s) added removed and £0 saved. You cannot get rid of more employees than you already have. You have {newEmployees} employees and {numDepartments} departments, where {newEmployees} and {numDepartments} are retrieved from the company object ",
-            summary = "Removes a specific number of employees to the company",
+            description = "Uses 'gameId' and 'employeeNum' request parameters to remove a specific number of employees (provided by 'employeeNum' parameter) to the company, provided there is a sufficient number of employee, then writes the data to the game-data.json file. <br />There are a number of  additional 200 responses that can be shown depending on the game state: <br />(1) If there is an insufficient number of employees to remove from the following 200 OK response is displayed: 0 employee(s) added removed and £0 saved. You cannot get rid of more employees than you already have. You have {newEmployees} employees and {numDepartments} departments, where {newEmployees} and {numDepartments} are retrieved from the company object <br />(2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br />(3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br />(4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
+            summary = "Removes a specific number of employees from the company",
             responses = {
                     @ApiResponse(
                             description = "Employees successfully removed if there are a sufficient number of employees",
@@ -235,8 +232,8 @@ public class GameController {
 
 
     @Operation(
-            description = "'/crowd-fund' endpoint uses the 'gameId' request parameter to add revenue to the company, then writes the data to the game-data.json file",
-            summary = "Adds 500000 to the revenue of the specified company",
+            description = "'Uses the 'gameId' request parameter to add revenue to the company, then writes the data to the game-data.json. There are a number of additional 200 responses that can be shown depending on the game state. <br /> (1) If the user has already crowd funded once per game turn: Invalid Action: You can only crowd fund once per turn <br /> (2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br /> (3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
+            summary = "Adds 500000 to the revenue of the company",
             responses = {
                     @ApiResponse(
                             description = "Successful crowd fund",
@@ -283,7 +280,7 @@ public class GameController {
 
     //add to this!!
     @Operation(
-            description = "'invest' endpoint uses gameId and {action} request parameters to invest - which results in either loss or gain of revenue, then writes the data to the game-data.json file. '{action}' can be either 'sniper' or 'passive' which changes the potential maximum amount of the revenue the gained or lost",
+            description = "Uses gameId and {action} request parameters to invest - which results in either loss or gain of revenue, then writes the data to the game-data.json file. '{action}' can be either 'sniper' or 'passive' which changes the potential maximum amount of the revenue the gained or lost. There are a number of additional 200 responses that can be shown depending on the game state. <br /> (1) If the user has already invested once game turn: Invalid Action: You can only invest once per turn. <br /> (2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions.<br /> (3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions.<br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
             summary = "Adds or minuses a random value from the revenue of the company",
             responses = {
                     @ApiResponse(
@@ -349,7 +346,7 @@ public class GameController {
 
     //change these!
     @Operation(
-            description = "'/department' endpoint uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state. If the user has maxed out the product XP the following message can also be shown: 0 department(s) added. You do not have enough employees to make a department.If the user has an insufficient number of employees to make a department the following 200 OK response is shown: 0 department(s) added. You do not have enough employees to make a department",
+            description = "Uses the 'gameId' request parameter to add a department to the company, provided the player has a sufficient number of employees, then writes the data to the game-data.json file. There are a number of additional 200 responses that can be shown depending on the game state. <br />(1) If the user has maxed out the product XP the following message can also be shown: 0 department(s) added. You do not have enough employees to make a department. <br />(2) If the user has an insufficient number of employees to make a department the following 200 OK response is shown: 0 department(s) added. You do not have enough employees to make a department. <br />(3) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br />(4) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (5) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
             summary = "Adds a department to the company",
             responses = {
                     @ApiResponse(
@@ -395,7 +392,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/research' endpoint (short for research and development )uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of 200 responses that can be shown depending on the game state: if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}, where {productXP} is retrieved from the company object",
+            description = "Uses the 'gameId' request parameter to add to 2 to the productXP of the company, provided the player has a sufficient funds, then writes the data to the game-data.json file. There are a number of additional 200 responses that can be shown depending on the game state: <br /> (1) if the user has maxed out the product XP the following message can also be shown: You have maxed out your product XP and so can no longer use the R&D method. You have a product XP of {productXP}, where {productXP} is retrieved from the company object.<br /> (2) If the game is completed the 200 OK response is: You completed the game, you cannot take any more action.<br />(3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions.<br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
             summary = "Adds a department to the company",
             responses = {
                     @ApiResponse(
@@ -444,8 +441,8 @@ public class GameController {
     }
 
     @Operation(
-            description = "'marketing' endpoint uses the 'gameId' request parameter to add to 1000 the customer base of the company, provided the user has a sufficient funds, then writes the data to the game-data.json file.There are a number of 200 responses that can be shown depending on the game state: If there is insufficient funds, the 200 OK response is: You have a customer base of Insufficient funds: You do not have enough funds to implement marketing. If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
-            summary = "Adds to 1000 to the customer base of the specified company",
+            description = "Uses the 'gameId' request parameter to add to 1000 the customer base of the company, provided the user has a sufficient funds, then writes the data to the game-data.json file.There are a number of additional 200 responses that can be shown depending on the game state: <br /> (1) If there is insufficient funds, the 200 OK response is: You have a customer base of Insufficient funds: You do not have enough funds to implement marketing. <br /> (2) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br /> (3) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (4) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
+            summary = "Adds to 1000 to the customer base of the company",
             responses = {
                     @ApiResponse(
                             description = "Customer base successfully added to provided there is sufficient funds",
@@ -490,7 +487,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/games' endpoint gets and displays all games in the game-data.json file in order of most recently created",
+            description = "Gets and displays all games in the game-data.json file in order of most recently created",
             summary = "Gets all games in the game-data.json file",
             responses = {
 
@@ -517,7 +514,7 @@ public class GameController {
 
 
     @Operation(
-            description = "'/company/{gameId}' endpoint uses the gameId path variable to get and display all information in a specific company object in the game-data.json file ",
+            description = "Uses the gameId path variable to get and display all information in a specific company object in the game-data.json file ",
             summary = "Gets all information for the specified company",
             responses = {
                     @ApiResponse(
@@ -543,7 +540,7 @@ public class GameController {
     //not sure why but this does not throw an exception
 
     @Operation(
-            description = "'/game/{gameId}' endpoint uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
+            description = "Uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
             summary = "Gets all information for the specified game",
             responses = {
                     @ApiResponse(
@@ -567,7 +564,7 @@ public class GameController {
     }
 
     @Operation(
-            description = "'/turn/{gameId}' endpoint uses the gameId path variable to get and display the current turn that the player is on out of the total amount of turns within the game ",
+            description = "Uses the gameId path variable to get and display the current turn that the player is on out of the total amount of turns within the game ",
             summary = "Gets the current turn of the player for the specified game",
             responses = {
                     @ApiResponse(
@@ -591,7 +588,7 @@ public class GameController {
     }
 
     @Operation(
-            description = "/actions/{gameId}' endpoint uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
+            description = "Uses the gameId path variable to get and display all information pertaining to the company in the game-data.json file ",
             summary = "Gets the number of actions the player has remaining in the current turn of a specified game",
             responses = {
                     @ApiResponse(
@@ -616,7 +613,7 @@ public class GameController {
 
     
     @Operation(
-            description = "'/advance-turn' endpoint uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file. There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: GAME OVER! You failed to reach IPO status!. you cannot take any more actions. If the game is completed the 200 OK response is: CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game!",
+            description = "Uses the gameId request parameter to add to the currentTurn, then writes the data to game-data.json file. There are a number of additional 200 responses that can be shown depending on the game state: <br />(1) If the game is over the 200 OK response is: GAME OVER! You failed to reach IPO status!. you cannot take any more actions. <br />(2) If the game is completed the 200 OK response is: CONGRATULATIONS!!!: Your company has successfully reached IPO status. You beat the game! ",
             summary = "Advances the currentTurn variable of the specified game",
             responses = {
                     @ApiResponse(
@@ -650,7 +647,7 @@ public class GameController {
     }
 
     @Operation(
-            description = "'/game' endpoint uses the gameId request parameter to delete the game object from the gamesList in the database class, then writes the data to the game-data.json file ",
+            description = "Uses the gameId request parameter to delete the game object from the gamesList in the database class, then writes the data to the game-data.json file ",
             summary = "Deletes the specified game",
             responses = {
                     @ApiResponse(
@@ -675,8 +672,8 @@ public class GameController {
     }
 
     @Operation(
-            description = "'/money' endpoint uses the gameId request parameter to updates the revenue of the specified company to 9999999",
-            summary = "Updates the revenue of the company to 9999999. There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
+            description = "Updates the revenue of the company to 9999999. There are a number of additional 200 responses that can be shown depending on the game state:<br />(1)  If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br />(2) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions <br />(3) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
+            summary = "Updates the revenue of the specified company to 9999999",
             responses = {
                     @ApiResponse(
                             description = "Successful update to revenue",
@@ -712,8 +709,8 @@ public class GameController {
 
 
     @Operation(
-            description = "'/motherlode' endpoint uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30). There are a number of 200 responses that can be shown depending on the game state: If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions",
-            summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company to those required for IPO status",
+            description = "Uses the gameId request parameter to update the company parameters:revenue, departments, employees, customerBase and productXP to values required for IPO status (£5000000, 3, 30, 10000 and 30). There are a number of additional 200 responses that can be shown depending on the game state: <br /> (1) If the game is over the 200 OK response is: You failed to complete the game. you cannot take any more actions. <br /> (2) If the game is completed the 200 OK response is: You completed the game, you cannot take any more actions. <br /> (3) If the user tries to make an invalid action, the 200 OK response is: Invalid action: You are only permitted 3 actions per turn. Advance turn to have access to more actions",
+            summary = "Updates revenue, departments, employees, customerBase and productXP variables of the company object to those required for IPO status",
             responses = {
                     @ApiResponse(
                             description = "Successful setting of company variables to achieve IPO status",

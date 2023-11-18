@@ -32,7 +32,7 @@ public class Company {
             return "Congrats! You crowd funded £" + newRevenue;
             }
         else{
-           return "Invalid action - You can only crowd fund once per turn";
+           return "Invalid Action: You can only crowd fund once per turn";
         }
     }
 
