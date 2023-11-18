@@ -247,7 +247,7 @@ public class GameController {
                     )
             }
     )
-    @PostMapping("/crowd-fund")
+    @PostMapping("/fund")
     public ResponseEntity<String> crowdFund(@RequestParam String gameId) {
         try {
 
