@@ -106,16 +106,16 @@ public class GameTest {
     }
 
     @Test
-    @DisplayName("Testing invalidAction returns true if actionsPerTurn is more than or equal to currentNumberOfActions")
+    @DisplayName("Testing invalidAction returns true if actionsPerTurn is more than currentNumberOfActions")
     public void testInvalidActionReturnsTrue(){
-       game.setCurrentNumberOfActions(3);
+       game.setCurrentNumberOfActions(1);
        boolean result = game.invalidAction();
 
        assertTrue(result);
     }
 
     @Test
-    @DisplayName("Testing invalidAction returns false if actionsPerTurn is less than currentNumberOfActions")
+    @DisplayName("Testing invalidAction returns false if actionsPerTurn is less than or equal to currentNumberOfActions")
     public void testInvalidActionReturnsFalse(){
        game.setCurrentNumberOfActions(4);
        boolean result = game.invalidAction();

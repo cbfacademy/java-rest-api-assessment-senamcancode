@@ -44,7 +44,7 @@ public class CompanyTest {
 
         String result = company.crowdFund();
 
-        assertEquals("Invalid action - You can only crowd fund once per turn", result);
+        assertEquals("Invalid Action: You can only crowd fund once per turn", result);
     }
 
 
@@ -201,7 +201,7 @@ public class CompanyTest {
         double newRevenue = company.getRevenue();
 
         assertEquals(initRevenue, newRevenue);
-        assertEquals("Insufficient funds: You don't have enough to do research and development", result);
+        assertEquals("Insufficient funds: You don't have enough to do research and development.", result);
     }
 
     @Test
@@ -214,7 +214,7 @@ public class CompanyTest {
         double newRevenue = company.getRevenue();
 
         assertEquals(initRevenue, newRevenue);
-        assertEquals("You have maxed out your product XP and so can no longer use the R&D method", result);
+        assertEquals("You have maxed out your product XP and so can no longer use the R&D method.", result);
 
     }
 
@@ -319,7 +319,7 @@ public class CompanyTest {
 
         String result = company.sniperInvestment();
 
-        assertEquals("You can only invest once per turn", result);
+        assertEquals("Invalid Action: You can only invest once per turn", result);
     }
 
 
@@ -331,7 +331,7 @@ public class CompanyTest {
 
         String result = company.sniperInvestment();
 
-        assertEquals("You can only invest once per turn", result);
+        assertEquals("Invalid Action: You can only invest once per turn", result);
     }
 
 
