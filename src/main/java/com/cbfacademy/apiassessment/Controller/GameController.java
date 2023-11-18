@@ -589,7 +589,8 @@ public class GameController {
     @GetMapping("/turn/{gameId}")
     public ResponseEntity<String> getCurrentTurn(@PathVariable("gameId") String gameId) {
        try {
-           return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of " + gameService.getMaxTurns(gameId));
+               return ResponseEntity.ok("You are currently in turn " + gameService.getCurrentTurn(gameId) + " of " + gameService.getMaxTurns(gameId));
+
        } catch (FileNotFoundException e) {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get current turn");
        }
@@ -613,7 +614,15 @@ public class GameController {
     @GetMapping("/actions/{gameId}")
     public ResponseEntity<?> getActionsRemaining(@PathVariable("gameId") String gameId) {
         try {
-            return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId));
+            if (gameService.checkGameIsOver(gameId)) {
+                return ResponseEntity.ok("You failed to complete the game, you cannot take any more actions");
+            }
+
+            if (gameService.checkGameIsCompleted(gameId)) {
+                return ResponseEntity.ok("You completed the game, you cannot take any more actions");
+            }
+
+            return ResponseEntity.ok(gameService.getNumberOfRemainingActions(gameId) + " actions remaining");
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: Unable to get number of remaining actions");
         }
