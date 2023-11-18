@@ -192,7 +192,7 @@ public class CompanyTest {
 
 
     @Test
-    @DisplayName("Testing the researchAndDev method doesnt change revenue and returns the relevat string, when the revenue is less than the cost of research and development")
+    @DisplayName("Testing the researchAndDev method doesn't change revenue and returns the relevant string, when the revenue is less than the cost of research and development")
     public void testResearchAndDevWhenRevenueIsTooLow()  {
         company.setRevenue(4999);
 
@@ -205,7 +205,7 @@ public class CompanyTest {
     }
 
     @Test
-    @DisplayName("Testing the researchAndDev method doesnt change revenue and returns the relevat string, when the productXP is maxed out")
+    @DisplayName("Testing the researchAndDev method doesn't change revenue and returns the relevant string, when the productXP is maxed out")
     public void testResearchAndDevWhenProductXPisMaxedOut(){
         company.setProductXP(company.getMaxProductXP());
 
@@ -240,6 +240,21 @@ public class CompanyTest {
         assertEquals(initProductXP + 10, newProductXP);
         assertEquals( initRevenue - 250000, newRevenue);
         assertEquals(initCustomerBase + 500, newCustomerBase);
+    }
+
+
+    @Test
+    @DisplayName("Testing researchAndDev with a maxed out ProductXP adds 1000 to the customer base ")
+    public void testResearchAndDevWithMaxProductXPAddsToCustomerBase() {
+        int initCustomerBase = company.getCustomerBase();
+        company.setProductXP(28);
+        company.researchAndDev();
+
+        int newProductXP = company.getProductXP();
+        int newCustomerBase = company.getCustomerBase();
+
+        assertEquals(30, newProductXP);
+        assertEquals(initCustomerBase + 1000, newCustomerBase);
     }
 
 

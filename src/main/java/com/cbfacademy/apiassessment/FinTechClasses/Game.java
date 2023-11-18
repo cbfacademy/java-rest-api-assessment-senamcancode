@@ -87,15 +87,6 @@ public class Game {
         }
         return false;
     }
-//    public boolean invalidAction(){
-//        if(actionsRemaining() > 3){
-//            return true;
-//        } else if(actionsRemaining() <= 0){
-//            return false;
-//        }
-//        return false;
-//    }
-
 
     public int actionsRemaining(){
         return actionsPerTurn - currentNumberOfActions;

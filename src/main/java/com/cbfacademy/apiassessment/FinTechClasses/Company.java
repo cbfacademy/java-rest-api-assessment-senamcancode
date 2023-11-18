@@ -127,13 +127,11 @@ public class Company {
         }
 
 
-        //this needs to be changes to 30
         if (revenue >= 50000 && productXP < maxProductXP) {
 
             productXP += 2;
             revenue -= 50000;
 
-            //might make a separate productXP boost so that I can tell the user that this happened - if not i can put it in the read me
             if (productXP % 10 == 0 && productXP != maxProductXP) {
                 customerBase += 500;
             } else if(productXP >= maxProductXP){
@@ -150,7 +148,7 @@ public class Company {
         return null;
     }
 
-    //marketing - adds 100 to customer base but costs money
+    //marketing - adds 1000 to customer base but costs money
     public String marketing() {
         if(revenue < 10000){
             return "Insufficient funds: You do not have enough funds to implement marketing";
@@ -180,7 +178,6 @@ public class Company {
             }
         } else {
             return "Invalid Action: You can only invest once per turn";
-            //should have code to check the invest count
         }
     }
 
@@ -203,7 +200,6 @@ public class Company {
             }
         } else {
             return "You can only invest once per turn";
-            //should have code to check the invest count
         }
     }
 
