@@ -128,7 +128,7 @@ String relativePath = "/src/main/game-data.json";
     http://127.0.0.1:8080/start
 - This POST request will initiate a new game and create and write to a game-data.json file. You should see the following: 
 ```sh
-https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/7f4cd789-b621-461f-a3ed-e951888aacee
+![new-game](https://github.com/cbfacademy/java-rest-api-assessment-senamcancode/assets/122734888/7f4cd789-b621-461f-a3ed-e951888aacee)
 ```
 
 3. Then input the following request URL as a GET request into the request bar:
