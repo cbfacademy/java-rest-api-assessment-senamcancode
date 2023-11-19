@@ -650,7 +650,7 @@ public class GameController {
             String resultMessage = gameService.triggerRandomEvent(gameId);
 
             gameService.advanceTurn(gameId);
-            return ResponseEntity.ok("You have advanced to the next turn " + resultMessage);
+            return ResponseEntity.ok("You have advanced to the next turn \n " + resultMessage);
         } catch (FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not found: Unable to advance turn");
         }
